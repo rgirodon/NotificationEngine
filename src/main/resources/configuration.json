@@ -1,0 +1,12 @@
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation.*"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk.*"
+				}
+			 ]
+}
