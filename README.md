@@ -5,3 +5,5 @@ Notification Engine based on :
 + Generic Pull Daemons for detecting changes and sending notification demands
 + Generic Selector for determining who subscribed to notifications
 + Generic Notificator for physically sending notifications
+
+Internal persistance will be done with a MongoDB database.
