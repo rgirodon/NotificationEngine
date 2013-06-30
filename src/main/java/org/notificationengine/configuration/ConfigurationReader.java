@@ -62,16 +62,21 @@ public class ConfigurationReader {
 				
 				JSONObject channelJsonObj = (JSONObject)channelsArray.get(i);
 				
-				String id = (String)channelJsonObj.get("id");
+				String id = (String)channelJsonObj.get(Constants.ID);
 				
 				// TODO handle null value
 				
-				String topic = (String)channelJsonObj.get("topic");
+				String topic = (String)channelJsonObj.get(Constants.TOPIC);
+				
+				// TODO handle null value
+				
+				String selectorType = (String)channelJsonObj.get(Constants.SELECTOR_TYPE);
 				
 				// TODO handle null value
 				
 				Channel channel = new Channel(id);
 				channel.setTopic(new Topic(topic));
+				channel.setSelectorType(selectorType);
 				
 				LOGGER.debug("Found channel : " + channel);
 				

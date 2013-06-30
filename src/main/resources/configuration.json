@@ -2,11 +2,13 @@
 "channels" : [
 				{
 				  "id" : "facturationChannel",
-				  "topic" : "facturation.*"
+				  "topic" : "facturation",
+				  "selectorType" : "mongoDbSelector"
 				},
 				{
 				  "id" : "helpdeskChannel",
-				  "topic" : "helpdesk.*"
+				  "topic" : "helpdesk",
+				  "selectorType" : "mongoDbSelector"
 				}
 			 ]
 }

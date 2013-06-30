@@ -12,7 +12,7 @@ public class Configuration {
 	public Configuration() {
 		super();
 		
-		this.channels = new ArrayList<Channel>();
+		this.channels = new ArrayList<>();
 	}
 
 	public void addChannel(Channel channel) {

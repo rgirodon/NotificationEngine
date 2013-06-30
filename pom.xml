@@ -66,8 +66,17 @@
 		<groupId>commons-lang</groupId>
 		<artifactId>commons-lang</artifactId>
 		<version>2.4</version>
-	</dependency>            
-                        
+	</dependency>  
+	<dependency>
+		<groupId>org.mongodb</groupId>
+		<artifactId>mongo-java-driver</artifactId>
+		<version>2.11.2</version>
+	</dependency>	                      
+    <dependency>
+	    <groupId>org.jongo</groupId>
+	    <artifactId>jongo</artifactId>
+	    <version>0.4</version>
+	</dependency>                   
 	          
   </dependencies>
   
