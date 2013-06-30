@@ -15,6 +15,6 @@ Notification Engine based on :
 
 + Generic Notificator for physically sending notifications
 
-Internal persistance will be done with MongoDB database
+Internal persistance will be done with MongoDB database.
 
-Many configurations options are not developped yet
+Many configurations options are not developped yet.
