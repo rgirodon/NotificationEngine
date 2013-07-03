@@ -21,6 +21,12 @@ public class RawNotification {
 		this.context = new HashMap<>();
 	}
 
+	public RawNotification(Topic topic) {
+		this();
+		
+		this.topic = topic;
+	}
+
 	@Override
 	public String toString() {
 		return "RawNotification [_id=" + _id + ", processed=" + processed

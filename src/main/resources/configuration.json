@@ -3,12 +3,16 @@
 				{
 				  "id" : "facturationChannel",
 				  "topic" : "facturation",
-				  "selectorType" : "mongoDbSelector"
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "multipleMailByRecipient",
+				  "mailTemplate" : "facturationMailTemplate"
 				},
 				{
 				  "id" : "helpdeskChannel",
 				  "topic" : "helpdesk",
-				  "selectorType" : "mongoDbSelector"
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "singleMailByRecipient",
+				  "mailTemplate" : "helpdeskMailTemplate"
 				}
 			 ]
 }

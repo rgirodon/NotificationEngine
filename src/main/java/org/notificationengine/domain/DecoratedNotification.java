@@ -9,12 +9,15 @@ public class DecoratedNotification {
 	private Recipient recipient;
 	
 	private RawNotification rawNotification;
+	
+	private Boolean sent;
 
 	public DecoratedNotification(RawNotification rawNotification,
 			Recipient recipient) {
 		super();
 		this.rawNotification = rawNotification;
-		this.recipient = recipient;		
+		this.recipient = recipient;
+		this.sent = Boolean.FALSE;
 	}
 
 	public DecoratedNotification() {
@@ -24,7 +27,8 @@ public class DecoratedNotification {
 	@Override
 	public String toString() {
 		return "DecoratedNotification [_id=" + _id + ", recipient=" + recipient
-				+ ", rawNotification=" + rawNotification + "]";
+				+ ", rawNotification=" + rawNotification + ", sent=" + sent
+				+ "]";
 	}
 
 	public ObjectId get_id() {
@@ -50,6 +54,12 @@ public class DecoratedNotification {
 	public void setRawNotification(RawNotification rawNotification) {
 		this.rawNotification = rawNotification;
 	}
-	
-	
+
+	public Boolean getSent() {
+		return sent;
+	}
+
+	public void setSent(Boolean sent) {
+		this.sent = sent;
+	}
 }

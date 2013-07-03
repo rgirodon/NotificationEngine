@@ -7,6 +7,8 @@ public class Channel {
 	private Topic topic;
 	
 	private String selectorType;
+	
+	private String notificatorType;
 
 	public Channel(String id) {
 		super();
@@ -17,7 +19,7 @@ public class Channel {
 	@Override
 	public String toString() {
 		return "Channel [id=" + id + ", topic=" + topic + ", selectorType="
-				+ selectorType + "]";
+				+ selectorType + ", notificatorType=" + notificatorType + "]";
 	}
 
 	public String getId() {
@@ -42,6 +44,14 @@ public class Channel {
 
 	public void setSelectorType(String selectorType) {
 		this.selectorType = selectorType;
+	}
+
+	public String getNotificatorType() {
+		return notificatorType;
+	}
+
+	public void setNotificatorType(String notificatorType) {
+		this.notificatorType = notificatorType;
 	}
 	
 	

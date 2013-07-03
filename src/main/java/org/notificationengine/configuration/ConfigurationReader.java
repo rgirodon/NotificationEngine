@@ -74,9 +74,14 @@ public class ConfigurationReader {
 				
 				// TODO handle null value
 				
+				String notificatorType = (String)channelJsonObj.get(Constants.NOTIFICATOR_TYPE);
+				
+				// TODO handle null value
+				
 				Channel channel = new Channel(id);
 				channel.setTopic(new Topic(topic));
 				channel.setSelectorType(selectorType);
+				channel.setNotificatorType(notificatorType);
 				
 				LOGGER.debug("Found channel : " + channel);
 				

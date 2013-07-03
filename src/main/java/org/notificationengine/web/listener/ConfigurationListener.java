@@ -11,8 +11,11 @@ import org.notificationengine.configuration.ConfigurationReader;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.Channel;
 import org.notificationengine.domain.Topic;
+import org.notificationengine.notificator.INotificator;
+import org.notificationengine.notificator.mail.MultipleMailByRecipientNotificator;
 import org.notificationengine.selector.ISelector;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
+import org.notificationengine.task.NotificatorTask;
 import org.notificationengine.task.SelectorTask;
 
 /**
@@ -58,6 +61,20 @@ public class ConfigurationListener implements ServletContextListener {
 				
 				// TODO set period configurable
 				timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, Constants.SELECTOR_TASK_PERIOD);
+				
+				break;
+			}
+			
+			INotificator notificator = null;
+				
+			switch(channel.getNotificatorType()) {
+			
+			case Constants.NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT :
+				
+				notificator = new MultipleMailByRecipientNotificator(topic);
+				
+				// TODO set period configurable
+				timer.schedule(new NotificatorTask(notificator), cptChannel * Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
 				
 				break;
 			}
