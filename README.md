@@ -20,6 +20,6 @@ Internal persistance is done with MongoDB database.
 Many configurations options are not developped yet.
 
 ## Settings 
-This application needs to have a mongoDB database running and can be ran on a glassfish 3.1 server. 
+This application needs to have a mongoDB database running on port 27017 and can be ran on a glassfish 3.1 server. 
 
-The database have to be named notificationengine with 3 collections: rawnotifications, decoratednotifications and subscriptions.
+The database has to be named notificationengine with 3 collections: rawnotifications, decoratednotifications and subscriptions.
