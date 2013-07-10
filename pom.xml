@@ -21,12 +21,18 @@
 		<version>4.10</version>
 		<scope>test</scope>
 	</dependency>
+<!-- 	<dependency> -->
+<!-- 		<groupId>javax</groupId> -->
+<!-- 		<artifactId>javaee-api</artifactId> -->
+<!-- 		<version>6.0</version> -->
+<!-- 		<scope>provided</scope> -->
+<!-- 	</dependency> -->
 	<dependency>
-		<groupId>javax</groupId>
-		<artifactId>javaee-api</artifactId>
-		<version>6.0</version>
-		<scope>provided</scope>
-	</dependency>
+        <groupId>org.glassfish.main.extras</groupId>
+        <artifactId>glassfish-embedded-all</artifactId>
+        <version>3.1.2.2</version>
+        <scope>provided</scope>
+    </dependency>
 	<dependency>
 		<groupId>log4j</groupId>
 		<artifactId>log4j</artifactId>
@@ -47,6 +53,11 @@
 		<artifactId>spring-web</artifactId>
 		<version>3.2.3.RELEASE</version>
 	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context-support</artifactId>
+		<version>3.2.3.RELEASE</version>
+	</dependency>            
 	<dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-webmvc</artifactId>

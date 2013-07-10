@@ -32,6 +32,8 @@ public class Constants {
 	
 	final public static String TEMPLATE_ENGINE = "templateEngine";
 	
+	final public static String MAILER = "mailer";
+	
 	final public static String CONFIGURATION_READER = "configurationReader";
 
 	public static final Object PROCESSED = "processed";
