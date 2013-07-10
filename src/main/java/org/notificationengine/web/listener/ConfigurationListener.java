@@ -15,6 +15,7 @@ import org.notificationengine.notificator.INotificator;
 import org.notificationengine.notificator.mail.MultipleMailByRecipientNotificator;
 import org.notificationengine.selector.ISelector;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
+import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.task.NotificatorTask;
 import org.notificationengine.task.SelectorTask;
 
@@ -41,7 +42,9 @@ public class ConfigurationListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent context) {
 		
-		Configuration configuration = ConfigurationReader.getInstance().readConfiguration();
+		ConfigurationReader configurationReader = (ConfigurationReader)SpringUtils.getBean(Constants.CONFIGURATION_READER);
+		
+		Configuration configuration = configurationReader.readConfiguration();
 		
 		Timer timer = new Timer();
 		
@@ -71,7 +74,7 @@ public class ConfigurationListener implements ServletContextListener {
 			
 			case Constants.NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT :
 				
-				notificator = new MultipleMailByRecipientNotificator(topic);
+				notificator = new MultipleMailByRecipientNotificator(topic, channel.getOption(Constants.MAIL_TEMPLATE));
 				
 				// TODO set period configurable
 				timer.schedule(new NotificatorTask(notificator), cptChannel * Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);

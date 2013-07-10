@@ -29,6 +29,10 @@ public class Constants {
 	final public static String DECORATED_NOTIFICATIONS_COLLECTION = "decoratednotifications";
 	
 	final public static String PERSISTER = "persister";
+	
+	final public static String TEMPLATE_ENGINE = "templateEngine";
+	
+	final public static String CONFIGURATION_READER = "configurationReader";
 
 	public static final Object PROCESSED = "processed";
 
@@ -46,7 +50,20 @@ public class Constants {
 
 	public static final String NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT = "multipleMailByRecipient";
 
+	/*
 	public static final int NOTIFICATOR_TASK_DELAY = 100000;
 	
 	public static final long NOTIFICATOR_TASK_PERIOD = 3600000;
+	*/
+	
+	public static final int NOTIFICATOR_TASK_DELAY = 20000;
+	
+	public static final long NOTIFICATOR_TASK_PERIOD = 60000;
+	
+
+	public static final String TEMPLATE_EXTENSION = ".template";
+	
+	public static final String MAIL_TEMPLATE = "mailTemplate";
+
+	public static final String RECIPIENT = "recipient";
 }

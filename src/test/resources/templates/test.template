@@ -1,0 +1,4 @@
+{{#items}}
+Name: {{name}}
+Price: {{price}}
+{{/items}}

@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.RawNotification;
+import org.notificationengine.domain.Subscription;
 import org.notificationengine.domain.Topic;
 import org.springframework.stereotype.Component;
 

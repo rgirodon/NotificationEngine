@@ -1,9 +1,11 @@
 package org.notificationengine.configuration;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -14,21 +16,20 @@ import org.json.simple.JSONValue;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.Channel;
 import org.notificationengine.domain.Topic;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component(value=Constants.CONFIGURATION_READER)
 public class ConfigurationReader {
 
 	private static Logger LOGGER = Logger.getLogger(ConfigurationReader.class);
 	
-	private static ConfigurationReader instance;
+	@Value("${config.directory}")
+	private String configDirectory;
 	
-	private ConfigurationReader() {		
-	}
-	
-	public static ConfigurationReader getInstance() {
-		if (null == instance) { 
-            instance = new ConfigurationReader();
-        }
-        return instance;
+	public ConfigurationReader() {		
+		
+		LOGGER.debug("ConfigurationReader instantiated");
 	}
 	
 	public Configuration readConfiguration() {
@@ -37,16 +38,8 @@ public class ConfigurationReader {
 		
 		try {		
 			LOGGER.info("Reading configuration file...");
-			
-			// TODO handle read this configuration file outside of app 
-			
-			InputStream configurationInputStream = this.getClass().getClassLoader().getResourceAsStream(Constants.CONFIGURATION_FILE_NAME);
-			
-			StringWriter configurationStringWriter = new StringWriter();		
 		
-			IOUtils.copy(configurationInputStream, configurationStringWriter);
-			
-			String configurationString = configurationStringWriter.toString();
+			String configurationString = FileUtils.readFileToString(new File(this.configDirectory + System.getProperty("file.separator") + Constants.CONFIGURATION_FILE_NAME));
 			
 			LOGGER.debug("Configuration : " + configurationString);
 			
@@ -83,6 +76,11 @@ public class ConfigurationReader {
 				channel.setSelectorType(selectorType);
 				channel.setNotificatorType(notificatorType);
 				
+				// TODO all other properties (such as mailTemplate) should be considered as options and handled dynamically
+				
+				String mailTemplate = (String)channelJsonObj.get(Constants.MAIL_TEMPLATE);
+				channel.addOption(Constants.MAIL_TEMPLATE, mailTemplate);
+				
 				LOGGER.debug("Found channel : " + channel);
 				
 				result.addChannel(channel);
@@ -98,5 +96,13 @@ public class ConfigurationReader {
 		}
 		
 		return result;
+	}
+
+	public String getConfigDirectory() {
+		return configDirectory;
+	}
+
+	public void setConfigDirectory(String configDirectory) {
+		this.configDirectory = configDirectory;
 	}
 }
