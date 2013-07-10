@@ -13,7 +13,7 @@ public class RawNotification {
 
 	private Topic topic;
 	
-	private Map<String, String> context;
+	private Map<String, Object> context;
 
 	public RawNotification() {
 		super();
@@ -62,11 +62,11 @@ public class RawNotification {
 		this.topic = topic;
 	}
 	
-	public Map<String, String> getContext() {
+	public Map<String, Object> getContext() {
 		return context;
 	}
 
-	public void setContext(Map<String, String> context) {
+	public void setContext(Map<String, Object> context) {
 		this.context = context;
 	}
 }

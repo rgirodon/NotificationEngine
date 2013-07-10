@@ -23,3 +23,6 @@ Many configurations options are not developped yet.
 This application needs to have a mongoDB database running on port 27017 and can be ran on a glassfish 3.1 server. 
 
 The database has to be named notificationengine with 3 collections: rawnotifications, decoratednotifications and subscriptions.
+
+At this state of development, the application looks up the templates in a directory specified in a localsettings.properties file under src/main/resources.
+

@@ -76,6 +76,11 @@
 	    <groupId>org.jongo</groupId>
 	    <artifactId>jongo</artifactId>
 	    <version>0.4</version>
+	</dependency>
+	<dependency>
+	  <groupId>com.github.spullara.mustache.java</groupId>
+	  <artifactId>compiler</artifactId>
+	  <version>0.8.12</version>
 	</dependency>                   
 	          
   </dependencies>

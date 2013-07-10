@@ -1,6 +1,10 @@
 package org.notificationengine.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bson.types.ObjectId;
+import org.notificationengine.constants.Constants;
 
 public class DecoratedNotification {
 
@@ -12,6 +16,17 @@ public class DecoratedNotification {
 	
 	private Boolean sent;
 
+	public Map<String, Object> getContext() {
+		
+		Map<String, Object> context = new HashMap<>();
+		
+		context.putAll(this.rawNotification.getContext());
+		
+		context.put(Constants.RECIPIENT, recipient.getAddress());
+		
+		return context;
+	}
+	
 	public DecoratedNotification(RawNotification rawNotification,
 			Recipient recipient) {
 		super();
@@ -62,4 +77,6 @@ public class DecoratedNotification {
 	public void setSent(Boolean sent) {
 		this.sent = sent;
 	}
+
+	
 }
