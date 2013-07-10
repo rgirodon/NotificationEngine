@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.Topic;
+import org.notificationengine.mail.Mailer;
 import org.notificationengine.notificator.Notificator;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.templating.TemplateEngine;
@@ -28,6 +29,7 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
 		
 		TemplateEngine templateEngine = (TemplateEngine)SpringUtils.getBean(Constants.TEMPLATE_ENGINE);
+		Mailer mailer = (Mailer)SpringUtils.getBean(Constants.MAILER);
 		
 		templateEngine.loadTemplate(mailTemplate);
 		
@@ -38,7 +40,10 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 			
 			LOGGER.debug("Notification text after merge : " + notificationText);
 			
-			// TODO sent a mail to the recipient
+			// sent a mail to the recipient
+			mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText);
+			
+			LOGGER.debug("Mail sent");
 		}
 	}
 	

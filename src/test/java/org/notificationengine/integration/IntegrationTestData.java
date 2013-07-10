@@ -62,11 +62,11 @@ public class IntegrationTestData {
 		persister.createRawNotification(rawNotification2);
 		
 		
-		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("gestionnaire1"));
+		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com"));
 		
-		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("gestionnaire2"));
+		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com"));
 		
-		Subscription subscription = new Subscription(new Topic("facturation"), new Recipient("gestionnaire"));
+		Subscription subscription = new Subscription(new Topic("facturation"), new Recipient("rgirodon@sqli.com"));
 		
 		mongoDbSelector.createSubscription(subscription1);
 		mongoDbSelector.createSubscription(subscription2);
