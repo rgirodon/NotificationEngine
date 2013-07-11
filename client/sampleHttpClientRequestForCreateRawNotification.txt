@@ -1,0 +1,17 @@
+Http Client
+
+Url : http://localhost:8000/notificationengine/rawNotification.do
+
+Method : PUT
+
+Header :
+Content-Type: application/json
+
+Body :
+{
+"topic" : "facturation.societe1",
+"context" : {
+                  "salutation" : "Hola chicos",
+                  "message" : "Hay que pagar ahora"
+                }
+}
