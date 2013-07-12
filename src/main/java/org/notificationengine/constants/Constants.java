@@ -51,6 +51,8 @@ public class Constants {
 	public static final String SENT = "sent";
 
 	public static final String NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT = "multipleMailByRecipient";
+	
+	public static final String NOTIFICATOR_TYPE_SINGLE_MAIL_BY_RECIPIENT = "singleMailByRecipient";
 
 	/*
 	public static final int NOTIFICATOR_TASK_DELAY = 100000;
@@ -68,4 +70,6 @@ public class Constants {
 	public static final String MAIL_TEMPLATE = "mailTemplate";
 
 	public static final String RECIPIENT = "recipient";
+
+	public static final String NOTIFICATIONS_BY_RECIPIENT = "notificationsByRecipient";
 }

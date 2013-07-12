@@ -13,6 +13,7 @@ import org.notificationengine.domain.Channel;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.notificator.INotificator;
 import org.notificationengine.notificator.mail.MultipleMailByRecipientNotificator;
+import org.notificationengine.notificator.mail.SingleMailByRecipientNotificator;
 import org.notificationengine.selector.ISelector;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.notificationengine.spring.SpringUtils;
@@ -62,11 +63,12 @@ public class ConfigurationListener implements ServletContextListener {
 				
 				selector = new MongoDbSelector(topic);
 				
-				// TODO set period configurable
-				timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, Constants.SELECTOR_TASK_PERIOD);
-				
 				break;
 			}
+			
+			// TODO set period configurable
+			timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, Constants.SELECTOR_TASK_PERIOD);
+			
 			
 			INotificator notificator = null;
 				
@@ -76,11 +78,19 @@ public class ConfigurationListener implements ServletContextListener {
 				
 				notificator = new MultipleMailByRecipientNotificator(topic, channel.getOption(Constants.MAIL_TEMPLATE));
 				
-				// TODO set period configurable
-				timer.schedule(new NotificatorTask(notificator), cptChannel * Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
-				
 				break;
+				
+			case Constants.NOTIFICATOR_TYPE_SINGLE_MAIL_BY_RECIPIENT :
+				
+				notificator = new SingleMailByRecipientNotificator(topic, channel.getOption(Constants.MAIL_TEMPLATE));
+				
+				break;	
+				
 			}
+			
+			// TODO set period configurable
+			timer.schedule(new NotificatorTask(notificator), cptChannel * Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
+			
 			
 			cptChannel++;
 		}
