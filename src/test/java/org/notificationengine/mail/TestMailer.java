@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.notificationengine.mail.Mailer;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 

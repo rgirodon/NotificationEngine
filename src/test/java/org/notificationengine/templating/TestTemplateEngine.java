@@ -10,6 +10,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.notificationengine.persistance.Persister;
+import org.notificationengine.templating.TemplateEngine;
 
 public class TestTemplateEngine {
 
