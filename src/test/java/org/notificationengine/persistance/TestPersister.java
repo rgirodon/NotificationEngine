@@ -11,6 +11,7 @@ import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Topic;
+import org.notificationengine.persistance.Persister;
 
 public class TestPersister {
 

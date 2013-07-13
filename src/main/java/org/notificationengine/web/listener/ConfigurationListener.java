@@ -19,6 +19,8 @@ import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.task.NotificatorTask;
 import org.notificationengine.task.SelectorTask;
+import org.notificationengine.web.controller.SubscriptionController;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Application Lifecycle Listener implementation class ConfigurationListener
@@ -61,7 +63,18 @@ public class ConfigurationListener implements ServletContextListener {
 			
 			case Constants.SELECTOR_TYPE_MONGODB :
 				
+				LOGGER.debug("Detected Selector of type " + Constants.SELECTOR_TYPE_MONGODB);
+				
 				selector = new MongoDbSelector(topic);
+				
+				SubscriptionController subscriptionController = (SubscriptionController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SUBSCRIPTION_CONTROLLER);
+				
+				if (!subscriptionController.isActivated()) {
+					
+					subscriptionController.activate((MongoDbSelector)selector);
+					
+					LOGGER.debug("SubscriptionController activated");
+				}
 				
 				break;
 			}
