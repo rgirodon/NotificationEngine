@@ -1,0 +1,14 @@
+Http Client
+
+Url : http://localhost:8000/notificationengine/subscription.do
+
+Method : PUT
+
+Header :
+Content-Type: application/json
+
+Body :
+{
+"topic" : "facturation",
+"recipient" : "rgirodon@sqli.com"
+}
