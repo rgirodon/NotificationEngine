@@ -14,6 +14,8 @@ import org.notificationengine.domain.Topic;
 import org.notificationengine.notificator.INotificator;
 import org.notificationengine.notificator.mail.MultipleMailByRecipientNotificator;
 import org.notificationengine.notificator.mail.SingleMailByRecipientNotificator;
+import org.notificationengine.notificator.mail.SingleMultiTopicMailByRecipientFeederNotificator;
+import org.notificationengine.notificator.mail.SingleMultiTopicMailByRecipientNotificator;
 import org.notificationengine.selector.ISelector;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.notificationengine.spring.SpringUtils;
@@ -51,6 +53,11 @@ public class ConfigurationListener implements ServletContextListener {
 		
 		Timer timer = new Timer();
 		
+		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator = (SingleMultiTopicMailByRecipientNotificator)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
+		
+		// TODO set period configurable
+		timer.schedule(new NotificatorTask(singleMultiTopicMailByRecipientNotificator), Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
+		
 		int cptChannel = 1;
 		
 		for (Channel channel : configuration.getChannels()) {
@@ -85,26 +92,41 @@ public class ConfigurationListener implements ServletContextListener {
 			
 			INotificator notificator = null;
 				
+			String mailTemplate = channel.getOption(Constants.MAIL_TEMPLATE);
+			
 			switch(channel.getNotificatorType()) {
 			
 			case Constants.NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT :
 				
-				notificator = new MultipleMailByRecipientNotificator(topic, channel.getOption(Constants.MAIL_TEMPLATE));
+				notificator = new MultipleMailByRecipientNotificator(topic, mailTemplate);
 				
 				break;
 				
 			case Constants.NOTIFICATOR_TYPE_SINGLE_MAIL_BY_RECIPIENT :
 				
-				notificator = new SingleMailByRecipientNotificator(topic, channel.getOption(Constants.MAIL_TEMPLATE));
+				notificator = new SingleMailByRecipientNotificator(topic, mailTemplate);
 				
-				break;	
+				break;
 				
+			case Constants.NOTIFICATOR_TYPE_SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT :
+				
+				if (!singleMultiTopicMailByRecipientNotificator.isActivated()) {
+					
+					singleMultiTopicMailByRecipientNotificator.activate();
+					
+					LOGGER.debug("SingleMultiTopicMailByRecipientNotificator activated");
+				}
+				
+				singleMultiTopicMailByRecipientNotificator.add(mailTemplate, topic);
+				
+				notificator = new SingleMultiTopicMailByRecipientFeederNotificator(topic);
+				
+				break;
 			}
-			
+					
 			// TODO set period configurable
 			timer.schedule(new NotificatorTask(notificator), cptChannel * Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
-			
-			
+						
 			cptChannel++;
 		}
 	}

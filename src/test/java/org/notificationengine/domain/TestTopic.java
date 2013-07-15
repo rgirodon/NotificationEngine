@@ -35,4 +35,22 @@ public class TestTopic {
 		
 		assertTrue(fathers.contains(new Topic("facturation.client1.agence1")));
 	}
+	
+	@Test
+	public void testIsSonOf() {
+		
+		Topic topic = new Topic("facturation.client1.agence1");
+		
+		Topic topicFather = new Topic("facturation.client1");
+		
+		Topic topicGrandFather = new Topic("facturation");
+		
+		assertTrue(topic.isSonOfTopic(topic));
+		
+		assertTrue(topic.isSonOfTopic(topicFather));
+		
+		assertTrue(topic.isSonOfTopic(topicGrandFather));
+		
+		assertFalse(topicFather.isSonOfTopic(topic));		
+	}
 }
