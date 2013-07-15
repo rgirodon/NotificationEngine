@@ -1,0 +1,18 @@
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "mailTemplate" : "commonMailTemplate"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "mailTemplate" : "commonMailTemplate"
+				}
+			 ]
+}

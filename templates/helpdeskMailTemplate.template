@@ -1,0 +1,13 @@
+Dear {{recipient}}
+
+This mail has been sent by Helpdesk application.
+
+Please take into account these actions from Helpdesk :
+
+{{#notificationsByRecipient}}
+> {{message}}
+{{/notificationsByRecipient}}
+
+Best regards,
+
+Helpdesk Team
