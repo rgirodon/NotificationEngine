@@ -44,7 +44,7 @@ public class IntegrationTestData {
 		rawNotification1.setTopic(new Topic("facturation.societe1"));
 		
 		Map<String, Object> context1 = new HashMap<>();
-		context1.put("message", "You must pay now, please.");
+		context1.put("message", "Tienes que pagar ahora.");
 		rawNotification1.setContext(context1);
 		
 		persister.createRawNotification(rawNotification1);
@@ -56,7 +56,7 @@ public class IntegrationTestData {
 		rawNotification2.setTopic(new Topic("facturation.societe2"));
 		
 		Map<String, Object> context2 = new HashMap<>();
-		context2.put("message", "You really must pay now, please.");
+		context2.put("message", "Hey chico, si no pagas tendras problemas.");
 		rawNotification2.setContext(context2);
 		
 		persister.createRawNotification(rawNotification2);
@@ -68,7 +68,7 @@ public class IntegrationTestData {
 		rawNotification3.setTopic(new Topic("helpdesk.societe1"));
 		
 		Map<String, Object> context3 = new HashMap<>();
-		context3.put("message", "Clean up the windows");
+		context3.put("message", "Limpia las vitras");
 		rawNotification3.setContext(context3);
 		
 		persister.createRawNotification(rawNotification3);
@@ -80,7 +80,7 @@ public class IntegrationTestData {
 		rawNotification4.setTopic(new Topic("helpdesk.societe2"));
 		
 		Map<String, Object> context4 = new HashMap<>();
-		context4.put("message", "Clean up the car");
+		context4.put("message", "Limpia el coche");
 		rawNotification4.setContext(context4);
 		
 		persister.createRawNotification(rawNotification4);

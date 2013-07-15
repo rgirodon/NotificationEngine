@@ -53,6 +53,10 @@ public class Constants {
 	public static final String NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT = "multipleMailByRecipient";
 	
 	public static final String NOTIFICATOR_TYPE_SINGLE_MAIL_BY_RECIPIENT = "singleMailByRecipient";
+	
+	public static final String NOTIFICATOR_TYPE_SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT = "singleMultiTopicMailByRecipient";
+	
+	public static final String SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR = "singleMultiTopicMailByRecipientNotificator";
 
 	/*
 	public static final int NOTIFICATOR_TASK_DELAY = 100000;
@@ -74,4 +78,8 @@ public class Constants {
 	public static final String NOTIFICATIONS_BY_RECIPIENT = "notificationsByRecipient";
 
 	public static final String SUBSCRIPTION_CONTROLLER = "subscriptionController";
+
+	public static final String NOTIFICATIONS_FOR_TOPIC = "notificationsForTopic";
+
+	public static final String TOPICS = "topics";
 }

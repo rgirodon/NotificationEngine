@@ -44,6 +44,13 @@ public class Topic {
 		
 		return result;
 	}
+	
+	public boolean isSonOfTopic(Topic topic) {
+		
+		Collection<Topic> fathers = this.getFathers();
+		
+		return fathers.contains(topic);
+	}
 
 	@Override
 	public String toString() {
@@ -84,4 +91,6 @@ public class Topic {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	
 }
