@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.notificationengine.domain.Channel;
+import org.notificationengine.domain.Topic;
 
 public class Configuration {
 
@@ -27,6 +28,48 @@ public class Configuration {
 	public void setChannels(Collection<Channel> channels) {
 		this.channels = channels;
 	}
+
+	public boolean hasChannelWithId(String id) {
+		
+		return (this.findChannelById(id) != null);
+	}
 	
+	public Channel findChannelById(String id) {
+		
+		Channel result = null;
+		
+		for (Channel channel : channels) {
+			
+			if (channel.getId().equals(id)) {
+				
+				result = channel;
+				
+				break;
+			}
+		}
+		
+		return result;
+	}
+
+	public boolean hasChannelWithTopic(String topic) {
+
+		return (this.findChannelByTopic(topic) != null);
+	}
 	
+	public Channel findChannelByTopic(String topic) {
+		
+		Channel result = null;
+		
+		for (Channel channel : channels) {
+			
+			if (channel.getTopic().equals(new Topic(topic))) {
+				
+				result = channel;
+				
+				break;
+			}
+		}
+		
+		return result;
+	}
 }
