@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Collection;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.junit.Test;
 
 public class TestTopic {

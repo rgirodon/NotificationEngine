@@ -10,8 +10,10 @@
 				{
 				  "id" : "helpdeskChannel",
 				  "topic" : "helpdesk",
-				  "selectorType" : "mongoDbSelector",
+				  "selectorType" : "mongoDbSelector",				  
+				  "selectorTaskPeriod" : "5000",
 				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "notificatorTaskPeriod" : "5000",
 				  "mailTemplate" : "commonMailTemplate"
 				}
 			 ]

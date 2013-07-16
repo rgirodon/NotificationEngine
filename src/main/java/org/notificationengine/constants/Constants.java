@@ -42,7 +42,7 @@ public class Constants {
 
 	public static final Object REGEX = "$regex";
 
-	public static final long SELECTOR_TASK_DELAY = 20000;
+	public static final long SELECTOR_TASK_DELAY = 10000;
 
 	public static final long SELECTOR_TASK_PERIOD = 60000;
 
@@ -58,16 +58,9 @@ public class Constants {
 	
 	public static final String SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR = "singleMultiTopicMailByRecipientNotificator";
 
-	/*
-	public static final int NOTIFICATOR_TASK_DELAY = 100000;
-	
-	public static final long NOTIFICATOR_TASK_PERIOD = 3600000;
-	*/
-	
 	public static final int NOTIFICATOR_TASK_DELAY = 20000;
 	
-	public static final long NOTIFICATOR_TASK_PERIOD = 60000;
-	
+	public static final long NOTIFICATOR_TASK_PERIOD = 60000;	
 
 	public static final String TEMPLATE_EXTENSION = ".template";
 	
@@ -86,4 +79,8 @@ public class Constants {
 	public static final String NOTIFICATOR_TYPE_CUSTOM = "customNotificator";
 	
 	public static final String SELECTOR_TYPE_CUSTOM = "customSelector";
+
+	public static final String OPTION_NOTIFICATOR_TASK_PERIOD = "notificatorTaskPeriod";
+	
+	public static final String OPTION_SELECTOR_TASK_PERIOD = "selectorTaskPeriod";
 }
