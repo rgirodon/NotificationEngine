@@ -55,10 +55,9 @@ public class ConfigurationListener implements ServletContextListener {
 		
 		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator = (SingleMultiTopicMailByRecipientNotificator)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
 		
-		// TODO set period configurable
 		timer.schedule(new NotificatorTask(singleMultiTopicMailByRecipientNotificator), Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
 		
-		int cptChannel = 1;
+		int cptChannel = 2;
 		
 		for (Channel channel : configuration.getChannels()) {
 			
@@ -86,8 +85,30 @@ public class ConfigurationListener implements ServletContextListener {
 				break;
 			}
 			
-			// TODO set period configurable
-			timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, Constants.SELECTOR_TASK_PERIOD);
+			Long selectorTaskPeriod = Constants.SELECTOR_TASK_PERIOD;
+			
+			String strOptionSelectorTaskPeriod = channel.getOption(Constants.OPTION_SELECTOR_TASK_PERIOD);
+			
+			if (strOptionSelectorTaskPeriod != null) {
+				
+				try {
+					selectorTaskPeriod = Long.parseLong(strOptionSelectorTaskPeriod);
+					
+					LOGGER.debug("selectorTaskPeriod set to : " + selectorTaskPeriod);
+				}
+				catch(NumberFormatException nfe) {
+					
+					LOGGER.debug("selectorTaskPeriod invalid : " + strOptionSelectorTaskPeriod);
+					LOGGER.debug("selectorTaskPeriod set to default");
+					
+					selectorTaskPeriod = Constants.SELECTOR_TASK_PERIOD;
+				}
+			}
+			else {
+				LOGGER.debug("selectorTaskPeriod set to default");
+			}
+			
+			timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, selectorTaskPeriod);
 			
 			
 			INotificator notificator = null;
@@ -124,8 +145,30 @@ public class ConfigurationListener implements ServletContextListener {
 				break;
 			}
 					
-			// TODO set period configurable
-			timer.schedule(new NotificatorTask(notificator), cptChannel * Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
+			Long notificatorTaskPeriod = Constants.NOTIFICATOR_TASK_PERIOD;
+			
+			String strOptionNotificatorTaskPeriod = channel.getOption(Constants.OPTION_NOTIFICATOR_TASK_PERIOD);
+			
+			if (strOptionNotificatorTaskPeriod != null) {
+				
+				try {
+					notificatorTaskPeriod = Long.parseLong(strOptionNotificatorTaskPeriod);
+					
+					LOGGER.debug("notificatorTaskPeriod set to : " + notificatorTaskPeriod);
+				}
+				catch(NumberFormatException nfe) {
+					
+					LOGGER.debug("notificatorTaskPeriod invalid : " + strOptionNotificatorTaskPeriod);
+					LOGGER.debug("notificatorTaskPeriod set to default");
+					
+					notificatorTaskPeriod = Constants.NOTIFICATOR_TASK_PERIOD;
+				}
+			}
+			else {
+				LOGGER.debug("notificatorTaskPeriod set to default");
+			}
+			
+			timer.schedule(new NotificatorTask(notificator), cptChannel * Constants.NOTIFICATOR_TASK_DELAY, notificatorTaskPeriod);
 						
 			cptChannel++;
 		}
