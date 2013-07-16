@@ -16,7 +16,7 @@ public class Constants {
 	
 	final public static String SELECTOR_TYPE = "selectorType";
 	
-	public static final Object NOTIFICATOR_TYPE = "notificatorType";
+	public static final String NOTIFICATOR_TYPE = "notificatorType";
 	
 	final public static String SELECTOR_TYPE_MONGODB = "mongoDbSelector";
 	
@@ -82,4 +82,8 @@ public class Constants {
 	public static final String NOTIFICATIONS_FOR_TOPIC = "notificationsForTopic";
 
 	public static final String TOPICS = "topics";
+
+	public static final String NOTIFICATOR_TYPE_CUSTOM = "customNotificator";
+	
+	public static final String SELECTOR_TYPE_CUSTOM = "customSelector";
 }

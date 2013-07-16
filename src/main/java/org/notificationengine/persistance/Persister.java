@@ -38,6 +38,8 @@ public class Persister {
 	public Persister(Boolean modeTest) {
 		
 		try {
+			// TODO set mongodb params configurable
+			
 			DB db = null;
 			
 			if (modeTest) {
