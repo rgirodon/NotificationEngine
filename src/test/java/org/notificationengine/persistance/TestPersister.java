@@ -3,6 +3,7 @@ package org.notificationengine.persistance;
 import static org.junit.Assert.*;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -12,6 +13,8 @@ import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.persistance.Persister;
+
+import com.mongodb.ServerAddress;
 
 public class TestPersister {
 
