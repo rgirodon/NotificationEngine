@@ -1,17 +1,17 @@
 package org.notificationengine.integration;
 
-import static org.junit.Assert.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
+import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Subscription;
 import org.notificationengine.domain.Topic;
+import org.notificationengine.persistance.MongoDbSettings;
 import org.notificationengine.persistance.Persister;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
 
@@ -24,9 +24,11 @@ public class IntegrationTestData {
 	@Before
 	public void init() {
 		
-		persister = new Persister();
+		MongoDbSettings mongoDbSettings = new MongoDbSettings(Boolean.FALSE, Constants.DEFAULT_MONGODB_URL, Constants.DEFAULT_MONGODB_DATABASE);
 		
-		mongoDbSelector = new MongoDbSelector(new Topic("facturation"));
+		persister = new Persister(Boolean.FALSE, mongoDbSettings);
+		
+		mongoDbSelector = new MongoDbSelector(new Topic("facturation"), Boolean.FALSE, mongoDbSettings);
 		
 		persister.cleanRawNotifications();
 		

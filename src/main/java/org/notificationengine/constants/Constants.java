@@ -20,13 +20,17 @@ public class Constants {
 	
 	final public static String SELECTOR_TYPE_MONGODB = "mongoDbSelector";
 	
-	final public static String DATABASE = "notificationengine";
+	final public static String DEFAULT_MONGODB_URL = "localhost:27017";
+	
+	final public static String DEFAULT_MONGODB_DATABASE = "notificationengine";
 	
 	final public static String DATABASE_TEST = "notificationengine_test";
 	
 	final public static String RAW_NOTIFICATIONS_COLLECTION = "rawnotifications";
 	
 	final public static String DECORATED_NOTIFICATIONS_COLLECTION = "decoratednotifications";
+	
+	final public static String SUBSCRIPTIONS_COLLECTION = "subscriptions";
 	
 	final public static String PERSISTER = "persister";
 	
@@ -83,4 +87,6 @@ public class Constants {
 	public static final String OPTION_NOTIFICATOR_TASK_PERIOD = "notificatorTaskPeriod";
 	
 	public static final String OPTION_SELECTOR_TASK_PERIOD = "selectorTaskPeriod";
+	
+	public static final String MONGODB_SETTINGS = "mongoDbSettings";
 }

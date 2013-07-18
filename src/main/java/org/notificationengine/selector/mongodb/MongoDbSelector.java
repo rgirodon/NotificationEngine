@@ -3,6 +3,7 @@ package org.notificationengine.selector.mongodb;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -10,25 +11,24 @@ import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
-import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Subscription;
 import org.notificationengine.domain.Topic;
-import org.notificationengine.persistance.Persister;
+import org.notificationengine.persistance.MongoDbSettings;
+import org.notificationengine.persistance.MongoDbUtils;
 import org.notificationengine.selector.Selector;
 import org.notificationengine.spring.SpringUtils;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
 
 public class MongoDbSelector extends Selector {
 
-	final public static String DATABASE = "notificationengine";
-	
-	final public static String DATABASE_TEST = "notificationengine_test";
-	
-	final public static String SUBSCRIPTIONS_COLLECTION = "subscriptions";
-	
 	private static Logger LOGGER = Logger.getLogger(MongoDbSelector.class);
+	
+	private Boolean modeTest;
+	
+	private MongoDbSettings mongoDbSettings;
 	
 	private MongoCollection subscriptions;
 	
@@ -37,25 +37,61 @@ public class MongoDbSelector extends Selector {
 		this(topic, Boolean.FALSE);
 	}
 	
+	// take care, only to be called by test class
+	public MongoDbSelector(Topic topic, Boolean modeTest, MongoDbSettings mongoDbSettings) {
+		
+		super(topic);
+		
+		this.modeTest = modeTest;
+		
+		this.mongoDbSettings = mongoDbSettings;
+		
+		this.init();
+	}
+	
 	public MongoDbSelector(Topic topic, Boolean modeTest) {
 		
 		super(topic);
 		
+		this.modeTest = modeTest;
+		
+		this.mongoDbSettings = (MongoDbSettings)SpringUtils.getBean(Constants.MONGODB_SETTINGS);
+		
+		this.init();
+	}
+	
+	private void init() {
 		try {
-			// TODO set mongodb params configurable
-			
 			DB db = null;
 			
-			if (modeTest) {
-				db = new MongoClient().getDB(DATABASE_TEST);
+			if (this.modeTest) {
+				db = new MongoClient().getDB(Constants.DATABASE_TEST);
 			}
 			else {
-				db = new MongoClient().getDB(DATABASE);
+				MongoClient mongoClient = null;
+				
+				if (!this.mongoDbSettings.getReplicaMode()) {
+					
+					String host = MongoDbUtils.getHostFromSingleServerUrl(this.mongoDbSettings.getUrl());
+					
+					int port = MongoDbUtils.getPortFromSingleServerUrl(this.mongoDbSettings.getUrl());
+					
+					ServerAddress addr = new ServerAddress(host, port);	
+					
+					mongoClient = new MongoClient(addr);
+				}
+				else {
+					List<ServerAddress> addrs = MongoDbUtils.getServerAddressListFromMultipleServerUrl(this.mongoDbSettings.getUrl());
+					
+					mongoClient = new MongoClient(addrs);
+				}
+				
+				db = mongoClient.getDB(this.mongoDbSettings.getDatabase());
 			}
 			
 			Jongo jongo = new Jongo(db);
 			
-			this.subscriptions = jongo.getCollection(SUBSCRIPTIONS_COLLECTION);
+			this.subscriptions = jongo.getCollection(Constants.SUBSCRIPTIONS_COLLECTION);
 		}
 		catch (UnknownHostException e) {
 

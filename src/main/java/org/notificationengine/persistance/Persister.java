@@ -3,7 +3,9 @@ package org.notificationengine.persistance;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
@@ -13,18 +15,25 @@ import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.RawNotification;
-import org.notificationengine.domain.Subscription;
 import org.notificationengine.domain.Topic;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
-import com.mongodb.WriteResult;
+import com.mongodb.ServerAddress;
 
 @Component(value=Constants.PERSISTER)
-public class Persister {
+public class Persister implements InitializingBean {
 
 	private static Logger LOGGER = Logger.getLogger(Persister.class);
+	
+	@Autowired
+	private MongoDbSettings mongoDbSettings;
+	
+	private Boolean modeTest; 
 	
 	private MongoCollection rawNotifications;
 	
@@ -35,18 +44,55 @@ public class Persister {
 		this(Boolean.FALSE);
 	}
 	
+	// take care, only to be called by test class
+	public Persister(Boolean modeTest, MongoDbSettings mongoDbSettings) {
+		
+		this.modeTest = modeTest;
+		
+		this.mongoDbSettings = mongoDbSettings;
+		
+		this.init();
+	}
+	
 	public Persister(Boolean modeTest) {
 		
+		this.modeTest = modeTest;
+	}
+	
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		
+		this.init();
+	}
+	
+	private void init() {
+		
 		try {
-			// TODO set mongodb params configurable
-			
 			DB db = null;
 			
-			if (modeTest) {
+			if (this.modeTest) {
 				db = new MongoClient().getDB(Constants.DATABASE_TEST);
 			}
 			else {
-				db = new MongoClient().getDB(Constants.DATABASE);
+				MongoClient mongoClient = null;
+				
+				if (!this.mongoDbSettings.getReplicaMode()) {
+					
+					String host = MongoDbUtils.getHostFromSingleServerUrl(this.mongoDbSettings.getUrl());
+					
+					int port = MongoDbUtils.getPortFromSingleServerUrl(this.mongoDbSettings.getUrl());
+					
+					ServerAddress addr = new ServerAddress(host, port);	
+					
+					mongoClient = new MongoClient(addr);
+				}
+				else {
+					List<ServerAddress> addrs = MongoDbUtils.getServerAddressListFromMultipleServerUrl(this.mongoDbSettings.getUrl());
+					
+					mongoClient = new MongoClient(addrs);
+				}
+				
+				db = mongoClient.getDB(this.mongoDbSettings.getDatabase());
 			}
 			
 			Jongo jongo = new Jongo(db);
@@ -61,23 +107,7 @@ public class Persister {
 			
 			LOGGER.error("Unable to build Persister");
 		}
-	}
-
-	public MongoCollection getRawNotifications() {
-		return rawNotifications;
-	}
-
-	public void setRawNotifications(MongoCollection rawNotifications) {
-		this.rawNotifications = rawNotifications;
-	}
-	
-	public MongoCollection getDecoratedNotifications() {
-		return decoratedNotifications;
-	}
-
-	public void setDecoratedNotifications(MongoCollection decoratedNotifications) {
-		this.decoratedNotifications = decoratedNotifications;
-	}
+	}	
 
 	public void createDecoratedNotification(
 			DecoratedNotification decoratedNotification) {
@@ -219,4 +249,38 @@ public class Persister {
 		
 		return this.decoratedNotifications.findOne(id).as(DecoratedNotification.class);
 	}
+
+	public Boolean getModeTest() {
+		return modeTest;
+	}
+
+	public void setModeTest(Boolean modeTest) {
+		this.modeTest = modeTest;
+	}
+	
+	public MongoDbSettings getMongoDbSettings() {
+		return mongoDbSettings;
+	}
+
+	public void setMongoDbSettings(MongoDbSettings mongoDbSettings) {
+		this.mongoDbSettings = mongoDbSettings;
+	}
+
+	public MongoCollection getRawNotifications() {
+		return rawNotifications;
+	}
+
+	public void setRawNotifications(MongoCollection rawNotifications) {
+		this.rawNotifications = rawNotifications;
+	}
+	
+	public MongoCollection getDecoratedNotifications() {
+		return decoratedNotifications;
+	}
+
+	public void setDecoratedNotifications(MongoCollection decoratedNotifications) {
+		this.decoratedNotifications = decoratedNotifications;
+	}
+
+	
 }
