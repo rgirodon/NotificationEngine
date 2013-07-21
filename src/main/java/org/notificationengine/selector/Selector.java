@@ -1,6 +1,8 @@
 package org.notificationengine.selector;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
@@ -14,19 +16,22 @@ public abstract class Selector implements ISelector {
 
 	private Topic topic;
 	
+	private Map<String, String> options;
+	
 	public Selector(Topic topic) {
 		
 		this.topic = topic;
-	}
-
-	public Topic getTopic() {
-		return topic;
-	}
-
-	public void setTopic(Topic topic) {
-		this.topic = topic;
+		
+		this.options = new HashMap<>();
 	}
 	
+	public Selector(Topic topic, Map<String, String> options) {
+		
+		this.topic = topic;
+		
+		this.options = options;
+	}
+
 	public void process() {
 		
 		Collection<RawNotification> rawNotifications = this.retrieveRawNotifications();
@@ -68,6 +73,22 @@ public abstract class Selector implements ISelector {
 		Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
 		
 		return persister.retrieveNotProcessedRawNotificationsForTopic(this.topic);
+	}
+	
+	public Topic getTopic() {
+		return topic;
+	}
+
+	public void setTopic(Topic topic) {
+		this.topic = topic;
+	}
+
+	public Map<String, String> getOptions() {
+		return options;
+	}
+
+	public void setOptions(Map<String, String> options) {
+		this.options = options;
 	}
 	
 	

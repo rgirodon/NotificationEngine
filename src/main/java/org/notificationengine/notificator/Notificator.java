@@ -1,6 +1,8 @@
 package org.notificationengine.notificator;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
@@ -12,11 +14,20 @@ public abstract class Notificator implements INotificator {
 
 	private Topic topic;
 	
+	private Map<String, String> options;
+	
 	public Notificator(Topic topic) {
 		
-		super();
+		this.topic = topic;
+		
+		this.options = new HashMap<>();
+	}
+	
+	public Notificator(Topic topic, Map<String, String> options) {
 		
 		this.topic = topic;
+		
+		this.options = options;
 	}
 
 	@Override
@@ -56,6 +67,14 @@ public abstract class Notificator implements INotificator {
 
 	public void setTopic(Topic topic) {
 		this.topic = topic;
+	}
+
+	public Map<String, String> getOptions() {
+		return options;
+	}
+
+	public void setOptions(Map<String, String> options) {
+		this.options = options;
 	}
 
 }

@@ -89,4 +89,12 @@ public class Constants {
 	public static final String OPTION_SELECTOR_TASK_PERIOD = "selectorTaskPeriod";
 	
 	public static final String MONGODB_SETTINGS = "mongoDbSettings";
+
+	public static final String SELECTOR_CLASS = "selectorClass";
+	
+	public static final String ADMINISTRATOR_ADDRESS = "administrator.address";
+	
+	public static final String LOCAL_SETTINGS_PROPERTIES = "localSettingsProperties";
+
+	public static final String NOTIFICATOR_CLASS = "notificatorClass";
 }
