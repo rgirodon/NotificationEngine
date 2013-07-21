@@ -1,10 +1,14 @@
 package org.notificationengine.web.listener;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.Timer;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.notificationengine.configuration.Configuration;
 import org.notificationengine.configuration.ConfigurationReader;
@@ -83,6 +87,34 @@ public class ConfigurationListener implements ServletContextListener {
 				}
 				
 				break;
+				
+			case Constants.SELECTOR_TYPE_CUSTOM :
+				
+				LOGGER.debug("Detected Selector of type " + Constants.SELECTOR_TYPE_CUSTOM);
+				
+				// get selector class
+				String selectorClass = channel.getOption(Constants.SELECTOR_CLASS);		
+				
+				LOGGER.debug("Detected Selector class " + selectorClass);
+				
+				// instantiate it
+				try {
+					Class clazz = Class.forName(selectorClass);
+					
+					Constructor constructor = clazz.getConstructor(Topic.class, Map.class);
+					
+					selector = (ISelector)constructor.newInstance(topic, channel.getOptions());
+				}
+				catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+
+					LOGGER.warn(ExceptionUtils.getFullStackTrace(e));
+					
+					LOGGER.warn("Unable to instantiate class " + selectorClass + ", channel will be ignored");
+					
+					continue;
+				}
+				
+				break;	
 			}
 			
 			Long selectorTaskPeriod = Constants.SELECTOR_TASK_PERIOD;
@@ -143,6 +175,34 @@ public class ConfigurationListener implements ServletContextListener {
 				notificator = new SingleMultiTopicMailByRecipientFeederNotificator(topic);
 				
 				break;
+				
+			case Constants.NOTIFICATOR_TYPE_CUSTOM :
+				
+				LOGGER.debug("Detected Notificator of type " + Constants.NOTIFICATOR_TYPE_CUSTOM);
+				
+				// get notificator class
+				String notificatorClass = channel.getOption(Constants.NOTIFICATOR_CLASS);		
+				
+				LOGGER.debug("Detected Notificator class " + notificatorClass);
+				
+				// instantiate it
+				try {
+					Class clazz = Class.forName(notificatorClass);
+					
+					Constructor constructor = clazz.getConstructor(Topic.class, Map.class);
+					
+					notificator = (INotificator)constructor.newInstance(topic, channel.getOptions());
+				}
+				catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+
+					LOGGER.warn(ExceptionUtils.getFullStackTrace(e));
+					
+					LOGGER.warn("Unable to instantiate class " + notificatorClass + ", channel will be ignored");
+					
+					continue;
+				}
+				
+				break;	
 			}
 					
 			Long notificatorTaskPeriod = Constants.NOTIFICATOR_TASK_PERIOD;

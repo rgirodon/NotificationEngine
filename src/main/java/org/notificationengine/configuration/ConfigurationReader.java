@@ -112,13 +112,6 @@ public class ConfigurationReader {
 					continue;
 				}
 				
-				// if selectorType is custom, ignore channel because it is not implemented yet
-				if (this.isCustomSelectorType(selectorType)) {
-					
-					LOGGER.warn("Found a channel with selectorType \"" + Constants.SELECTOR_TYPE_CUSTOM + "\", it will be ignored because it is not implemented yet");
-					continue;
-				}
-				
 				String notificatorType = (String)channelJsonObj.get(Constants.NOTIFICATOR_TYPE);
 				
 				if (StringUtils.isEmpty(notificatorType)) {
@@ -131,13 +124,6 @@ public class ConfigurationReader {
 				if (!this.isKnownNotificatorType(notificatorType)) {
 					
 					LOGGER.warn("Found a channel with an unknown notificatorType [" + notificatorType + "], it will be ignored");
-					continue;
-				}
-				
-				// if notificatorType is custom, ignore channel because it is not implemented yet
-				if (this.isCustomNotificatorType(notificatorType)) {
-					
-					LOGGER.warn("Found a channel with notificatorType \"" + Constants.NOTIFICATOR_TYPE_CUSTOM + "\", it will be ignored because it is not implemented yet");
 					continue;
 				}
 				
@@ -190,16 +176,6 @@ public class ConfigurationReader {
 	private boolean isKnownNotificatorType(String notificatorType) {
 		
 		return ArrayUtils.contains(KNOWN_NOTIFICATOR_TYPES, notificatorType);
-	}
-
-	private boolean isCustomNotificatorType(String notificatorType) {
-
-		return Constants.NOTIFICATOR_TYPE_CUSTOM.equals(notificatorType);
-	}
-
-	private boolean isCustomSelectorType(String selectorType) {
-		
-		return Constants.SELECTOR_TYPE_CUSTOM.equals(selectorType);
 	}
 
 	public String getConfigDirectory() {

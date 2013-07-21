@@ -1,0 +1,24 @@
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator",
+				  "mailTemplate" : "commonMailTemplate"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorTaskPeriod" : "5000",
+				  "selectorTaskPeriod" : "5000",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator",
+				  "mailTemplate" : "commonMailTemplate"
+				}
+			 ]
+}
