@@ -4,3 +4,8 @@ data/
 scripts/
 .classpath
 .project
+custom/jdbcselector/target
+custom/jdbcselector/.settings
+custom/jdbcselector/.classpath
+custom/jdbcselector/.project
+custom/jdbcselector/db/data

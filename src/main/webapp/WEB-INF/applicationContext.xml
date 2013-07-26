@@ -27,7 +27,7 @@
 	    <property name="suffix" value=".jsp"/>
 	</bean>
     
-    <context:property-placeholder location="classpath:localsettings.properties" />
+    <context:property-placeholder location="classpath:localsettings.properties" ignore-unresolvable="true" />
     
     <util:properties id="localSettingsProperties" location="classpath:localsettings.properties"/>
     
