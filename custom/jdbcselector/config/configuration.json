@@ -1,0 +1,22 @@
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.custom.jdbcselector.JdbcSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator",
+				  "mailTemplate" : "commonMailTemplate"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.custom.jdbcselector.JdbcSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator",
+				  "mailTemplate" : "commonMailTemplate"
+				}
+			 ]
+}

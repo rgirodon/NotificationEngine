@@ -108,7 +108,7 @@ public class MongoDbSelector extends Selector {
 		
 		for (Topic fatherTopic : topic.getFathers()) {
 		
-			LOGGER.debug("Searching Subscription for topic : " + fatherTopic);
+			LOGGER.debug("Searching Subscriptions for topic : " + fatherTopic);
 			
 			JSONObject exactQueryJsonObject = new JSONObject();
 			exactQueryJsonObject.put(Constants.TOPIC_NAME, fatherTopic.getName());
