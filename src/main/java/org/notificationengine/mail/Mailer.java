@@ -22,6 +22,8 @@ public class Mailer {
 
 	public void sendMail(String recipientAddress, String text) {
 
+		// TODO enable customization of subject, and maybe from field
+		
         SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
         
         msg.setTo(recipientAddress);
@@ -32,6 +34,9 @@ public class Mailer {
             this.mailSender.send(msg);
         }
         catch(MailException ex) {
+        	
+        	// TODO raise an exception so that the decorated notification is not marked as sent
+        	
         	LOGGER.error(ExceptionUtils.getFullStackTrace(ex));
 			
 			LOGGER.error("Unable to send mail");
