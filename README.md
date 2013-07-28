@@ -100,9 +100,39 @@ Then, the Raw Notification about the arrival of Tevez in the Juventus will trigg
 
 ### 1.3.1. Selectors
 
+In the Notification Engine, Selector components are responsible of :
+- for a given Topic : 
+	- retrieving not processed Raw Notifications
+	- for each of retrieved Raw Notifications : 
+		- retrieving concerned Subscriptions 
+		- for each of retrieved Subscriptions :
+			- creating a Decorated Notification linked to the Raw Notification and the Subscription recipient
+		- marking it as processed
+
 ### 1.3.2. Notificators
 
+In the Notification Engine, Notificator components are responsible of :
+- for a given Topic : 
+	- retrieving not sent Decorated Notifications
+	- for each of retrieved Decorated Notifications : 
+		- sending it
+		- marking it as sent
+
 ### 1.3.3. Channels
+
+Channels are the base items when configuring the Notification Engine.
+
+Configuring the Notification Engine is actually defining the Channels that it will instantiate.
+
+A Channel is defined by :
+- its identifier
+- its Topic
+- its Selector
+- its Notificator
+
+Furthermore, the Notification Engine allows to set additionnal options, such as execution periods, mail templates, to complete configuration of components.
+
+With no surprise, the configuration file of the Notification Engine will contain the definition of its Channels. 
 
 # 2. Installing the Notification Engine
 
