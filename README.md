@@ -223,6 +223,86 @@ Note that you can define here a replicaSet, you just have to set the mongo.repli
 
 ## 3.2. Configuration
 
+As explained before, for the Notification Engine, a Configuration is the definition of the Channels that the Engine will instantiate.
+
+This definition must be done in a file named configuration.json in the configuration directory specified in the localsettings.properties file.
+
+You can find multiple of configuration files in config directory.
+
+As you can see, the configuration is done in JSON :
+
+Example 1
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorTaskPeriod" : "5000",
+				  "selectorTaskPeriod" : "5000",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+Example 2
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "multipleMailByRecipient",
+				  "mailTemplate" : "facturationMailTemplate"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "singleMailByRecipient",
+				  "mailTemplate" : "helpdeskMailTemplate"
+				}
+			 ]
+}
+```
+
+Example 3
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "mailTemplate" : "commonMailTemplate"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "mongoDbSelector",				  
+				  "selectorTaskPeriod" : "5000",
+				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "notificatorTaskPeriod" : "5000",
+				  "mailTemplate" : "commonMailTemplate"
+				}
+			 ]
+}
+```
+
 ### 3.2.1. Built-in Selectors
 
 ### 3.2.2. Built-in Notificators
