@@ -140,11 +140,45 @@ With no surprise, the configuration file of the Notification Engine will contain
 
 ### 2.1.1 JDK version
 
+The Notification Engine is a classical JavaEE 6 web application.
+
+It needs Java7.
+
 ### 2.1.2 Maven as a build tool
+
+Maven 3 is used as the build tool.
+
+The project is declared with type war.
 
 ## 2.2. Application Server
 
+The Notification Engine has been validated with Glassfish 3, but it should run on any JavaEE application Server, including Tomcat since it does not use EJB components.
+
+Before building the war, just edit the localsettings.properties file under src/main/resources.
+See section "Local settings" for details on how to set local settings.
+
+To build the war just run :
+
+```
+mvn package -DskipTests
+
+See section "Unit tests" if you are reluctant with skipping tests.
+
+Then you will get the war in your target directory.
+You will just have to deploy it classically into your application server.
+
 ## 2.3. Notification Engine Database
+
+The Notification Engine needs an internal persistance system, for storing Raw and Decorated Notifications.
+
+It can also store Subscriptions in this persistance system.
+
+MongoDB has been choosen for this internal persistance.
+
+The Notification Engine has been validated with MongoDB 2.4.4.
+
+By default, the Notification Engine expects a MongoDB instance running on localhost, on port 27017.
+This instance should contain a database named "notificationengine", with collections named "rawnotifications" and "decoratednotifications".
 
 # 3. Using the Notification Engine
 
