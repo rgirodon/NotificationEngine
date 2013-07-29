@@ -185,6 +185,42 @@ This instance should contain a database named "notificationengine", with collect
 
 ## 3.1. Local settings
 
+The file localsettings.properties file (under src/main/resources) is where you must set your local installation settings.
+
+```
+config.directory=D:/temp/notificationengine/config
+templates.directory=D:/temp/notificationengine/templates
+smtp.host=smtp.gmail.com
+smtp.port=587
+smtp.username=xxxxx
+smtp.password=xxxxx
+smtp.timeout=8500
+smtp.starttls.enable=true
+smtp.auth=true
+mail.from=xxxxx
+mail.subject=Notification Engine Mail
+mongo.replica.mode=false
+mongo.url=localhost:27017
+mongo.database=notificationengine
+administrator.address=xxxxx
+```
+
+- config.directory is the directory that will contain the configuration file (named configuration.json) of the Notification Engine.
+
+- templates.directory is the directory that will contain the template files used by the Notificator components.
+
+- smtp.* are properties that define the smtp settings that the system will use for sending mails.
+All these properties are self explaining.
+
+- mail.from is the default from address that will be set by the system for all sent emails.
+
+- mail.subject is the default subject that will be set by the system for all sent emails.
+
+- mongo.* are properties that define the mongoDb settings that the system will use for its internal persistance.
+Note that you can define here a replicaSet, you just have to set the mongo.replica.mode property to true, and the mongo.url property to a comma separated list of host:port (localhost:27017,localhost:28017:localhost:29017 for example).
+
+- administrator.address is the address where all emails will be sent if you choose the AdministratorSelector.
+
 ## 3.2. Configuration
 
 ### 3.2.1. Built-in Selectors
