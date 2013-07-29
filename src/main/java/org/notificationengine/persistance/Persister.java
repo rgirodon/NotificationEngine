@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.DB;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
@@ -43,7 +44,7 @@ public class Persister implements InitializingBean {
 		
 		this(Boolean.FALSE);
 	}
-	
+
 	// take care, only to be called by test class
 	public Persister(Boolean modeTest, MongoDbSettings mongoDbSettings) {
 		
@@ -124,6 +125,71 @@ public class Persister implements InitializingBean {
 		
 		LOGGER.debug("Inserted RawNotification : " + rawNotification);
 	}
+	
+	public Collection<RawNotification> retrieveAllRawNotifications() {
+		
+		LOGGER.debug("Retrieve all RawNotifications");
+		
+		Collection<RawNotification> result = new ArrayList<>();
+		
+		Iterable<RawNotification> rawNotificationsForGetAll = this.rawNotifications.find("{}").as(RawNotification.class);
+		
+		for(RawNotification rawNotification : rawNotificationsForGetAll) {
+			
+			LOGGER.debug("Found RawNotification (get all): " + rawNotification);
+			
+			result.add(rawNotification);
+			
+		}
+		
+		LOGGER.debug("All RawNotifications found");
+		
+		return result;
+		
+	}
+
+    public Collection<RawNotification> retrieveAllRawNotificationsForTopic(Topic topic) {
+
+        LOGGER.debug("Retrieve not processed RawNotifications for Topic : " + topic);
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.TOPIC_NAME, topic.getName());
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForExactQuery) {
+
+            LOGGER.debug("Found RawNotification (exact query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+
+        JSONObject likeQueryJsonObject = new JSONObject();
+
+        JSONObject regularExpressionJsonObject = new JSONObject();
+        regularExpressionJsonObject.put(Constants.REGEX, topic.getName() + "\\..*");
+
+        likeQueryJsonObject.put(Constants.TOPIC_NAME, regularExpressionJsonObject);
+
+        String likeQuery = likeQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForLikeQuery = this.rawNotifications.find(likeQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForLikeQuery) {
+
+            LOGGER.debug("Found RawNotification (like query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+        return result;
+
+    }
 
 	public Collection<RawNotification> retrieveNotProcessedRawNotificationsForTopic(Topic topic) {
 		
