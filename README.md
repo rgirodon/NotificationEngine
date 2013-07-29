@@ -303,6 +303,19 @@ Example 3
 }
 ```
 
+As you can see, a Configuration is an array of Channels.
+
+Each Channel has :
+- an identifier
+- a topic
+- a selector 
+  - the selector can be of a known type, or of a custom type - in this case the Configuration must specify its full name class
+  - the selector can have a specific execution period, expressed in ms with property selectorTaskPeriod (if it has not, if will be a 20s default period)
+- a notificator
+  - the notificator can be of a known type, or of a custom type - in this case the Configuration must specify its full name class
+  - the notificator can have a specific execution period, expressed in ms with property notificatorTaskPeriod (if it has not, if will be a 20s default period)
+- any other needed options (just like mailTemplate in our examples) that will be accessible through a map at runtime  
+
 ### 3.2.1. Built-in Selectors
 
 ### 3.2.2. Built-in Notificators
