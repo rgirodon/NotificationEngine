@@ -161,6 +161,7 @@ To build the war just run :
 
 ```
 mvn package -DskipTests
+```
 
 See section "Unit tests" if you are reluctant with skipping tests.
 
