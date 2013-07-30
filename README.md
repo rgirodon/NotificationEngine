@@ -517,6 +517,51 @@ Facturation Team
 
 ### 3.2.2.3 SingleMailByRecipientNotificator
 
+This is quite a more advanced Notificator : for a given topic, when it has found not sent Decorated Notifications, it will just send 1 mail by recipient, grouping the not sent Notifications.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "singleMailByRecipient",
+				  "mailTemplate" : "helpdeskMailTemplate"
+				}
+			 ]
+}
+```
+
+As you can see, this notificator needs an option "mailTemplate".
+In our example, the built-in Template Engine will look for a template file named helpdeskMailTemplate.template in the template directory specified in localsettings.properties.
+
+For building the mail content, this notificator will merge this template with a Context containing :
+- an entry named "notificationsByRecipient" which is the list of the Contexts of the grouped RawNotifications
+- an additionnal entry named "recipient" containing the recipient address.
+
+The template syntax is the one of Mustache framework.
+
+Here is an example of template for this notificator :
+```
+Dear {{recipient}}
+
+This mail has been sent by Helpdesk application.
+
+Please take into account these actions from Helpdesk :
+
+{{#notificationsByRecipient}}
+> {{message}}
+{{/notificationsByRecipient}}
+
+Best regards,
+
+Helpdesk Team
+```
+
 ### 3.2.2.4 SingleMultiTopicMailByRecipientNotificator
 
 ### 3.2.3. Built-in Components
@@ -551,9 +596,8 @@ Mailer mailer = (Mailer)SpringUtils.getBean(Constants.MAILER);
 Then you just have to ask the mailer to send a content to a given address with its method sendMail :
 
 ```JAVA
-public void sendMail(String recipientAddress, String text) {
-...
-}
+// sent a mail to the recipient
+mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText);
 ```
 
 #### 3.2.3.2. Template Engine
