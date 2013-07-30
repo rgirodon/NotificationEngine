@@ -1,5 +1,6 @@
 package org.notificationengine.domain;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,13 +13,19 @@ public class RawNotification {
 	private Boolean processed;
 
 	private Topic topic;
-	
-	private Map<String, Object> context;
+
+    private Date createdAt;
+
+    private Date processedAt;
+
+    private Map<String, Object> context;
 
 	public RawNotification() {
 		super();
 		
 		this.context = new HashMap<>();
+        this.createdAt = new Date();
+        this.processedAt = null;
 	}
 
 	public RawNotification(Topic topic) {
@@ -69,4 +76,20 @@ public class RawNotification {
 	public void setContext(Map<String, Object> context) {
 		this.context = context;
 	}
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getProcessedAt() {
+        return processedAt;
+    }
+
+    public void setProcessedAt(Date processedAt) {
+        this.processedAt = processedAt;
+    }
 }

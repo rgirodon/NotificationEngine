@@ -239,6 +239,7 @@ public class Persister implements InitializingBean {
 	public void markRawNotificationAsProcessed(RawNotification rawNotification) {
 		
 		rawNotification.setProcessed(Boolean.TRUE);
+        rawNotification.setProcessedAt(new Date());
 		
 		this.rawNotifications.save(rawNotification);
 	}
