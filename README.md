@@ -564,6 +564,67 @@ Helpdesk Team
 
 ### 3.2.2.4 SingleMultiTopicMailByRecipientNotificator
 
+This is the most advanced Notificator : when it has found not sent Decorated Notifications, it will just send 1 mail by recipient, grouping the not sent Notifications of multiple Topics.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "mailTemplate" : "commonMailTemplate"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "mongoDbSelector",				  
+				  "selectorTaskPeriod" : "5000",
+				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "notificatorTaskPeriod" : "5000",
+				  "mailTemplate" : "commonMailTemplate"
+				}
+			 ]
+}
+```
+
+As you can see, this notificator needs an option "mailTemplate".
+In our example, the built-in Template Engine will look for a template file named commonMailTemplate.template in the template directory specified in localsettings.properties.
+
+For building the mail content, this notificator will merge this template with a Context containing :
+- an entry named "topics" which is a list of Contexts containing :
+  - an entry "topic" with the name of the Topic
+  - an entry "notificationsForTopic" which is the list of the Contexts of the grouped RawNotifications of this Topic for this recipient
+- an additionnal entry named "recipient" containing the recipient address.
+
+The template syntax is the one of Mustache framework.
+
+Here is an example of template for this notificator :
+```
+Dear {{recipient}}
+
+This mail has been sent by Notification application.
+
+{{#topics}}
+
+{{topic}}
+
+{{#notificationsForTopic}}
+
+> {{message}}
+
+{{/notificationsForTopic}}
+
+{{/topics}}
+
+Best regards,
+
+Notification Team
+```
+
 ### 3.2.3. Built-in Components
 
 #### 3.2.3.1. Mailer
