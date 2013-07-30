@@ -1,5 +1,6 @@
 package org.notificationengine.domain;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,10 @@ public class DecoratedNotification {
 	private RawNotification rawNotification;
 	
 	private Boolean sent;
+
+    private Date createdAt;
+
+    private Date sentAt;
 
 	public Map<String, Object> getContext() {
 		
@@ -33,9 +38,11 @@ public class DecoratedNotification {
 		this.rawNotification = rawNotification;
 		this.recipient = recipient;
 		this.sent = Boolean.FALSE;
+        this.createdAt = new Date();
+        this.sentAt = null;
 	}
 
-	public DecoratedNotification() {
+    public DecoratedNotification() {
 		super();
 	}
 
@@ -77,6 +84,22 @@ public class DecoratedNotification {
 	public void setSent(Boolean sent) {
 		this.sent = sent;
 	}
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(Date sentAt) {
+        this.sentAt = sentAt;
+    }
 
 	
 }
