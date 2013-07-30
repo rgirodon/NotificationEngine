@@ -18,7 +18,7 @@ public class TestMongoDbSelector {
 	@Before
 	public void init() {
 		
-		mongoDbSelector = new MongoDbSelector(new Topic("facturation"), Boolean.TRUE);
+		mongoDbSelector = new MongoDbSelector(new Topic("facturation"), Boolean.TRUE, null);
 		
 		mongoDbSelector.cleanSubscriptions();
 	}
