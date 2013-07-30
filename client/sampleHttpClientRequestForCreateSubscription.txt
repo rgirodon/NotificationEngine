@@ -10,5 +10,5 @@ Content-Type: application/json
 Body :
 {
 "topic" : "facturation",
-"recipient" : "rgirodon@sqli.com"
+"recipient" : "xxxx@yyyy.com"
 }

@@ -372,6 +372,35 @@ To register this notificator in a Channel, here is an example :
 
 #### 3.2.1.2 MongoDbSelector
 
+This is a more advanced Selector. It retrieves Subscriptions in the MongoDB database used by the Notification Engine for internal persistance.
+
+It looks for Subscriptions in a collection named subscriptions, and with this format.
+
+```JSON
+{
+  "_id" : ObjectId("51f7c7e04531027fab736425"),
+  "topic" : {
+    "name" : "facturation.societe1"
+  },
+  "recipient" : {
+    "address" : "xxxx@zzzz.com"
+  }
+}
+```
+
+Once registered, this Selector also activates a controller that will allow to create Subscriptions by HTTP PUT requests :
+
+If content :
+
+```JSON
+{
+"topic" : "facturation",
+"recipient" : "xxxx@yyyy.com"
+}
+```
+
+is sent to URL http://<host>:<port>/notificationengine/subscription.do with method PUT and header Content-Type set to application/json, then such subscription will be persisted.
+
 ### 3.2.2. Built-in Notificators
 
 ### 3.2.3. Built-in Components
