@@ -16,12 +16,16 @@ public class SingleMultiTopicMailByRecipientFeederNotificator extends Notificato
 	}
 
 	@Override
-	protected void processNotSentDecoratedNotifications(
+	protected Boolean processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
+
+        Boolean result = Boolean.TRUE;
 		
 		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator = (SingleMultiTopicMailByRecipientNotificator)SpringUtils.getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
 		
 		singleMultiTopicMailByRecipientNotificator.addDecoratedNotificationsToProcess(notSentDecoratedNotifications);
+
+        return result;
 	}
 
 

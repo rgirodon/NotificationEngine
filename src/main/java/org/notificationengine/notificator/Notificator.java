@@ -35,9 +35,12 @@ public abstract class Notificator implements INotificator {
 		
 		Collection<DecoratedNotification> notSentDecoratedNotifications = this.retrieveNotSentDecoratedNotifications();
 		
-		this.processNotSentDecoratedNotifications(notSentDecoratedNotifications);
-		
-		this.markDecoratedNotificationsAsSent(notSentDecoratedNotifications);
+		Boolean success = this.processNotSentDecoratedNotifications(notSentDecoratedNotifications);
+
+        if(success){
+
+            this.markDecoratedNotificationsAsSent(notSentDecoratedNotifications);
+        }
 	}
 	
 	private void markDecoratedNotificationsAsSent(
@@ -58,7 +61,7 @@ public abstract class Notificator implements INotificator {
 		return persister.retrieveNotSentDecoratedNotificationsForTopic(this.topic);
 	}
 
-	protected abstract void processNotSentDecoratedNotifications(
+	protected abstract Boolean processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications);
 
 	public Topic getTopic() {
