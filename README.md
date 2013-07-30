@@ -399,7 +399,7 @@ If content
 }
 ```
 
-is sent to URL http://<host>:<port>/notificationengine/subscription.do with method PUT and header Content-Type set to application/json, then such subscription will be persisted.
+is sent to URL http://host:port/notificationengine/subscription.do with method PUT and header Content-Type set to application/json, then such subscription will be persisted.
 
 You can retrieve this example in client directory.
 
@@ -433,8 +433,6 @@ To enable creation of Raw Notifications, the Notification Engine proposes a REST
 
 If content
 
-If content
-
 ```JSON
 {
 "topic" : "facturation.societe1",
@@ -445,7 +443,7 @@ If content
 }
 ```
 
-is sent to URL http://<host>:<port>/notificationengine/rawNotification.do with method PUT and header Content-Type set to application/json, then a Raw Notification with such Toppic and Context will be persisted.
+is sent to URL http://host:port/notificationengine/rawNotification.do with method PUT and header Content-Type set to application/json, then a Raw Notification with such Toppic and Context will be persisted.
 
 It will be in the MongoDB database, in rawnotifications collection, with that format :
 
