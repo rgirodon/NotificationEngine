@@ -453,7 +453,7 @@ All concrete implementations of Notificator will provide a specific way for proc
 
 ### 3.2.2.1 LoggerNotificator
 
-This is the most simple Notificator :it just logs with a level INFO any Decorated Notification.
+This is the most simple Notificator : it just logs with a level INFO any Decorated Notification.
 
 To register this notificator in a Channel, here is an example :
 
@@ -473,6 +473,47 @@ To register this notificator in a Channel, here is an example :
 ```
 
 ### 3.2.2.2 MultipleMailByRecipientNotificator
+
+This is quite a simple Notificator : it just send an email for any Decorated Notification.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "multipleMailByRecipient",
+				  "mailTemplate" : "facturationMailTemplate"
+				}
+			 ]
+}
+```
+
+As you can see, this notificator needs an option "mailTemplate".
+In our example, the built-in Template Engine will look for a template file named facturationMailTemplate.template in the template directory specified in localsettings.properties.
+
+For building the mail content, this notificator will merge this template with a Context containing :
+- all the entries of the Raw Notification Context
+- an additionnal entry named "recipient" containing the recipient address.
+
+The template syntax is the one of Mustache framework.
+
+Here is an example of template for this notificator :
+```
+Dear {{recipient}}
+
+This mail has been sent by Facturation application.
+
+{{message}}
+
+Best regards,
+
+Facturation Team
+```
 
 ### 3.2.2.3 SingleMailByRecipientNotificator
 
