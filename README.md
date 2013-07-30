@@ -390,7 +390,7 @@ It looks for Subscriptions in a collection named subscriptions, and with this fo
 
 Once registered, this Selector also activates a controller that will allow to create Subscriptions by HTTP PUT requests :
 
-If content :
+If content
 
 ```JSON
 {
@@ -400,6 +400,8 @@ If content :
 ```
 
 is sent to URL http://<host>:<port>/notificationengine/subscription.do with method PUT and header Content-Type set to application/json, then such subscription will be persisted.
+
+You can retrieve this example in client directory.
 
 To register this selector in a Channel, here is an example :
 
@@ -426,6 +428,42 @@ To register this selector in a Channel, here is an example :
 #### 3.2.3.2. Template Engine
 
 ## 3.3. Raw Notifications Push API
+
+To enable creation of Raw Notifications, the Notification Engine proposes a REST API.
+
+If content
+
+If content
+
+```JSON
+{
+"topic" : "facturation.societe1",
+"context" : {
+			  "salutation" : "Hola chicos",
+			  "message" : "Hay que pagar ahora"
+			}
+}
+```
+
+is sent to URL http://<host>:<port>/notificationengine/rawNotification.do with method PUT and header Content-Type set to application/json, then a Raw Notification with such Toppic and Context will be persisted.
+
+It will be in the MongoDB database, in rawnotifications collection, with that format :
+
+```JSON
+{
+  "_id" : ObjectId("51f7c7e04531027fab736421"),
+  "processed" : false,
+  "topic" : {
+    "name" : "facturation.societe1"
+  },
+  "context" : {
+    "salutation" : "Hola chicos",
+    "message" : "Hay que pagar ahora."
+  }
+}
+```
+
+You can retrieve this example in client directory.
 
 # 4. Extending the Notification Engine
 
