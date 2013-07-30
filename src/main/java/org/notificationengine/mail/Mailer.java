@@ -20,9 +20,11 @@ public class Mailer {
 	@Autowired
 	private SimpleMailMessage templateMessage;
 
-	public void sendMail(String recipientAddress, String text) {
+	public Boolean sendMail(String recipientAddress, String text) {
 
 		// TODO enable customization of subject, and maybe from field
+
+        Boolean result = Boolean.FALSE;
 		
         SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
         
@@ -32,6 +34,8 @@ public class Mailer {
         
         try{
             this.mailSender.send(msg);
+
+            result = Boolean.TRUE;
         }
         catch(MailException ex) {
         	
@@ -41,6 +45,8 @@ public class Mailer {
 			
 			LOGGER.error("Unable to send mail");
         }
+
+        return result;
     }
 	
 	public MailSender getMailSender() {

@@ -16,13 +16,15 @@ public class LoggerNotificator extends Notificator {
 	}
 
 	@Override
-	protected void processNotSentDecoratedNotifications(
+	protected Boolean processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
 		
 		for (DecoratedNotification notSentDecoratedNotification : notSentDecoratedNotifications) {
 		
 			LOGGER.info("Sent notification : " + notSentDecoratedNotification.toString());
 		}
+
+        return Boolean.TRUE;
 	}
 
 }

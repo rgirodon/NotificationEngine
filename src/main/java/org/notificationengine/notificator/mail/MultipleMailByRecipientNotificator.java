@@ -25,13 +25,15 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 	}
 
 	@Override
-	protected void processNotSentDecoratedNotifications(
+	protected Boolean processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
 		
 		TemplateEngine templateEngine = (TemplateEngine)SpringUtils.getBean(Constants.TEMPLATE_ENGINE);
 		Mailer mailer = (Mailer)SpringUtils.getBean(Constants.MAILER);
 		
 		templateEngine.loadTemplate(mailTemplate);
+
+        Boolean result = Boolean.TRUE;
 		
 		for (DecoratedNotification decoratedNotification : notSentDecoratedNotifications) {
 			
@@ -41,10 +43,21 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 			LOGGER.debug("Notification text after merge : " + notificationText);
 			
 			// sent a mail to the recipient
-			mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText);
+			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText);
+
+            if(!sentCorrectly) {
+                result = Boolean.FALSE;
+
+                LOGGER.warn("Mail not sent");
+            }
+
+            else {
 			
-			LOGGER.debug("Mail sent");
+			    LOGGER.debug("Mail sent");
+            }
 		}
+
+        return result;
 	}
 	
 	public String getMailTemplate() {

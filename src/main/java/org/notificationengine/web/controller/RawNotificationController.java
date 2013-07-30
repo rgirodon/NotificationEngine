@@ -64,9 +64,9 @@ public class RawNotificationController {
 
     }
 
-    @RequestMapping(value = "/allRowNotificationsForTopic.do", method = RequestMethod.GET, params = {"topicName"})
+    @RequestMapping(value = "/allRowNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
     @ResponseBody
-    public String listRowNotificationsForTopic(@RequestParam(value="topicName") String topicName) {
+    public String listRowNotificationsForTopic(@RequestParam(value="topic") String topicName) {
 
         LOGGER.debug("RawNotificationsController GET listRowNotificationsForTopic, topic:" + topicName);
 
