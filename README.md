@@ -830,10 +830,67 @@ Just do the same with your own custom notificators.
 
 ### 4.2.1. Purpose and principles
 
+It is possible to extend the Notification Engine without altering the code base.
+
+All you need is creating a new Maven project declaring in its pom.xml :
+
+- the Notification Engine "core" as a war dependency (for applying the war overlay technique provided by maven war plugin)
+
+- the Notification Engine "core" as a classic dependency (with "classes" classifier for the code to compile)
+
+This is illustrated by this extract of the pom.xml of the custom project JDBC selector provided under custom/jdbcselector directory :
+```
+<dependency>
+  <groupId>org.notificationengine</groupId>
+  <artifactId>notificationengine</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <type>war</type>
+</dependency> 
+
+<dependency>
+  <groupId>org.notificationengine</groupId>
+  <artifactId>notificationengine</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <classifier>classes</classifier>
+</dependency>
+```
+
 ### 4.2.2. Example of the JDBC Selector
+
+We applied this option for creating a custom project that extends the Notification Engine by providing a JDBC based Selector.
+
+You can see in last chapter an except of the pom.xml file of this custom project.
+
+The JDBC selector can be configurated in its localsettingsJdbcSelector.properties file (under src/main/resources) :
+
+```
+jdbc.driverClassName=org.hsqldb.jdbc.JDBCDriver
+jdbc.url=jdbc:hsqldb:hsql://localhost/subscriptions
+jdbc.username=SA
+jdbc.password=
+jdbc.sql.order=SELECT u.EMAIL FROM USER u, SUBSCRIPTION s, TOPIC t WHERE u.ID = s.USER_ID AND t.ID = s.TOPIC_ID AND t.LABEL = :topic
+jdbc.sql.recipient.alias=EMAIL
+jdbc.sql.topic.param=topic
+``` 
+
+Properties "jdbc.driverClassName", "jdbc.url", "jdbc.username", "jdbc.password" are self-explaining.
+Property "jdbc.sql.order" is the SQL order that will be executed by the selector to get the Subscriptions for a given Topic.
+Property "jdbc.sql.recipient.alias" is the name of the alias for the column containing the address of the recipient concerned by the Subscription.
+Property "jdbc.sql.topic.param=topic" is the name of the parameter used for substituting the Topic at runtime.
+
+Note that if you use a database different than hsqldb, you will have to add the dependency in the pom.xml. 
 
 ## 4.3. Unit tests
 
+We tried to add some unit tests to our Notification Engine.
+Some of them need a MongoDB instance running on localhost, on port 27017.
+This instance should contain a database named notificationengine_test, with collections rawnotifications, decoratednotifications and subscriptions.
+This is not very "state of the art", please be indulgent :)
+
 # 5. Roadmap
 
+We use the issues of GitHub to define the new features we plan to implement.
 
+We also use it to list the bugs we find.
+
+Feel free to contribute, and we would really welcome any of your suggestions for improving the Notification Engine.
