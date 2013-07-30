@@ -58,7 +58,9 @@ public abstract class Selector implements ISelector {
 		persister.markRawNotificationAsProcessed(rawNotification);
 	}
 
-	abstract protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+	abstract public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+
+    abstract public Collection<Subscription> retrieveSubscriptions();
 
 	private void createDecoratedNotification(
 			DecoratedNotification decoratedNotification) {
