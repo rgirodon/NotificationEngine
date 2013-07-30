@@ -523,7 +523,56 @@ Facturation Team
 
 #### 3.2.3.1. Mailer
 
+The system ships a Mailer for sending the emails.
+
+The Mailer is based on Spring mail module.
+
+The Mailer configuration is done in localsettings.properties :
+
+```
+smtp.host=smtp.gmail.com
+smtp.port=587
+smtp.username=xxxxx
+smtp.password=xxxxx
+smtp.timeout=8500
+smtp.starttls.enable=true
+smtp.auth=true
+```
+
+If you need the Mailer in a custom notificator, you can get it in Spring context.
+We provide a SpingUtils utility class for getting beans.
+
+Here is the way of getting the Mailer :
+
+```JAVA
+Mailer mailer = (Mailer)SpringUtils.getBean(Constants.MAILER);
+```
+
+Then you just have to ask the mailer to send a content to a given address with its method sendMail :
+
+```JAVA
+public void sendMail(String recipientAddress, String text) {
+...
+}
+```
+
 #### 3.2.3.2. Template Engine
+
+The system ships a Template Engine for building the email content.
+
+The Template Engine is based on Mustache, and all templates must follow Mustache syntax.
+
+The Template Engine looks for templates files in the template directory specified in localsettings.properties.
+It looks for files named with the value of option "mailTemplate" of the configuration, with the extension ".template".
+
+If you need the Template Engine in a custom notificator, you can get it in Spring context.
+We provide a SpingUtils utility class for getting beans.
+
+Here is the way of getting the Template Engine :
+
+```JAVA
+TemplateEngine templateEngine = (TemplateEngine)SpringUtils.getBean(Constants.TEMPLATE_ENGINE); 
+```
 
 ## 3.3. Raw Notifications Push API
 
