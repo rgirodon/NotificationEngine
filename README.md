@@ -717,11 +717,114 @@ You can retrieve this example in client directory.
 
 # 4. Extending the Notification Engine
 
+The Notification Engine provides some built-in Selectors and Notificators, but there are chances that you need to create new Selectors or Notificators to fit your needs.
+
+There are 2 ways for doing this :
+
+1. First option
+- get the code base
+- add your own components
+- build the war
+- deploy it
+
+2. Second option
+- get the code base 
+- install it in your maven repo
+- create a custom project where you add your own components
+- build the war of your custom project
+- deploy the war of your custom project
+
+In both cases, you need to add your components to the configuration file.
+
 ## 4.1. Configuring custom components
 
 ### 4.1.1. Configuring custom selectors
 
+If you look at the configuration of the AdministratorSelector, you can already see how to configure a custom Selector :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+As you can see, you declare the selectorType as "customSelector", and provide the full name of the selector class in the selectorClass field.
+
+The NotificationEngine will then instantiate your selector, using a 2 parameters constructor :
+- one for the Topic
+- one for the map of options (provided in the configuration file)
+
+Here is the example with the code of the AdministratorSelector :
+
+```JAVA
+public class AdministratorSelector extends Selector {
+
+	public AdministratorSelector(Topic topic, Map<String, String> options) {
+		super(topic, options);
+	}
+	
+	@Override
+	protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
+		// not shown...
+	}
+}
+```
+
+Just do the same with your own custom selectors.
+
 ### 4.1.2. Configuring custom notificators
+
+If you look at the configuration of the LoggerNotificator, you can already see how to configure a custom Notificator :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+As you can see, you declare the notificatorType as "customNotificator", and provide the full name of the notificator class in the notificatorClass field.
+
+The NotificationEngine will then instantiate your notificator, using a 2 parameters constructor :
+- one for the Topic
+- one for the map of options (provided in the configuration file)
+
+Here is the example with the code of the LoggerNotificator :
+
+```JAVA
+public class LoggerNotificator extends Notificator {
+
+	public LoggerNotificator(Topic topic, Map<String, String> options) {
+		super(topic, options);
+	}
+
+	@Override
+	protected void processNotSentDecoratedNotifications(
+			Collection<DecoratedNotification> notSentDecoratedNotifications) {
+		// not shown...
+	}
+
+}
+```
+
+Just do the same with your own custom notificators.
 
 ## 4.2. Creating a custom project
 
