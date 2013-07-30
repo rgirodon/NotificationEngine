@@ -23,7 +23,7 @@ public class TestPersister {
 	@Before
 	public void init() {
 		
-		persister = new Persister(Boolean.TRUE);
+		persister = new Persister(Boolean.TRUE, null);
 		
 		persister.cleanRawNotifications();
 		
