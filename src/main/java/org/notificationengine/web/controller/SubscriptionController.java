@@ -10,10 +10,9 @@ import org.notificationengine.dto.SubscriptionDTO;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 @Controller(value=Constants.SUBSCRIPTION_CONTROLLER)
 public class SubscriptionController {
@@ -54,6 +53,40 @@ public class SubscriptionController {
 			
 			LOGGER.debug("Subscription persisted : " + subscriptionDTO);
 		}
+    }
+
+    @RequestMapping(value = "/countAllSubscriptions.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Integer countAllSubscription() {
+
+        Integer result = new Integer(0);
+
+        LOGGER.debug("Subscription controller, countAllSubscription");
+
+        Collection<Subscription> subscriptions = this.mongoDbSelector.retrieveSubscriptions();
+
+        result = subscriptions.size();
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/countAllSubscriptionsForTopic.do", method = RequestMethod.GET, params = {"topic"})
+    @ResponseBody
+    public Integer countAllSubscriptionForTopic(@RequestParam(value="topic") String topicName) {
+
+        Integer result = new Integer(0);
+
+        Topic topic = new Topic(topicName);
+
+        LOGGER.debug("Subscription controller, countAllSubscription");
+
+        Collection<Subscription> subscriptions = this.mongoDbSelector.retrieveSubscriptionsForTopic(topic);
+
+        result = subscriptions.size();
+
+        return result;
+
     }
 
 	private void setMongoDbSelector(MongoDbSelector mongoDbSelector) {

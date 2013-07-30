@@ -11,6 +11,7 @@ import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.dto.RawNotificationDTO;
 import org.notificationengine.persistance.Persister;
+import org.omg.CORBA.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -111,6 +112,66 @@ public class RawNotificationController {
         Gson gson = new Gson();
 
         String result = gson.toJson(rawNotification);
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/countAllRawNotifications.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Integer getCountAllRawNotifications() {
+
+        Integer result = new Integer(0);
+
+        Collection<RawNotification> rawNotifications = this.persister.retrieveAllRawNotifications();
+
+        result = rawNotifications.size();
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/countNotProcessedRawNotifications.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Integer getCountNotProcessedRawNotifications() {
+
+        Integer result = new Integer(0);
+
+        Collection<RawNotification> rawNotifications = this.persister.retrieveNotProcessedRawNotifications();
+
+        result = rawNotifications.size();
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/countRawNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
+    @ResponseBody
+    public Integer getCountRawNotificationsForTopic(@RequestParam(value="topic") String topicName) {
+
+        Integer result = new Integer(0);
+
+        Topic topic = new Topic(topicName);
+
+        Collection<RawNotification> rawNotifications = this.persister.retrieveAllRawNotificationsForTopic(topic);
+
+        result = rawNotifications.size();
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/countNotProcessedRawNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
+    @ResponseBody
+    public Integer getCountNotProcessedRawNotificationsForTopic(@RequestParam(value="topic") String topicName) {
+
+        Integer result = new Integer(0);
+
+        Topic topic = new Topic(topicName);
+
+        Collection<RawNotification> rawNotifications = this.persister.retrieveNotProcessedRawNotificationsForTopic(topic);
+
+        result = rawNotifications.size();
 
         return result;
 
