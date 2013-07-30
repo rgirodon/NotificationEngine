@@ -421,6 +421,63 @@ To register this selector in a Channel, here is an example :
 
 ### 3.2.2. Built-in Notificators
 
+All notificators implement the INotificator interface, that just declares a process method.
+
+```JAVA
+public interface INotificator {
+
+	public void process();
+}
+```
+
+A base class implementation Notificator has been provided that does all the boilerplate code, and leaves the processNotSentDecoratedNotifications method abstract.
+
+Boilerplate code consists in :
+- for a given Topic : 
+	- retrieving not sent Decorated Notifications
+	- for each of retrieved Decorated Notifications : 
+		- sending it (left abstract)
+		- marking it as sent
+
+```JAVA
+public abstract class Notificator implements INotificator {
+
+	// Not shown : boilerplate code
+
+	protected abstract void processNotSentDecoratedNotifications(
+			Collection<DecoratedNotification> notSentDecoratedNotifications);
+}
+```
+
+All concrete implementations of Notificator will provide a specific way for processing not sent Decorated Notifications.
+
+### 3.2.2.1 LoggerNotificator
+
+This is the most simple Notificator :it just logs with a level INFO any Decorated Notification.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+### 3.2.2.2 MultipleMailByRecipientNotificator
+
+### 3.2.2.3 SingleMailByRecipientNotificator
+
+### 3.2.2.4 SingleMultiTopicMailByRecipientNotificator
+
 ### 3.2.3. Built-in Components
 
 #### 3.2.3.1. Mailer
@@ -443,7 +500,7 @@ If content
 }
 ```
 
-is sent to URL http://host:port/notificationengine/rawNotification.do with method PUT and header Content-Type set to application/json, then a Raw Notification with such Toppic and Context will be persisted.
+is sent to URL http://host:port/notificationengine/rawNotification.do with method PUT and header Content-Type set to application/json, then a Raw Notification with such Topic and Context will be persisted.
 
 It will be in the MongoDB database, in rawnotifications collection, with that format :
 
