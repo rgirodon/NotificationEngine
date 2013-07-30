@@ -82,9 +82,9 @@ public class RawNotificationController {
 
     }
 
-    @RequestMapping(value = "/notProceededRawNotificationsForTopic.do", method = RequestMethod.GET, params = {"topicName"})
+    @RequestMapping(value = "/notProceededRawNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
     @ResponseBody
-    public String notProceededRawNotifications(@RequestParam(value="topicName") String topicName) {
+    public String notProceededRawNotifications(@RequestParam(value="topic") String topicName) {
 
         LOGGER.debug("RawNotificationController GET notProceededRawNotifications, topic: " + topicName);
 
@@ -95,6 +95,22 @@ public class RawNotificationController {
         Gson gson = new Gson();
 
         String result = gson.toJson(rawNotifications);
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/rawNotification.do", method =  RequestMethod.GET, params = {"id"})
+    @ResponseBody
+    public String rawNotificationById(@RequestParam(value="id") String id) {
+
+        ObjectId objId = new ObjectId(id);
+
+        RawNotification rawNotification = this.persister.retrieveRawNotificationById(objId);
+
+        Gson gson = new Gson();
+
+        String result = gson.toJson(rawNotification);
 
         return result;
 
