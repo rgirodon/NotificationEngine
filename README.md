@@ -353,7 +353,7 @@ All concrete implementations of Selector will provide a specific way for retriev
 
 This is the most simple Selector : for any Topic it retrieves just one Recipient, the Administrator email set in localsettings.properties.
 
-To register this notificator in a Channel, here is an example :
+To register this selector in a Channel, here is an example :
 
 ```JSON
 {
@@ -400,6 +400,22 @@ If content :
 ```
 
 is sent to URL http://<host>:<port>/notificationengine/subscription.do with method PUT and header Content-Type set to application/json, then such subscription will be persisted.
+
+To register this selector in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
 
 ### 3.2.2. Built-in Notificators
 
