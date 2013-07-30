@@ -318,6 +318,60 @@ Each Channel has :
 
 ### 3.2.1. Built-in Selectors
 
+All selectors implement the ISelector interface, that just declares a process method.
+
+```JAVA
+public interface ISelector {
+
+	public void process();
+}
+```
+
+A base class implementation Selector has been provided that does all the boilerplate code, and leaves the retrieveSubscriptionsForTopic method abstract.
+
+Boilerplate code consists in :
+- for a given Topic : 
+	- retrieving not processed Raw Notifications
+	- for each of retrieved Raw Notifications : 
+		- retrieving concerned Subscriptions (left abstract)
+		- for each of retrieved Subscriptions :
+			- creating a Decorated Notification linked to the Raw Notification and the Subscription recipient
+		- marking it as processed
+
+```JAVA
+public abstract class Selector implements ISelector {
+
+	// Not shown : boilerplate code
+
+	abstract protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+}
+```
+
+All concrete implementations of Selector will provide a specific way for retrieving Subscriptions for a given Topic.
+
+#### 3.2.1.1 AdministratorSelector
+
+This is the most simple Selector : for any Topic it retrieves just one Recipient, the Administrator email set in localsettings.properties.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+#### 3.2.1.2 MongoDbSelector
+
 ### 3.2.2. Built-in Notificators
 
 ### 3.2.3. Built-in Components
