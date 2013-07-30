@@ -3,6 +3,7 @@ package org.notificationengine.persistance;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -306,6 +307,7 @@ public class Persister implements InitializingBean {
 			DecoratedNotification decoratedNotification) {
 		
 		decoratedNotification.setSent(Boolean.TRUE);
+        decoratedNotification.setSentAt(new Date());
 		
 		this.decoratedNotifications.save(decoratedNotification);
 	}
