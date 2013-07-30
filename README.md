@@ -721,18 +721,18 @@ The Notification Engine provides some built-in Selectors and Notificators, but t
 
 There are 2 ways for doing this :
 
-1. First option
-- get the code base
-- add your own components
-- build the war
-- deploy it
+- First option
+	- get the code base
+	- add your own components
+	- build the war
+	- deploy it
 
-2. Second option
-- get the code base 
-- install it in your maven repo
-- create a custom project where you add your own components
-- build the war of your custom project
-- deploy the war of your custom project
+- Second option
+	- get the code base 
+	- install it in your maven repo
+	- create a custom project where you add your own components
+	- build the war of your custom project
+	- deploy the war of your custom project
 
 In both cases, you need to add your components to the configuration file.
 
