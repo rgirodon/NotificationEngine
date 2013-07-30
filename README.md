@@ -874,8 +874,11 @@ jdbc.sql.topic.param=topic
 ``` 
 
 Properties "jdbc.driverClassName", "jdbc.url", "jdbc.username", "jdbc.password" are self-explaining.
+
 Property "jdbc.sql.order" is the SQL order that will be executed by the selector to get the Subscriptions for a given Topic.
+
 Property "jdbc.sql.recipient.alias" is the name of the alias for the column containing the address of the recipient concerned by the Subscription.
+
 Property "jdbc.sql.topic.param=topic" is the name of the parameter used for substituting the Topic at runtime.
 
 Note that if you use a database different than hsqldb, you will have to add the dependency in the pom.xml. 
