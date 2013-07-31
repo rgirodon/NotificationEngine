@@ -20,9 +20,7 @@ public class Mailer {
 	@Autowired
 	private SimpleMailMessage templateMessage;
 
-	public Boolean sendMail(String recipientAddress, String text) {
-
-		// TODO enable customization of subject, and maybe from field
+	public Boolean sendMail(String recipientAddress, String text, String... otherParams) {
 
         Boolean result = Boolean.FALSE;
 		
@@ -31,6 +29,22 @@ public class Mailer {
         msg.setTo(recipientAddress);
         
         msg.setText(text);
+
+        // TODO enable customization of subject, and maybe from field
+
+        if(otherParams.length > 0) {
+
+            String subject = otherParams[0];
+
+            msg.setSubject(subject);
+        }
+
+        if(otherParams.length > 1) {
+
+            String fromField = otherParams[1];
+
+            msg.setFrom(fromField);
+        }
         
         try{
             this.mailSender.send(msg);
@@ -38,9 +52,7 @@ public class Mailer {
             result = Boolean.TRUE;
         }
         catch(MailException ex) {
-        	
-        	// TODO raise an exception so that the decorated notification is not marked as sent
-        	
+
         	LOGGER.error(ExceptionUtils.getFullStackTrace(ex));
 			
 			LOGGER.error("Unable to send mail");

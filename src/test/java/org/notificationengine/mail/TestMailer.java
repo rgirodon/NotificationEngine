@@ -17,13 +17,13 @@ public class TestMailer {
 	public void init() {
 		
 		SimpleMailMessage templateMessage = new SimpleMailMessage();
-		templateMessage.setFrom("**********");
+		templateMessage.setFrom("mduclos@sqli.com");
 		templateMessage.setSubject("Notification Engine Test Mail");
 		
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
-		mailSender.setUsername("*********");
+		mailSender.setUsername("mduclos@sqli.com");
 		mailSender.setPassword("*********");
 		
 		Properties properties = new Properties();
@@ -44,5 +44,23 @@ public class TestMailer {
 
         assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Default Test Mail Content."));
 	}
+
+    @Test
+    public void testSendMailWithSubject() {
+
+        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Mail with a different subject", "NotificationEngine Test with custom subject"));
+    }
+
+    @Test
+    public void testSendMailWithSubjectAndFromField() {
+
+        // TODO : this test is not failing but "from" field is the admin one.
+
+        assertTrue(this.mailer.sendMail("mduclos@sqli.com",
+                "Mail with a different subject and from field",
+                "Notification Engine - Custom subject and from fields",
+                "notification@engine.com"));
+
+    }
 
 }
