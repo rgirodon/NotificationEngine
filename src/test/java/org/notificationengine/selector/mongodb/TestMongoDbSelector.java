@@ -42,4 +42,25 @@ public class TestMongoDbSelector {
 		
 		assertEquals(2, subscriptions.size());
 	}
+
+    @Test
+    public void testRetrieveAllSubscriptions() {
+
+        Subscription subscription1 = new Subscription(new Topic("facturation"), new Recipient("boss@societe.com"));
+        mongoDbSelector.createSubscription(subscription1);
+
+        Subscription subscription2 = new Subscription(new Topic("facturation.client1"), new Recipient("accountmanager1@societe.com"));
+        mongoDbSelector.createSubscription(subscription2);
+
+        Subscription subscription3 = new Subscription(new Topic("facturation.client1.agence1"), new Recipient("dptresp1@societe.com"));
+        mongoDbSelector.createSubscription(subscription3);
+
+        Subscription subscription4 = new Subscription(new Topic("facturation.client2"), new Recipient("accountmanager2@societe.com"));
+        mongoDbSelector.createSubscription(subscription4);
+
+        Collection<Subscription> subscriptions = mongoDbSelector.retrieveSubscriptions();
+
+        assertEquals(4, subscriptions.size());
+
+    }
 }
