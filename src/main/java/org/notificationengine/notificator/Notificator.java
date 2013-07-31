@@ -1,8 +1,6 @@
 package org.notificationengine.notificator;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
@@ -34,13 +32,22 @@ public abstract class Notificator implements INotificator {
 	public void process() {
 		
 		Collection<DecoratedNotification> notSentDecoratedNotifications = this.retrieveNotSentDecoratedNotifications();
-		
-		Boolean success = this.processNotSentDecoratedNotifications(notSentDecoratedNotifications);
 
-        if(success){
+        Map<DecoratedNotification, Boolean> decoratedNotificationSentMap= this.processNotSentDecoratedNotifications(notSentDecoratedNotifications);
 
-            this.markDecoratedNotificationsAsSent(notSentDecoratedNotifications);
+        Collection<DecoratedNotification> decoratedNotificationToMarkAsSent = new ArrayList<>();
+
+        for(Map.Entry<DecoratedNotification, Boolean> decoratedNotificationSent : decoratedNotificationSentMap.entrySet()) {
+
+            if(decoratedNotificationSent.getValue()) {
+
+                decoratedNotificationToMarkAsSent.add(decoratedNotificationSent.getKey());
+
+            }
+
         }
+
+        this.markDecoratedNotificationsAsSent(decoratedNotificationToMarkAsSent);
 	}
 	
 	private void markDecoratedNotificationsAsSent(
@@ -61,7 +68,7 @@ public abstract class Notificator implements INotificator {
 		return persister.retrieveNotSentDecoratedNotificationsForTopic(this.topic);
 	}
 
-	protected abstract Boolean processNotSentDecoratedNotifications(
+	protected abstract Map<DecoratedNotification, Boolean> processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications);
 
 	public Topic getTopic() {

@@ -29,10 +29,10 @@ public class SingleMailByRecipientNotificator extends Notificator {
 	}
 
 	@Override
-	protected Boolean processNotSentDecoratedNotifications(
+	protected Map<DecoratedNotification, Boolean> processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
 
-        Boolean result = Boolean.TRUE;
+        Map<DecoratedNotification, Boolean> result = new HashMap<>();
 		
 		TemplateEngine templateEngine = (TemplateEngine)SpringUtils.getBean(Constants.TEMPLATE_ENGINE);
 		Mailer mailer = (Mailer)SpringUtils.getBean(Constants.MAILER);
@@ -85,22 +85,17 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			String notificationText = templateEngine.processTemplate(this.mailTemplate, globalContext);
 			
 			LOGGER.debug("Notification text after merge : " + notificationText);
-
-            //Boolean to test email sent
-            Boolean sentCorrectly = Boolean.TRUE;
 			
 			// sent a mail to the recipient
-			sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText);
+			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText);
 
-            if(!sentCorrectly) {
-                result = Boolean.FALSE;
+            LOGGER.debug("Mail sent? " + sentCorrectly);
 
-                LOGGER.warn("Mail not sent");
+            for (DecoratedNotification notificationForThisRecipient : notificationsForThisRecipient) {
+
+                result.put(notificationForThisRecipient, sentCorrectly);
             }
-            else {
-			
-			    LOGGER.debug("Mail sent");
-            }
+
 		}
 
         return result;

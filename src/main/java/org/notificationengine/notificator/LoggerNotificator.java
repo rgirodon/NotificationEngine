@@ -1,6 +1,7 @@
 package org.notificationengine.notificator;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -16,15 +17,19 @@ public class LoggerNotificator extends Notificator {
 	}
 
 	@Override
-	protected Boolean processNotSentDecoratedNotifications(
+	protected Map<DecoratedNotification, Boolean> processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
+
+        Map<DecoratedNotification, Boolean> result = new HashMap<>();
 		
 		for (DecoratedNotification notSentDecoratedNotification : notSentDecoratedNotifications) {
 		
 			LOGGER.info("Sent notification : " + notSentDecoratedNotification.toString());
+
+            result.put(notSentDecoratedNotification, Boolean.TRUE);
 		}
 
-        return Boolean.TRUE;
+        return result;
 	}
 
 }

@@ -106,9 +106,9 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				LOGGER.debug("Notification text after merge : " + notificationText);
 				
 				// sent a mail to the recipient
-				mailer.sendMail(recipient.getAddress(), notificationText);
-				
-				LOGGER.debug("Mail sent");
+				Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText);
+
+				LOGGER.debug("Mail sent? " + sentCorrectly);
 			}
 		}
 	}
