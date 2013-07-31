@@ -475,4 +475,102 @@ public class TestPersister {
 		
 		assertTrue(decoratedNotification.getSent());
 	}
+
+    @Test
+    public void testRetrieveAllTopics() {
+
+        RawNotification rawNotification1 = new RawNotification();
+        rawNotification1.set_id(new ObjectId());
+        rawNotification1.setProcessed(Boolean.FALSE);
+        rawNotification1.setTopic(new Topic("facturation.societe1"));
+
+        persister.createRawNotification(rawNotification1);
+
+
+        RawNotification rawNotification2 = new RawNotification();
+        rawNotification2.set_id(new ObjectId());
+        rawNotification2.setProcessed(Boolean.FALSE);
+        rawNotification2.setTopic(new Topic("facturation.societe2"));
+
+        persister.createRawNotification(rawNotification2);
+
+
+        RawNotification rawNotification3 = new RawNotification();
+        rawNotification3.set_id(new ObjectId());
+        rawNotification3.setProcessed(Boolean.TRUE);
+        rawNotification3.setTopic(new Topic("facturation.societe1"));
+
+        persister.createRawNotification(rawNotification3);
+
+
+        RawNotification rawNotification4 = new RawNotification();
+        rawNotification4.set_id(new ObjectId());
+        rawNotification4.setProcessed(Boolean.FALSE);
+        rawNotification4.setTopic(new Topic("facturation"));
+
+        persister.createRawNotification(rawNotification4);
+
+
+        RawNotification rawNotification5 = new RawNotification();
+        rawNotification5.set_id(new ObjectId());
+        rawNotification5.setProcessed(Boolean.FALSE);
+        rawNotification5.setTopic(new Topic("facturationDifferente"));
+
+        persister.createRawNotification(rawNotification5);
+
+
+        Collection<Topic> topics = this.persister.retrieveAllTopics();
+
+        assertEquals(4, topics.size());
+
+    }
+
+    @Test
+    public void testRetrieveSubTopicsForTopic() {
+
+        RawNotification rawNotification1 = new RawNotification();
+        rawNotification1.set_id(new ObjectId());
+        rawNotification1.setProcessed(Boolean.FALSE);
+        rawNotification1.setTopic(new Topic("facturation.societe1"));
+
+        persister.createRawNotification(rawNotification1);
+
+
+        RawNotification rawNotification2 = new RawNotification();
+        rawNotification2.set_id(new ObjectId());
+        rawNotification2.setProcessed(Boolean.FALSE);
+        rawNotification2.setTopic(new Topic("facturation.societe2"));
+
+        persister.createRawNotification(rawNotification2);
+
+
+        RawNotification rawNotification3 = new RawNotification();
+        rawNotification3.set_id(new ObjectId());
+        rawNotification3.setProcessed(Boolean.TRUE);
+        rawNotification3.setTopic(new Topic("facturation.societe1"));
+
+        persister.createRawNotification(rawNotification3);
+
+
+        RawNotification rawNotification4 = new RawNotification();
+        rawNotification4.set_id(new ObjectId());
+        rawNotification4.setProcessed(Boolean.FALSE);
+        rawNotification4.setTopic(new Topic("facturation"));
+
+        persister.createRawNotification(rawNotification4);
+
+
+        RawNotification rawNotification5 = new RawNotification();
+        rawNotification5.set_id(new ObjectId());
+        rawNotification5.setProcessed(Boolean.FALSE);
+        rawNotification5.setTopic(new Topic("facturationDifferente"));
+
+        persister.createRawNotification(rawNotification5);
+
+
+        Collection<Topic> topics = this.persister.retrieveAllSubTopicsForTopic(new Topic("facturation"));
+
+        assertEquals(3, topics.size());
+
+    }
 }

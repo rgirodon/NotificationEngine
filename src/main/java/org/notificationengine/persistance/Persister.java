@@ -1,10 +1,7 @@
 package org.notificationengine.persistance;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -425,6 +422,50 @@ public class Persister implements InitializingBean {
         }
 
         return result;
+    }
+
+    public Collection<Topic> retrieveAllTopics() {
+
+        LOGGER.debug("Retrieve all Topics");
+
+        Collection<Topic> result = new HashSet<>();
+
+        Collection<RawNotification> rawNotifications = this.retrieveAllRawNotifications();
+
+        for(RawNotification rowNotification : rawNotifications) {
+
+            result.add(rowNotification.getTopic());
+
+        }
+
+        for(Topic topic : result) {
+
+            LOGGER.debug("Topic found: " + topic);
+        }
+
+        return result;
+
+    }
+
+    public Collection<Topic> retrieveAllSubTopicsForTopic(Topic topic) {
+
+        LOGGER.debug("Retrieve all subtopics of topic " + topic.getName());
+
+        Collection<Topic> result = new HashSet<>();
+
+        Collection<RawNotification> rawNotifications = this.retrieveAllRawNotificationsForTopic(topic);
+
+        for(RawNotification rawNotification : rawNotifications) {
+
+            result.add(rawNotification.getTopic());
+        }
+
+        for(Topic topicFound : result) {
+            LOGGER.debug("Topic found " + topicFound);
+        }
+
+        return result;
+
     }
 
 	public void markDecoratedNotificationAsSent(
