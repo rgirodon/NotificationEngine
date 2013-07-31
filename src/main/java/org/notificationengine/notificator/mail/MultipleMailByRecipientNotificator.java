@@ -1,6 +1,8 @@
 package org.notificationengine.notificator.mail;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.notificationengine.constants.Constants;
@@ -25,7 +27,7 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 	}
 
 	@Override
-	protected Boolean processNotSentDecoratedNotifications(
+	protected Map<DecoratedNotification, Boolean> processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
 		
 		TemplateEngine templateEngine = (TemplateEngine)SpringUtils.getBean(Constants.TEMPLATE_ENGINE);
@@ -33,7 +35,7 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 		
 		templateEngine.loadTemplate(mailTemplate);
 
-        Boolean result = Boolean.TRUE;
+        Map<DecoratedNotification, Boolean> result = new HashMap<>();
 		
 		for (DecoratedNotification decoratedNotification : notSentDecoratedNotifications) {
 			
@@ -45,16 +47,9 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 			// sent a mail to the recipient
 			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText);
 
-            if(!sentCorrectly) {
-                result = Boolean.FALSE;
+            LOGGER.debug("Mail sent? " + sentCorrectly);
 
-                LOGGER.warn("Mail not sent");
-            }
-
-            else {
-			
-			    LOGGER.debug("Mail sent");
-            }
+            result.put(decoratedNotification, sentCorrectly);
 		}
 
         return result;

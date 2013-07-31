@@ -1,6 +1,8 @@
 package org.notificationengine.notificator.mail;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
@@ -16,14 +18,19 @@ public class SingleMultiTopicMailByRecipientFeederNotificator extends Notificato
 	}
 
 	@Override
-	protected Boolean processNotSentDecoratedNotifications(
+	protected Map<DecoratedNotification, Boolean> processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
 
-        Boolean result = Boolean.TRUE;
+        Map<DecoratedNotification, Boolean> result = new HashMap<>();
 		
 		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator = (SingleMultiTopicMailByRecipientNotificator)SpringUtils.getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
 		
 		singleMultiTopicMailByRecipientNotificator.addDecoratedNotificationsToProcess(notSentDecoratedNotifications);
+
+        for(DecoratedNotification notSentDecoratedNotification: notSentDecoratedNotifications) {
+
+            result.put(notSentDecoratedNotification, Boolean.TRUE);
+        }
 
         return result;
 	}
