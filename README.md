@@ -318,32 +318,582 @@ Each Channel has :
 
 ### 3.2.1. Built-in Selectors
 
+All selectors implement the ISelector interface, that just declares a process method.
+
+```JAVA
+public interface ISelector {
+
+	public void process();
+}
+```
+
+A base class implementation Selector has been provided that does all the boilerplate code, and leaves the retrieveSubscriptionsForTopic method abstract.
+
+Boilerplate code consists in :
+- for a given Topic : 
+	- retrieving not processed Raw Notifications
+	- for each of retrieved Raw Notifications : 
+		- retrieving concerned Subscriptions (left abstract)
+		- for each of retrieved Subscriptions :
+			- creating a Decorated Notification linked to the Raw Notification and the Subscription recipient
+		- marking it as processed
+
+```JAVA
+public abstract class Selector implements ISelector {
+
+	// Not shown : boilerplate code
+
+	abstract protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+}
+```
+
+All concrete implementations of Selector will provide a specific way for retrieving Subscriptions for a given Topic.
+
+#### 3.2.1.1 AdministratorSelector
+
+This is the most simple Selector : for any Topic it retrieves just one Recipient, the Administrator email set in localsettings.properties.
+
+To register this selector in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+#### 3.2.1.2 MongoDbSelector
+
+This is a more advanced Selector. It retrieves Subscriptions in the MongoDB database used by the Notification Engine for internal persistance.
+
+It looks for Subscriptions in a collection named subscriptions, and with this format.
+
+```JSON
+{
+  "_id" : ObjectId("51f7c7e04531027fab736425"),
+  "topic" : {
+    "name" : "facturation.societe1"
+  },
+  "recipient" : {
+    "address" : "xxxx@zzzz.com"
+  }
+}
+```
+
+Once registered, this Selector also activates a controller that will allow to create Subscriptions by HTTP PUT requests :
+
+If content
+
+```JSON
+{
+"topic" : "facturation",
+"recipient" : "xxxx@yyyy.com"
+}
+```
+
+is sent to URL http://host:port/notificationengine/subscription.do with method PUT and header Content-Type set to application/json, then such subscription will be persisted.
+
+You can retrieve this example in client directory.
+
+To register this selector in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
 ### 3.2.2. Built-in Notificators
+
+All notificators implement the INotificator interface, that just declares a process method.
+
+```JAVA
+public interface INotificator {
+
+	public void process();
+}
+```
+
+A base class implementation Notificator has been provided that does all the boilerplate code, and leaves the processNotSentDecoratedNotifications method abstract.
+
+Boilerplate code consists in :
+- for a given Topic : 
+	- retrieving not sent Decorated Notifications
+	- for each of retrieved Decorated Notifications : 
+		- sending it (left abstract)
+		- marking it as sent
+
+```JAVA
+public abstract class Notificator implements INotificator {
+
+	// Not shown : boilerplate code
+
+	protected abstract void processNotSentDecoratedNotifications(
+			Collection<DecoratedNotification> notSentDecoratedNotifications);
+}
+```
+
+All concrete implementations of Notificator will provide a specific way for processing not sent Decorated Notifications.
+
+### 3.2.2.1 LoggerNotificator
+
+This is the most simple Notificator : it just logs with a level INFO any Decorated Notification.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+### 3.2.2.2 MultipleMailByRecipientNotificator
+
+This is quite a simple Notificator : it just send an email for any Decorated Notification.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "multipleMailByRecipient",
+				  "mailTemplate" : "facturationMailTemplate"
+				}
+			 ]
+}
+```
+
+As you can see, this notificator needs an option "mailTemplate".
+In our example, the built-in Template Engine will look for a template file named facturationMailTemplate.template in the template directory specified in localsettings.properties.
+
+For building the mail content, this notificator will merge this template with a Context containing :
+- all the entries of the Raw Notification Context
+- an additionnal entry named "recipient" containing the recipient address.
+
+The template syntax is the one of Mustache framework.
+
+Here is an example of template for this notificator :
+```
+Dear {{recipient}}
+
+This mail has been sent by Facturation application.
+
+{{message}}
+
+Best regards,
+
+Facturation Team
+```
+
+### 3.2.2.3 SingleMailByRecipientNotificator
+
+This is quite a more advanced Notificator : for a given topic, when it has found not sent Decorated Notifications, it will just send 1 mail by recipient, grouping the not sent Notifications.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "singleMailByRecipient",
+				  "mailTemplate" : "helpdeskMailTemplate"
+				}
+			 ]
+}
+```
+
+As you can see, this notificator needs an option "mailTemplate".
+In our example, the built-in Template Engine will look for a template file named helpdeskMailTemplate.template in the template directory specified in localsettings.properties.
+
+For building the mail content, this notificator will merge this template with a Context containing :
+- an entry named "notificationsByRecipient" which is the list of the Contexts of the grouped RawNotifications
+- an additionnal entry named "recipient" containing the recipient address.
+
+The template syntax is the one of Mustache framework.
+
+Here is an example of template for this notificator :
+```
+Dear {{recipient}}
+
+This mail has been sent by Helpdesk application.
+
+Please take into account these actions from Helpdesk :
+
+{{#notificationsByRecipient}}
+> {{message}}
+{{/notificationsByRecipient}}
+
+Best regards,
+
+Helpdesk Team
+```
+
+### 3.2.2.4 SingleMultiTopicMailByRecipientNotificator
+
+This is the most advanced Notificator : when it has found not sent Decorated Notifications, it will just send 1 mail by recipient, grouping the not sent Notifications of multiple Topics.
+
+To register this notificator in a Channel, here is an example :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "mongoDbSelector",
+				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "mailTemplate" : "commonMailTemplate"
+				},
+				{
+				  "id" : "helpdeskChannel",
+				  "topic" : "helpdesk",
+				  "selectorType" : "mongoDbSelector",				  
+				  "selectorTaskPeriod" : "5000",
+				  "notificatorType" : "singleMultiTopicMailByRecipient",
+				  "notificatorTaskPeriod" : "5000",
+				  "mailTemplate" : "commonMailTemplate"
+				}
+			 ]
+}
+```
+
+As you can see, this notificator needs an option "mailTemplate".
+In our example, the built-in Template Engine will look for a template file named commonMailTemplate.template in the template directory specified in localsettings.properties.
+
+For building the mail content, this notificator will merge this template with a Context containing :
+- an entry named "topics" which is a list of Contexts containing :
+  - an entry "topic" with the name of the Topic
+  - an entry "notificationsForTopic" which is the list of the Contexts of the grouped RawNotifications of this Topic for this recipient
+- an additionnal entry named "recipient" containing the recipient address.
+
+The template syntax is the one of Mustache framework.
+
+Here is an example of template for this notificator :
+```
+Dear {{recipient}}
+
+This mail has been sent by Notification application.
+
+{{#topics}}
+
+{{topic}}
+
+{{#notificationsForTopic}}
+
+> {{message}}
+
+{{/notificationsForTopic}}
+
+{{/topics}}
+
+Best regards,
+
+Notification Team
+```
 
 ### 3.2.3. Built-in Components
 
 #### 3.2.3.1. Mailer
 
+The system ships a Mailer for sending the emails.
+
+The Mailer is based on Spring mail module.
+
+The Mailer configuration is done in localsettings.properties :
+
+```
+smtp.host=smtp.gmail.com
+smtp.port=587
+smtp.username=xxxxx
+smtp.password=xxxxx
+smtp.timeout=8500
+smtp.starttls.enable=true
+smtp.auth=true
+```
+
+If you need the Mailer in a custom notificator, you can get it in Spring context.
+We provide a SpingUtils utility class for getting beans.
+
+Here is the way of getting the Mailer :
+
+```JAVA
+Mailer mailer = (Mailer)SpringUtils.getBean(Constants.MAILER);
+```
+
+Then you just have to ask the mailer to send a content to a given address with its method sendMail :
+
+```JAVA
+// sent a mail to the recipient
+mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText);
+```
+
 #### 3.2.3.2. Template Engine
+
+The system ships a Template Engine for building the email content.
+
+The Template Engine is based on Mustache, and all templates must follow Mustache syntax.
+
+The Template Engine looks for templates files in the template directory specified in localsettings.properties.
+It looks for files named with the value of option "mailTemplate" of the configuration, with the extension ".template".
+
+If you need the Template Engine in a custom notificator, you can get it in Spring context.
+We provide a SpingUtils utility class for getting beans.
+
+Here is the way of getting the Template Engine :
+
+```JAVA
+TemplateEngine templateEngine = (TemplateEngine)SpringUtils.getBean(Constants.TEMPLATE_ENGINE); 
+```
 
 ## 3.3. Raw Notifications Push API
 
+To enable creation of Raw Notifications, the Notification Engine proposes a REST API.
+
+If content
+
+```JSON
+{
+"topic" : "facturation.societe1",
+"context" : {
+			  "salutation" : "Hola chicos",
+			  "message" : "Hay que pagar ahora"
+			}
+}
+```
+
+is sent to URL http://host:port/notificationengine/rawNotification.do with method PUT and header Content-Type set to application/json, then a Raw Notification with such Topic and Context will be persisted.
+
+It will be in the MongoDB database, in rawnotifications collection, with that format :
+
+```JSON
+{
+  "_id" : ObjectId("51f7c7e04531027fab736421"),
+  "processed" : false,
+  "topic" : {
+    "name" : "facturation.societe1"
+  },
+  "context" : {
+    "salutation" : "Hola chicos",
+    "message" : "Hay que pagar ahora."
+  }
+}
+```
+
+You can retrieve this example in client directory.
+
 # 4. Extending the Notification Engine
+
+The Notification Engine provides some built-in Selectors and Notificators, but there are chances that you need to create new Selectors or Notificators to fit your needs.
+
+There are 2 ways for doing this :
+
+- First option
+	- get the code base
+	- add your own components
+	- build the war
+	- deploy it
+
+- Second option
+	- get the code base 
+	- install it in your maven repo
+	- create a custom project where you add your own components
+	- build the war of your custom project
+	- deploy the war of your custom project
+
+In both cases, you need to add your components to the configuration file.
 
 ## 4.1. Configuring custom components
 
 ### 4.1.1. Configuring custom selectors
 
+If you look at the configuration of the AdministratorSelector, you can already see how to configure a custom Selector :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+As you can see, you declare the selectorType as "customSelector", and provide the full name of the selector class in the selectorClass field.
+
+The NotificationEngine will then instantiate your selector, using a 2 parameters constructor :
+- one for the Topic
+- one for the map of options (provided in the configuration file)
+
+Here is the example with the code of the AdministratorSelector :
+
+```JAVA
+public class AdministratorSelector extends Selector {
+
+	public AdministratorSelector(Topic topic, Map<String, String> options) {
+		super(topic, options);
+	}
+	
+	@Override
+	protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
+		// not shown...
+	}
+}
+```
+
+Just do the same with your own custom selectors.
+
 ### 4.1.2. Configuring custom notificators
+
+If you look at the configuration of the LoggerNotificator, you can already see how to configure a custom Notificator :
+
+```JSON
+{
+"channels" : [
+				{
+				  "id" : "facturationChannel",
+				  "topic" : "facturation",
+				  "selectorType" : "customSelector",
+				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+				  "notificatorType" : "customNotificator",
+				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+				}
+			 ]
+}
+```
+
+As you can see, you declare the notificatorType as "customNotificator", and provide the full name of the notificator class in the notificatorClass field.
+
+The NotificationEngine will then instantiate your notificator, using a 2 parameters constructor :
+- one for the Topic
+- one for the map of options (provided in the configuration file)
+
+Here is the example with the code of the LoggerNotificator :
+
+```JAVA
+public class LoggerNotificator extends Notificator {
+
+	public LoggerNotificator(Topic topic, Map<String, String> options) {
+		super(topic, options);
+	}
+
+	@Override
+	protected void processNotSentDecoratedNotifications(
+			Collection<DecoratedNotification> notSentDecoratedNotifications) {
+		// not shown...
+	}
+
+}
+```
+
+Just do the same with your own custom notificators.
 
 ## 4.2. Creating a custom project
 
 ### 4.2.1. Purpose and principles
 
+It is possible to extend the Notification Engine without altering the code base.
+
+All you need is creating a new Maven project declaring in its pom.xml :
+
+- the Notification Engine "core" as a war dependency (for applying the war overlay technique provided by maven war plugin)
+
+- the Notification Engine "core" as a classic dependency (with "classes" classifier for the code to compile)
+
+This is illustrated by this extract of the pom.xml of the custom project JDBC selector provided under custom/jdbcselector directory :
+```
+<dependency>
+  <groupId>org.notificationengine</groupId>
+  <artifactId>notificationengine</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <type>war</type>
+</dependency> 
+
+<dependency>
+  <groupId>org.notificationengine</groupId>
+  <artifactId>notificationengine</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <classifier>classes</classifier>
+</dependency>
+```
+
 ### 4.2.2. Example of the JDBC Selector
+
+We applied this option for creating a custom project that extends the Notification Engine by providing a JDBC based Selector.
+
+You can see in last chapter an except of the pom.xml file of this custom project.
+
+The JDBC selector can be configurated in its localsettingsJdbcSelector.properties file (under src/main/resources) :
+
+```
+jdbc.driverClassName=org.hsqldb.jdbc.JDBCDriver
+jdbc.url=jdbc:hsqldb:hsql://localhost/subscriptions
+jdbc.username=SA
+jdbc.password=
+jdbc.sql.order=SELECT u.EMAIL FROM USER u, SUBSCRIPTION s, TOPIC t WHERE u.ID = s.USER_ID AND t.ID = s.TOPIC_ID AND t.LABEL = :topic
+jdbc.sql.recipient.alias=EMAIL
+jdbc.sql.topic.param=topic
+``` 
+
+Properties "jdbc.driverClassName", "jdbc.url", "jdbc.username", "jdbc.password" are self-explaining.
+
+Property "jdbc.sql.order" is the SQL order that will be executed by the selector to get the Subscriptions for a given Topic.
+
+Property "jdbc.sql.recipient.alias" is the name of the alias for the column containing the address of the recipient concerned by the Subscription.
+
+Property "jdbc.sql.topic.param=topic" is the name of the parameter used for substituting the Topic at runtime.
+
+Note that if you use a database different than hsqldb, you will have to add the dependency in the pom.xml. 
 
 ## 4.3. Unit tests
 
+We tried to add some unit tests to our Notification Engine.
+Some of them need a MongoDB instance running on localhost, on port 27017.
+This instance should contain a database named notificationengine_test, with collections rawnotifications, decoratednotifications and subscriptions.
+This is not very "state of the art", please be indulgent :)
+
 # 5. Roadmap
 
+We use the issues of GitHub to define the new features we plan to implement.
 
+We also use it to list the bugs we find.
+
+Feel free to contribute, and we would really welcome any of your suggestions for improving the Notification Engine.
