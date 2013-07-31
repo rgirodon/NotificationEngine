@@ -18,7 +18,7 @@ public class AdministratorSelector extends Selector {
 	}
 
 	@Override
-	protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
+	public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
 		
 		Properties localSettingsProperties = (Properties)SpringUtils.getBean(Constants.LOCAL_SETTINGS_PROPERTIES);
 		
@@ -34,4 +34,21 @@ public class AdministratorSelector extends Selector {
 		return result;
 	}
 
+    @Override
+    public Collection<Subscription> retrieveSubscriptions() {
+
+        Properties localSettingsProperties = (Properties)SpringUtils.getBean(Constants.LOCAL_SETTINGS_PROPERTIES);
+
+        String administratorAddress = localSettingsProperties.getProperty(Constants.ADMINISTRATOR_ADDRESS);
+
+        Subscription subscription = new Subscription();
+        subscription.setTopic(this.getTopic());
+        subscription.setRecipient(new Recipient(administratorAddress));
+
+        Collection<Subscription> result = new ArrayList<>();
+        result.add(subscription);
+
+        return result;
+
+    }
 }

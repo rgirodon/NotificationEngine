@@ -102,7 +102,7 @@ public class MongoDbSelector extends Selector {
 	}
 
 	@Override
-	protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
+	public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
 		
 		Collection<Subscription> result = new ArrayList<>();
 		
@@ -130,7 +130,27 @@ public class MongoDbSelector extends Selector {
 		return result;
 	}
 
-	public void cleanSubscriptions() {
+    @Override
+    public Collection<Subscription> retrieveSubscriptions() {
+
+        Collection<Subscription> result = new ArrayList<>();
+
+        Iterable<Subscription> subscriptionsForExactQuery = this.subscriptions.find("{}").as(Subscription.class);
+
+        for(Subscription subscription : subscriptionsForExactQuery) {
+
+            LOGGER.debug("Found Subscription : " + subscription);
+
+            result.add(subscription);
+        }
+
+        LOGGER.debug("Nbr of subscriptions retrieved : " + result.size());
+
+        return result;
+
+    }
+
+    public void cleanSubscriptions() {
 		
 		this.subscriptions.remove();
 	}

@@ -1,9 +1,7 @@
 package org.notificationengine.persistance;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -22,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.DB;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
@@ -43,7 +42,7 @@ public class Persister implements InitializingBean {
 		
 		this(Boolean.FALSE);
 	}
-	
+
 	// take care, only to be called by test class
 	public Persister(Boolean modeTest, MongoDbSettings mongoDbSettings) {
 		
@@ -124,6 +123,109 @@ public class Persister implements InitializingBean {
 		
 		LOGGER.debug("Inserted RawNotification : " + rawNotification);
 	}
+	
+	public Collection<RawNotification> retrieveAllRawNotifications() {
+		
+		LOGGER.debug("Retrieve all RawNotifications");
+		
+		Collection<RawNotification> result = new ArrayList<>();
+		
+		Iterable<RawNotification> rawNotificationsForGetAll = this.rawNotifications.find("{}").as(RawNotification.class);
+		
+		for(RawNotification rawNotification : rawNotificationsForGetAll) {
+			
+			LOGGER.debug("Found RawNotification (get all): " + rawNotification);
+			
+			result.add(rawNotification);
+			
+		}
+		
+		LOGGER.debug("All RawNotifications found");
+		
+		return result;
+		
+	}
+
+    public Collection<RawNotification> retrieveAllRawNotificationsForTopic(Topic topic) {
+
+        LOGGER.debug("Retrieve not processed RawNotifications for Topic : " + topic);
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.TOPIC_NAME, topic.getName());
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForExactQuery) {
+
+            LOGGER.debug("Found RawNotification (exact query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+
+        JSONObject likeQueryJsonObject = new JSONObject();
+
+        JSONObject regularExpressionJsonObject = new JSONObject();
+        regularExpressionJsonObject.put(Constants.REGEX, topic.getName() + "\\..*");
+
+        likeQueryJsonObject.put(Constants.TOPIC_NAME, regularExpressionJsonObject);
+
+        String likeQuery = likeQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForLikeQuery = this.rawNotifications.find(likeQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForLikeQuery) {
+
+            LOGGER.debug("Found RawNotification (like query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+        return result;
+
+    }
+
+    public Collection<RawNotification> retrieveNotProcessedRawNotifications() {
+
+        LOGGER.debug("Retrieve not processed RawNotifications");
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.PROCESSED, Boolean.FALSE);
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForExactQuery) {
+
+            LOGGER.debug("Found RawNotification (exact query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+
+        JSONObject likeQueryJsonObject = new JSONObject();
+        likeQueryJsonObject.put(Constants.PROCESSED, Boolean.FALSE);
+
+        String likeQuery = likeQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForLikeQuery = this.rawNotifications.find(likeQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForLikeQuery) {
+
+            LOGGER.debug("Found RawNotification (like query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+        return result;
+    }
 
 	public Collection<RawNotification> retrieveNotProcessedRawNotificationsForTopic(Topic topic) {
 		
@@ -172,6 +274,7 @@ public class Persister implements InitializingBean {
 	public void markRawNotificationAsProcessed(RawNotification rawNotification) {
 		
 		rawNotification.setProcessed(Boolean.TRUE);
+        rawNotification.setProcessedAt(new Date());
 		
 		this.rawNotifications.save(rawNotification);
 	}
@@ -236,10 +339,140 @@ public class Persister implements InitializingBean {
 		return result;
 	}
 
+    public Collection<DecoratedNotification> retrieveAllDecoratedNotifications() {
+
+        LOGGER.debug("Retrieve all DecoratedNotifications");
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Iterable<DecoratedNotification> decoratedNotifications = this.decoratedNotifications.find("{}").as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotifications) {
+
+            LOGGER.debug("Found DecoratedNotification (exact query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+
+    }
+
+    public Collection<DecoratedNotification> retrieveAllDecoratedNotificationsForTopic(Topic topic) {
+
+        LOGGER.debug("Retrieve not sent DecoratedNotifications for Topic : " + topic);
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.RAW_NOTIFICATION_TOPIC_NAME, topic.getName());
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<DecoratedNotification> decoratedNotificationsForExactQuery = this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForExactQuery) {
+
+            LOGGER.debug("Found DecoratedNotification (exact query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+
+        JSONObject likeQueryJsonObject = new JSONObject();
+
+        JSONObject regularExpressionJsonObject = new JSONObject();
+        regularExpressionJsonObject.put(Constants.REGEX, topic.getName() + "\\..*");
+
+        likeQueryJsonObject.put(Constants.RAW_NOTIFICATION_TOPIC_NAME, regularExpressionJsonObject);
+
+        String likeQuery = likeQueryJsonObject.toString();
+
+        Iterable<DecoratedNotification> decoratedNotificationsForLikeQuery = this.decoratedNotifications.find(likeQuery).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForLikeQuery) {
+
+            LOGGER.debug("Found DecoratedNotification (like query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+
+    }
+
+    public Collection<DecoratedNotification> retrieveNotSentDecoratedNotifications() {
+
+        LOGGER.debug("Retrieve not sent DecoratedNotifications");
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.SENT, Boolean.FALSE);
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<DecoratedNotification> decoratedNotificationsForExactQuery = this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForExactQuery) {
+
+            LOGGER.debug("Found DecoratedNotification (exact query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+    }
+
+    public Collection<Topic> retrieveAllTopics() {
+
+        LOGGER.debug("Retrieve all Topics");
+
+        Collection<Topic> result = new HashSet<>();
+
+        Collection<RawNotification> rawNotifications = this.retrieveAllRawNotifications();
+
+        for(RawNotification rowNotification : rawNotifications) {
+
+            result.add(rowNotification.getTopic());
+
+        }
+
+        for(Topic topic : result) {
+
+            LOGGER.debug("Topic found: " + topic);
+        }
+
+        return result;
+
+    }
+
+    public Collection<Topic> retrieveAllSubTopicsForTopic(Topic topic) {
+
+        LOGGER.debug("Retrieve all subtopics of topic " + topic.getName());
+
+        Collection<Topic> result = new HashSet<>();
+
+        Collection<RawNotification> rawNotifications = this.retrieveAllRawNotificationsForTopic(topic);
+
+        for(RawNotification rawNotification : rawNotifications) {
+
+            result.add(rawNotification.getTopic());
+        }
+
+        for(Topic topicFound : result) {
+            LOGGER.debug("Topic found " + topicFound);
+        }
+
+        return result;
+
+    }
+
 	public void markDecoratedNotificationAsSent(
 			DecoratedNotification decoratedNotification) {
 		
 		decoratedNotification.setSent(Boolean.TRUE);
+        decoratedNotification.setSentAt(new Date());
 		
 		this.decoratedNotifications.save(decoratedNotification);
 	}

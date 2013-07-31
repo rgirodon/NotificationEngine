@@ -293,7 +293,7 @@ Example 3
 				{
 				  "id" : "helpdeskChannel",
 				  "topic" : "helpdesk",
-				  "selectorType" : "mongoDbSelector",				  
+				  "selectorType" : "mongoDbSelector",
 				  "selectorTaskPeriod" : "5000",
 				  "notificatorType" : "singleMultiTopicMailByRecipient",
 				  "notificatorTaskPeriod" : "5000",
@@ -308,13 +308,13 @@ As you can see, a Configuration is an array of Channels.
 Each Channel has :
 - an identifier
 - a Topic
-- a Selector 
+- a Selector
   - the Selector can be of a known type, or of a custom type - in this case the Configuration must specify its full name class
   - the Selector can have a specific execution period, expressed in ms with property selectorTaskPeriod (if it has not, if will be a 20s default period)
 - a Notificator
   - the Notificator can be of a known type, or of a custom type - in this case the Configuration must specify its full name class
   - the Notificator can have a specific execution period, expressed in ms with property notificatorTaskPeriod (if it has not, if will be a 20s default period)
-- any other needed options (just like mailTemplate in our examples) that will be accessible through a map at runtime  
+- any other needed options (just like mailTemplate in our examples) that will be accessible through a map at runtime
 
 ### 3.2.1. Built-in Selectors
 
