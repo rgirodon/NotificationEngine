@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.notificationengine.mail.Mailer;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import static org.junit.Assert.assertTrue;
 
 public class TestMailer {
 
@@ -16,14 +17,14 @@ public class TestMailer {
 	public void init() {
 		
 		SimpleMailMessage templateMessage = new SimpleMailMessage();
-		templateMessage.setFrom("rgirodon@sqli.com");
+		templateMessage.setFrom("**********");
 		templateMessage.setSubject("Notification Engine Test Mail");
 		
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
-		mailSender.setUsername("rgirodon@sqli.com");
-		mailSender.setPassword("manuriviere");
+		mailSender.setUsername("*********");
+		mailSender.setPassword("*********");
 		
 		Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");
@@ -40,8 +41,8 @@ public class TestMailer {
 	
 	@Test
 	public void testSendMail() {
-		
-		this.mailer.sendMail("rgirodon@sqli.com", "Default Test Mail Content.");
+
+        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Default Test Mail Content."));
 	}
 
 }

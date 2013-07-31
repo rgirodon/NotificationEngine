@@ -424,21 +424,6 @@ public class Persister implements InitializingBean {
             result.add(decoratedNotification);
         }
 
-
-        JSONObject likeQueryJsonObject = new JSONObject();
-        likeQueryJsonObject.put(Constants.SENT, Boolean.FALSE);
-
-        String likeQuery = likeQueryJsonObject.toString();
-
-        Iterable<DecoratedNotification> decoratedNotificationsForLikeQuery = this.decoratedNotifications.find(likeQuery).as(DecoratedNotification.class);
-
-        for(DecoratedNotification decoratedNotification : decoratedNotificationsForLikeQuery) {
-
-            LOGGER.debug("Found DecoratedNotification (like query) : " + decoratedNotification);
-
-            result.add(decoratedNotification);
-        }
-
         return result;
     }
 
