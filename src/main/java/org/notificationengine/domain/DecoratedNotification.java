@@ -44,13 +44,19 @@ public class DecoratedNotification {
 
     public DecoratedNotification() {
 		super();
+        this.createdAt = new Date();
 	}
 
 	@Override
 	public String toString() {
-		return "DecoratedNotification [_id=" + _id + ", recipient=" + recipient
-				+ ", rawNotification=" + rawNotification + ", sent=" + sent
-				+ "]";
+		return "DecoratedNotification ["+
+                "_id=" + _id +
+                ", recipient=" + recipient +
+                ", rawNotification=" + rawNotification +
+                ", sent=" + sent +
+                ", createdAt=" + createdAt +
+                ", sentAt=" + sentAt +
+				"]";
 	}
 
 	public ObjectId get_id() {

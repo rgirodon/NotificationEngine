@@ -1,6 +1,8 @@
 package org.notificationengine.persistance;
 
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -369,6 +371,8 @@ public class Persister implements InitializingBean {
 
         String exactQuery = exactQueryJsonObject.toString();
 
+        LOGGER.debug("Exact query: " + exactQuery);
+
         Iterable<DecoratedNotification> decoratedNotificationsForExactQuery = this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
 
         for(DecoratedNotification decoratedNotification : decoratedNotificationsForExactQuery) {
@@ -422,6 +426,202 @@ public class Persister implements InitializingBean {
         }
 
         return result;
+    }
+
+    public Collection<RawNotification> retrieveRawNotificationsForDate(Date date) {
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        /*JSONObject dateRange = new JSONObject();
+        dateRange.put(Constants.AFTER, Constants.HASH);
+        dateRange.put(Constants.BEFORE, Constants.HASH);
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.CREATED_AT, dateRange);
+
+        String exactQuery = exactQueryJsonObject.toString();*/
+
+        // TODO : see if method above is possible (not working as it is yet)
+
+        // TEMP : query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}}";
+
+        LOGGER.debug("Date query: " + exactQuery);
+
+        Iterable<RawNotification> rawNotificationsForDate = this.rawNotifications.find(exactQuery, beginDate, endDate).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForDate) {
+
+            result.add(rawNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<RawNotification> retrieveProcessedRawNotificationsForDate(Date date) {
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        /*JSONObject dateRange = new JSONObject();
+        dateRange.put(Constants.AFTER, Constants.HASH);
+        dateRange.put(Constants.BEFORE, Constants.HASH);
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.CREATED_AT, dateRange);
+
+        String exactQuery = exactQueryJsonObject.toString();*/
+
+        // TODO : see if method above is possible (not working as it is yet)
+
+        // TEMP : query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}, processed: true}";
+
+        LOGGER.debug("Date query: " + exactQuery);
+
+        Iterable<RawNotification> rawNotificationsForDate = this.rawNotifications.find(exactQuery, beginDate, endDate).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForDate) {
+
+            result.add(rawNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<DecoratedNotification> retrieveSentDecoratedNotificationsForDate(Date date) {
+
+        LOGGER.debug("retrieveSentDecoratedNotificationsForDate: " + date.toString() );
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        /*JSONObject dateRange = new JSONObject();
+        dateRange.put(Constants.AFTER, Constants.HASH);
+        dateRange.put(Constants.BEFORE, Constants.HASH);
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.CREATED_AT, dateRange);
+
+        String exactQuery = exactQueryJsonObject.toString();*/
+
+        // TODO : see if method above is possible (not working as it is yet)
+
+        // TEMP : query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}, sent: true}";
+
+        LOGGER.debug("Date query: " + exactQuery);
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDate =
+                this.decoratedNotifications.find(exactQuery, beginDate, endDate).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDate) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<DecoratedNotification> retrieveDecoratedNotificationsForDate(Date date) {
+
+        LOGGER.debug("retrieveDecoratedNotificationsForDate: " + date.toString() );
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        JSONObject dateRange = new JSONObject();
+        dateRange.put(Constants.AFTER, Constants.HASH);
+        dateRange.put(Constants.BEFORE, Constants.HASH);
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.CREATED_AT, dateRange);
+
+        String exactQuery2 = exactQueryJsonObject.toString();
+
+        // TODO : see if method above is possible (not working as it is yet)
+
+        // TEMP : query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}}";
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDate =
+                this.decoratedNotifications.find(exactQuery, beginDate, endDate).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDate) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+
+        }
+
+        return result;
+
     }
 
     public Collection<Topic> retrieveAllTopics() {

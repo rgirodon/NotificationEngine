@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class DecoratedNotificationController {
@@ -98,6 +100,96 @@ public class DecoratedNotificationController {
         Collection<DecoratedNotification> decoratedNotifications = this.persister.retrieveNotSentDecoratedNotificationsForTopic(topic);
 
         Integer result = decoratedNotifications.size();
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/getSentDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @ResponseBody
+    public String getSentDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
+
+        Date date = new Date();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < nbDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        //Retrieve data and store it to be sent as response
+
+        Map<String, Integer> stats = new HashMap<>();
+
+        for(Date atDate : datesToGet) {
+
+            Integer nbRowNotificationsCreated = this.persister.retrieveSentDecoratedNotificationsForDate(atDate).size();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = dateFormat.format(atDate);
+
+            stats.put(formattedDate, nbRowNotificationsCreated);
+
+        }
+
+        Gson gson = new Gson();
+
+        String result = gson.toJson(stats);
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/getCreatedDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @ResponseBody
+    public String getCreatedDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
+
+        Date date = new Date();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < nbDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        //Retrieve data and store it to be sent as response
+
+        Map<String, Integer> stats = new HashMap<>();
+
+        for(Date atDate : datesToGet) {
+
+            Integer nbRowNotificationsCreated = this.persister.retrieveDecoratedNotificationsForDate(atDate).size();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = dateFormat.format(atDate);
+
+            stats.put(formattedDate, nbRowNotificationsCreated);
+
+        }
+
+        Gson gson = new Gson();
+
+        String result = gson.toJson(stats);
 
         return result;
 
