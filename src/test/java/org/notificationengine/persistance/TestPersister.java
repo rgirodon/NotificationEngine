@@ -748,4 +748,23 @@ public class TestPersister {
 
     }
 
+    @Test
+    public void testSaveDecoratedNotification() {
+
+        DecoratedNotification decoratedNotification1 = new DecoratedNotification();
+        decoratedNotification1.set_id(new ObjectId());
+        decoratedNotification1.setSent(Boolean.FALSE);
+        decoratedNotification1.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.createDecoratedNotification(decoratedNotification1);
+
+        decoratedNotification1.setSendingAttempts(2);
+        
+        persister.saveDecoratedNotification(decoratedNotification1);
+
+        DecoratedNotification decoratedNotification2 = persister.retrieveDecoratedNotificationById(decoratedNotification1.get_id());
+
+        assertEquals(new Integer(2), decoratedNotification2.getSendingAttempts());
+
+    }
 }
