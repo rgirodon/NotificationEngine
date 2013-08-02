@@ -15,14 +15,16 @@ import org.notificationengine.domain.Subscription;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.persistance.MongoDbSettings;
 import org.notificationengine.persistance.MongoDbUtils;
+import org.notificationengine.selector.ISelectorWriteEnabled;
 import org.notificationengine.selector.Selector;
+import org.notificationengine.selector.SelectorWriteEnabled;
 import org.notificationengine.spring.SpringUtils;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
-public class MongoDbSelector extends Selector {
+public class MongoDbSelector extends SelectorWriteEnabled {
 
 	private static Logger LOGGER = Logger.getLogger(MongoDbSelector.class);
 	
