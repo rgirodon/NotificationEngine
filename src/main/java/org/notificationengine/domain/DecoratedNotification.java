@@ -21,6 +21,8 @@ public class DecoratedNotification {
 
     private Date sentAt;
 
+    private Integer sendingAttempts;
+
 	public Map<String, Object> getContext() {
 		
 		Map<String, Object> context = new HashMap<>();
@@ -40,17 +42,26 @@ public class DecoratedNotification {
 		this.sent = Boolean.FALSE;
         this.createdAt = new Date();
         this.sentAt = null;
+        this.sendingAttempts = 0;
 	}
 
     public DecoratedNotification() {
 		super();
+        this.createdAt = new Date();
+        this.sendingAttempts = 0;
 	}
 
 	@Override
 	public String toString() {
-		return "DecoratedNotification [_id=" + _id + ", recipient=" + recipient
-				+ ", rawNotification=" + rawNotification + ", sent=" + sent
-				+ "]";
+		return "DecoratedNotification ["+
+                "_id=" + _id +
+                ", recipient=" + recipient +
+                ", rawNotification=" + rawNotification +
+                ", sent=" + sent +
+                ", createdAt=" + createdAt +
+                ", sentAt=" + sentAt +
+                ", sendingAttempts=" + sendingAttempts +
+				"]";
 	}
 
 	public ObjectId get_id() {
@@ -99,6 +110,13 @@ public class DecoratedNotification {
 
     public void setSentAt(Date sentAt) {
         this.sentAt = sentAt;
+    }
+    public Integer getSendingAttempts() {
+        return sendingAttempts;
+    }
+
+    public void setSendingAttempts(Integer sendingAttempts) {
+        this.sendingAttempts = sendingAttempts;
     }
 
 	

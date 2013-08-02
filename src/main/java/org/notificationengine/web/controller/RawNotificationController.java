@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class RawNotificationController {
@@ -172,6 +174,96 @@ public class RawNotificationController {
         Collection<RawNotification> rawNotifications = this.persister.retrieveNotProcessedRawNotificationsForTopic(topic);
 
         result = rawNotifications.size();
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/getCreatedRawNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @ResponseBody
+    public String getRawNotificationsCreatedForLastDays(@RequestParam("days") Integer nbDays) {
+
+        Date date = new Date();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < nbDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        //Retrieve data and store it to be sent as response
+
+        Map<String, Integer> stats = new HashMap<>();
+
+        for(Date atDate : datesToGet) {
+
+            Integer nbRowNotificationsCreated = this.persister.retrieveRawNotificationsForDate(atDate).size();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = dateFormat.format(atDate);
+
+            stats.put(formattedDate, nbRowNotificationsCreated);
+
+        }
+
+        Gson gson = new Gson();
+
+        String result = gson.toJson(stats);
+
+        return result;
+
+    }
+
+    @RequestMapping(value = "/getProcessedRawNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @ResponseBody
+    public String getRawNotificationsProcessedForLastDays(@RequestParam("days") Integer nbDays) {
+
+        Date date = new Date();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < nbDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        //Retrieve data and store it to be sent as response
+
+        Map<String, Integer> stats = new HashMap<>();
+
+        for(Date atDate : datesToGet) {
+
+            Integer nbRowNotificationsCreated = this.persister.retrieveProcessedRawNotificationsForDate(atDate).size();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = dateFormat.format(atDate);
+
+            stats.put(formattedDate, nbRowNotificationsCreated);
+
+        }
+
+        Gson gson = new Gson();
+
+        String result = gson.toJson(stats);
 
         return result;
 

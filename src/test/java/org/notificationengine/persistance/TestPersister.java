@@ -2,8 +2,11 @@ package org.notificationengine.persistance;
 
 import static org.junit.Assert.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.List;
+import java.util.Date;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -573,4 +576,176 @@ public class TestPersister {
         assertEquals(3, topics.size());
 
     }
+
+    @Test
+    public void testRetrieveRawNotificationsForDate() {
+
+        RawNotification rawNotification1 = new RawNotification();
+        rawNotification1.set_id(new ObjectId());
+        rawNotification1.setProcessed(Boolean.FALSE);
+        rawNotification1.setTopic(new Topic("facturation.societe1"));
+
+        persister.createRawNotification(rawNotification1);
+
+
+        RawNotification rawNotification2 = new RawNotification();
+        rawNotification2.set_id(new ObjectId());
+        rawNotification2.setProcessed(Boolean.FALSE);
+        rawNotification2.setTopic(new Topic("facturation.societe2"));
+
+        persister.createRawNotification(rawNotification2);
+
+        Date today = new Date();
+
+        Collection<RawNotification> rawNotifications = this.persister.retrieveRawNotificationsForDate(today);
+
+        assertEquals(2, rawNotifications.size());
+
+    }
+
+    @Test
+    public void testRetrieveProcessedRawNotificationsForDate() {
+
+        RawNotification rawNotification1 = new RawNotification();
+        rawNotification1.set_id(new ObjectId());
+        rawNotification1.setProcessed(Boolean.FALSE);
+        rawNotification1.setTopic(new Topic("facturation.societe1"));
+
+        persister.createRawNotification(rawNotification1);
+
+
+        RawNotification rawNotification2 = new RawNotification();
+        rawNotification2.set_id(new ObjectId());
+        rawNotification2.setProcessed(Boolean.TRUE);
+        rawNotification2.setTopic(new Topic("facturation.societe2"));
+
+        persister.createRawNotification(rawNotification2);
+
+        Date today = new Date();
+
+        Collection<RawNotification> rawNotifications = this.persister.retrieveProcessedRawNotificationsForDate(today);
+
+        assertEquals(1, rawNotifications.size());
+
+
+    }
+
+    @Test
+    public void testGetCreatedDecoratedNotificationForDate() {
+
+        DecoratedNotification decoratedNotification1 = new DecoratedNotification();
+        decoratedNotification1.set_id(new ObjectId());
+        decoratedNotification1.setSent(Boolean.FALSE);
+        decoratedNotification1.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.createDecoratedNotification(decoratedNotification1);
+
+
+        DecoratedNotification decoratedNotification2 = new DecoratedNotification();
+        decoratedNotification2.set_id(new ObjectId());
+        decoratedNotification2.setSent(Boolean.FALSE);
+        decoratedNotification2.setRawNotification(new RawNotification(new Topic("facturation.societe2")));
+
+        persister.createDecoratedNotification(decoratedNotification2);
+
+
+        DecoratedNotification decoratedNotification3 = new DecoratedNotification();
+        decoratedNotification3.set_id(new ObjectId());
+        decoratedNotification3.setSent(Boolean.TRUE);
+        decoratedNotification3.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.createDecoratedNotification(decoratedNotification3);
+
+
+        DecoratedNotification decoratedNotification4 = new DecoratedNotification();
+        decoratedNotification4.set_id(new ObjectId());
+        decoratedNotification4.setSent(Boolean.FALSE);
+        decoratedNotification4.setRawNotification(new RawNotification(new Topic("facturation")));
+
+        persister.createDecoratedNotification(decoratedNotification4);
+
+
+
+        DecoratedNotification rawNotification5 = new DecoratedNotification();
+        rawNotification5.set_id(new ObjectId());
+        rawNotification5.setSent(Boolean.TRUE);
+        rawNotification5.setRawNotification(new RawNotification(new Topic("facturationDifferente")));
+
+        persister.createDecoratedNotification(rawNotification5);
+
+        Date today = new Date();
+
+        Collection<DecoratedNotification> decoratedNotifications = this.persister.retrieveDecoratedNotificationsForDate(today);
+
+        assertEquals(5, decoratedNotifications.size());
+    }
+
+    @Test
+    public void testGetSentDecoratedNotificationForDate() {
+
+        DecoratedNotification decoratedNotification1 = new DecoratedNotification();
+        decoratedNotification1.set_id(new ObjectId());
+        decoratedNotification1.setSent(Boolean.FALSE);
+        decoratedNotification1.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.createDecoratedNotification(decoratedNotification1);
+
+
+        DecoratedNotification decoratedNotification2 = new DecoratedNotification();
+        decoratedNotification2.set_id(new ObjectId());
+        decoratedNotification2.setSent(Boolean.FALSE);
+        decoratedNotification2.setRawNotification(new RawNotification(new Topic("facturation.societe2")));
+
+        persister.createDecoratedNotification(decoratedNotification2);
+
+
+        DecoratedNotification decoratedNotification3 = new DecoratedNotification();
+        decoratedNotification3.set_id(new ObjectId());
+        decoratedNotification3.setSent(Boolean.TRUE);
+        decoratedNotification3.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.createDecoratedNotification(decoratedNotification3);
+
+
+        DecoratedNotification decoratedNotification4 = new DecoratedNotification();
+        decoratedNotification4.set_id(new ObjectId());
+        decoratedNotification4.setSent(Boolean.FALSE);
+        decoratedNotification4.setRawNotification(new RawNotification(new Topic("facturation")));
+
+        persister.createDecoratedNotification(decoratedNotification4);
+
+
+
+        DecoratedNotification rawNotification5 = new DecoratedNotification();
+        rawNotification5.set_id(new ObjectId());
+        rawNotification5.setSent(Boolean.TRUE);
+        rawNotification5.setRawNotification(new RawNotification(new Topic("facturationDifferente")));
+
+        persister.createDecoratedNotification(rawNotification5);
+
+        Date today = new Date();
+
+        Collection<DecoratedNotification> decoratedNotifications = this.persister.retrieveSentDecoratedNotificationsForDate(today);
+
+        assertEquals(2, decoratedNotifications.size());
+    }
+
+    @Test
+    public void testDeleteDecoratedNotification() {
+
+        DecoratedNotification decoratedNotification1 = new DecoratedNotification();
+        decoratedNotification1.set_id(new ObjectId());
+        decoratedNotification1.setSent(Boolean.FALSE);
+        decoratedNotification1.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.createDecoratedNotification(decoratedNotification1);
+
+        persister.deleteDecoratedNotification(decoratedNotification1);
+
+        Collection<DecoratedNotification> decoratedNotifications = persister.retrieveAllDecoratedNotifications();
+
+        assertEquals(0, decoratedNotifications.size());
+
+    }
+
 }

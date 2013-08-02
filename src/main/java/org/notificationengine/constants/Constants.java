@@ -11,7 +11,7 @@ public class Constants {
 	final public static String TOPIC_NAME = "topic.name";
 	
 	final public static String RAW_NOTIFICATION_TOPIC_NAME = "rawNotification.topic.name";
-	
+
 	final public static String ID = "id";
 	
 	final public static String SELECTOR_TYPE = "selectorType";
@@ -40,11 +40,19 @@ public class Constants {
 	
 	final public static String CONFIGURATION_READER = "configurationReader";
 
+    public static final String CREATED_AT = "createdAt";
+
 	public static final Object PROCESSED = "processed";
 
 	public static final Object _ID = "_id";
 
 	public static final Object REGEX = "$regex";
+
+    public static final Object AFTER = "$gte";
+
+    public static final Object BEFORE = "$lt";
+
+    public static final Object HASH = "#";
 
 	public static final long SELECTOR_TASK_DELAY = 10000;
 
@@ -97,4 +105,6 @@ public class Constants {
 	public static final String LOCAL_SETTINGS_PROPERTIES = "localSettingsProperties";
 
 	public static final String NOTIFICATOR_CLASS = "notificatorClass";
+
+    public static final Integer MAX_ATTEMPTS = 5;
 }
