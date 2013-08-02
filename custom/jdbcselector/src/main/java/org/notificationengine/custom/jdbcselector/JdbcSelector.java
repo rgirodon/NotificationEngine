@@ -19,7 +19,7 @@ public class JdbcSelector extends Selector {
 	}
 
 	@Override
-	protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
+	public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
 		
 		DbHelper dbHelper = (DbHelper)SpringUtils.getBean(JdbcSelectorConstants.DB_HELPER);
 		
@@ -36,5 +36,15 @@ public class JdbcSelector extends Selector {
 		
 		return result;
 	}
-
+	
+	public Collection<Subscription> retrieveSubscriptions() {
+		
+		DbHelper dbHelper = (DbHelper)SpringUtils.getBean(JdbcSelectorConstants.DB_HELPER);
+		
+		Collection<Subscription> result = dbHelper.retrieveSubscriptions();
+		
+		LOGGER.debug("Nbr of subscriptions retrieved : " + result.size());
+		
+		return result;
+	}
 }
