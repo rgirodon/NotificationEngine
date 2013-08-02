@@ -87,7 +87,7 @@ public class IntegrationTestData {
 		
 		persister.createRawNotification(rawNotification4);
 		
-		
+		/*
 		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com"));
 		
 		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com"));
@@ -108,7 +108,7 @@ public class IntegrationTestData {
 		mongoDbSelector.createSubscription(subscription4);
 		mongoDbSelector.createSubscription(subscription5);
 		mongoDbSelector.createSubscription(subscription6);
-		
+		*/
 	}
 
 }

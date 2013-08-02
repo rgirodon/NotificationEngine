@@ -22,15 +22,24 @@ public class DbHelper {
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
-	@Value("${jdbc.sql.order}")
-	private String sqlOrder;
+	@Value("${jdbc.sql.orderForSubscriptionsByTopic}")
+	private String sqlOrderForSubscriptionsByTopic;
 	
-	@Value("${jdbc.sql.recipient.alias}")
-	private String recipientAlias;
+	@Value("${jdbc.sql.recipient.aliasForSubscriptionsByTopic}")
+	private String recipientAliasForSubscriptionsByTopic;
 	
-	@Value("${jdbc.sql.topic.param}")
-	private String topicParam;
-
+	@Value("${jdbc.sql.topic.paramForSubscriptionsByTopic}")
+	private String topicParamForSubscriptionsByTopic;
+	
+	@Value("${jdbc.sql.orderForAllSubscriptions}")
+	private String sqlOrderForAllSubscriptions;
+	
+	@Value("${jdbc.sql.recipient.aliasForAllSubscriptions}")
+	private String recipientAliasForAllSubscriptions;
+	
+	@Value("${jdbc.sql.topic.aliasForAllSubscriptions}")
+	private String topicAliasForAllSubscriptions;
+	
     @Autowired
     public void setDataSource(DataSource dataSource) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -39,9 +48,9 @@ public class DbHelper {
 	public Collection<Subscription> retrieveSubscriptionsForTopic(
 			final String topicName) {
 		
-		SqlParameterSource namedParameters = new MapSqlParameterSource(this.topicParam, topicName);
+		SqlParameterSource namedParameters = new MapSqlParameterSource(this.topicParamForSubscriptionsByTopic, topicName);
 
-	    return this.namedParameterJdbcTemplate.query(this.sqlOrder, namedParameters, new RowMapper<Subscription>() {
+	    return this.namedParameterJdbcTemplate.query(this.sqlOrderForSubscriptionsByTopic, namedParameters, new RowMapper<Subscription>() {
 
 			@Override
 			public Subscription mapRow(ResultSet rs, int cptLine)
@@ -49,7 +58,26 @@ public class DbHelper {
 				
 				Topic topic = new Topic(topicName);
 				
-				Recipient recipient = new Recipient(rs.getString(recipientAlias));
+				Recipient recipient = new Recipient(rs.getString(recipientAliasForSubscriptionsByTopic));
+				
+				Subscription subscription = new Subscription(topic, recipient);
+
+				return subscription;
+			}	    	
+		});
+	}
+
+	public Collection<Subscription> retrieveSubscriptions() {
+		
+	    return this.namedParameterJdbcTemplate.query(this.sqlOrderForAllSubscriptions, new RowMapper<Subscription>() {
+
+			@Override
+			public Subscription mapRow(ResultSet rs, int cptLine)
+					throws SQLException {
+				
+				Topic topic = new Topic(rs.getString(topicAliasForAllSubscriptions));
+				
+				Recipient recipient = new Recipient(rs.getString(recipientAliasForAllSubscriptions));
 				
 				Subscription subscription = new Subscription(topic, recipient);
 
