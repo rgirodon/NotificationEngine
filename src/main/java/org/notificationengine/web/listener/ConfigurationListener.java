@@ -59,6 +59,8 @@ public class ConfigurationListener implements ServletContextListener {
 		
 		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator = (SingleMultiTopicMailByRecipientNotificator)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
 		
+		SubscriptionController subscriptionController = (SubscriptionController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SUBSCRIPTION_CONTROLLER);
+		
 		timer.schedule(new NotificatorTask(singleMultiTopicMailByRecipientNotificator), Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
 		
 		int cptChannel = 2;
@@ -76,15 +78,6 @@ public class ConfigurationListener implements ServletContextListener {
 				LOGGER.debug("Detected Selector of type " + Constants.SELECTOR_TYPE_MONGODB);
 				
 				selector = new MongoDbSelector(topic);
-				
-				SubscriptionController subscriptionController = (SubscriptionController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SUBSCRIPTION_CONTROLLER);
-				
-				if (!subscriptionController.isActivated()) {
-					
-					subscriptionController.activate((MongoDbSelector)selector);
-					
-					LOGGER.debug("SubscriptionController activated");
-				}
 				
 				break;
 				
@@ -142,6 +135,7 @@ public class ConfigurationListener implements ServletContextListener {
 			
 			timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, selectorTaskPeriod);
 			
+			subscriptionController.setSelector(selector);
 			
 			INotificator notificator = null;
 				
