@@ -35,7 +35,7 @@ public class SubscriptionController {
 		
 		return (this.mongoDbSelector != null);
 	}
-	
+    
 	@RequestMapping(value = "/subscription.do", method = RequestMethod.PUT, consumes = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void create(@RequestBody SubscriptionDTO subscriptionDTO) {
