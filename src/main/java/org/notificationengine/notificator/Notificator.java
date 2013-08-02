@@ -36,6 +36,7 @@ public abstract class Notificator implements INotificator {
         Map<DecoratedNotification, Boolean> decoratedNotificationSentMap= this.processNotSentDecoratedNotifications(notSentDecoratedNotifications);
 
         Collection<DecoratedNotification> decoratedNotificationToMarkAsSent = new ArrayList<>();
+        Collection<DecoratedNotification> decoratedNotificationToDelete = new ArrayList<>();
 
         for(Map.Entry<DecoratedNotification, Boolean> decoratedNotificationSent : decoratedNotificationSentMap.entrySet()) {
 
@@ -43,14 +44,36 @@ public abstract class Notificator implements INotificator {
 
                 decoratedNotificationToMarkAsSent.add(decoratedNotificationSent.getKey());
 
+            } else {
+
+                Integer attempts = decoratedNotificationSent.getKey().getSendingAttempts();
+
+                attempts = attempts + 1;
+
+                decoratedNotificationSent.getKey().setSendingAttempts(attempts);
+
+                if(attempts > Constants.MAX_ATTEMPTS) {
+
+                    this.deleteDecoratedNotification(decoratedNotificationSent.getKey());
+
+                }
+
             }
 
         }
 
         this.markDecoratedNotificationsAsSent(decoratedNotificationToMarkAsSent);
 	}
-	
-	private void markDecoratedNotificationsAsSent(
+
+    protected void deleteDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
+
+        Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
+
+        persister.deleteDecoratedNotification(decoratedNotificationToDelete);
+
+    }
+
+    private void markDecoratedNotificationsAsSent(
 			Collection<DecoratedNotification> notSentDecoratedNotifications) {
 		
 		Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);

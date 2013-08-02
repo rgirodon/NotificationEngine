@@ -730,4 +730,22 @@ public class TestPersister {
         assertEquals(2, decoratedNotifications.size());
     }
 
+    @Test
+    public void testDeleteDecoratedNotification() {
+
+        DecoratedNotification decoratedNotification1 = new DecoratedNotification();
+        decoratedNotification1.set_id(new ObjectId());
+        decoratedNotification1.setSent(Boolean.FALSE);
+        decoratedNotification1.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.createDecoratedNotification(decoratedNotification1);
+
+        persister.deleteDecoratedNotification(decoratedNotification1);
+
+        Collection<DecoratedNotification> decoratedNotifications = persister.retrieveAllDecoratedNotifications();
+
+        assertEquals(0, decoratedNotifications.size());
+
+    }
+
 }
