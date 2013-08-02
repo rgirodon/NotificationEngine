@@ -715,5 +715,12 @@ public class Persister implements InitializingBean {
 		this.decoratedNotifications = decoratedNotifications;
 	}
 
-	
+
+    public void deleteDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
+
+        ObjectId decoratedNotificationId = decoratedNotificationToDelete.get_id();
+
+        this.decoratedNotifications.remove(decoratedNotificationId);
+
+    }
 }

@@ -105,4 +105,6 @@ public class Constants {
 	public static final String LOCAL_SETTINGS_PROPERTIES = "localSettingsProperties";
 
 	public static final String NOTIFICATOR_CLASS = "notificatorClass";
+
+    public static final Integer MAX_ATTEMPTS = 5;
 }
