@@ -27,11 +27,7 @@ public class SingleMultiTopicMailByRecipientFeederNotificator extends Notificato
 		
 		singleMultiTopicMailByRecipientNotificator.addDecoratedNotificationsToProcess(notSentDecoratedNotifications);
 
-        for(DecoratedNotification notSentDecoratedNotification: notSentDecoratedNotifications) {
-
-            result.put(notSentDecoratedNotification, Boolean.TRUE);
-        }
-
+		// returns an empty map because all the job (of marking as sent the decorated notifications) will be done in the singleMultiTopicMailByRecipientNotificator
         return result;
 	}
 

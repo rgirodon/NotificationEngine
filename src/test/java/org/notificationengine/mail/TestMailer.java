@@ -17,14 +17,14 @@ public class TestMailer {
 	public void init() {
 		
 		SimpleMailMessage templateMessage = new SimpleMailMessage();
-		templateMessage.setFrom("mduclos@sqli.com");
+		templateMessage.setFrom("rgirodon@sqli.com");
 		templateMessage.setSubject("Notification Engine Test Mail");
 		
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
-		mailSender.setUsername("mduclos@sqli.com");
-		mailSender.setPassword("*********");
+		mailSender.setUsername("rgirodon@sqli.com");
+		mailSender.setPassword("*****");
 		
 		Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");
@@ -42,13 +42,13 @@ public class TestMailer {
 	@Test
 	public void testSendMail() {
 
-        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Default Test Mail Content."));
+        assertTrue(this.mailer.sendMail("rgirodon@sqli.com", "Default Test Mail Content."));
 	}
 
     @Test
     public void testSendMailWithSubject() {
 
-        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Mail with a different subject", "NotificationEngine Test with custom subject"));
+        assertTrue(this.mailer.sendMail("rgirodon@sqli.com", "Mail with a different subject", "NotificationEngine Test with custom subject"));
     }
 
     @Test
@@ -56,10 +56,10 @@ public class TestMailer {
 
         // TODO : this test is not failing but "from" field is the admin one.
 
-        assertTrue(this.mailer.sendMail("mduclos@sqli.com",
+        assertTrue(this.mailer.sendMail("rgirodon@sqli.com",
                 "Mail with a different subject and from field",
                 "Notification Engine - Custom subject and from fields",
-                "notification@engine.com"));
+                "rgirodon2000@yahoo.fr"));
 
     }
 
