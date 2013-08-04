@@ -1,9 +1,12 @@
 package org.notificationengine.mail;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.notificationengine.constants.Constants;
 import org.notificationengine.mail.Mailer;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -24,7 +27,7 @@ public class TestMailer {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 		mailSender.setUsername("rgirodon@sqli.com");
-		mailSender.setPassword("*****");
+		mailSender.setPassword("xxxx");
 		
 		Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");
@@ -42,25 +45,28 @@ public class TestMailer {
 	@Test
 	public void testSendMail() {
 
-        assertTrue(this.mailer.sendMail("rgirodon@sqli.com", "Default Test Mail Content."));
+        assertTrue(this.mailer.sendMail("rgirodon@sqli.com", "Default Test Mail Content.", null));
 	}
 
     @Test
     public void testSendMailWithSubject() {
 
-        assertTrue(this.mailer.sendMail("rgirodon@sqli.com", "Mail with a different subject", "NotificationEngine Test with custom subject"));
+    	Map<String, String> options = new HashMap<>();
+    	options.put(Constants.SUBJECT, "NotificationEngine Test with custom subject");
+    	
+        assertTrue(this.mailer.sendMail("rgirodon@sqli.com", "Mail with a different subject", options));
     }
 
     @Test
     public void testSendMailWithSubjectAndFromField() {
 
-        // TODO : this test is not failing but "from" field is the admin one.
+    	Map<String, String> options = new HashMap<>();
+    	options.put(Constants.SUBJECT, "NotificationEngine Test with custom subject and from");
+    	options.put(Constants.FROM, "rgirodon2000@yahoo.fr");
 
         assertTrue(this.mailer.sendMail("rgirodon@sqli.com",
                 "Mail with a different subject and from field",
-                "Notification Engine - Custom subject and from fields",
-                "rgirodon2000@yahoo.fr"));
-
+                options));
     }
 
 }

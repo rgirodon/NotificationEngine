@@ -107,4 +107,8 @@ public class Constants {
 	public static final String NOTIFICATOR_CLASS = "notificatorClass";
 
     public static final Integer MAX_ATTEMPTS = 5;
+
+	public static final String SUBJECT = "subject";
+	
+	public static final String FROM = "from";
 }

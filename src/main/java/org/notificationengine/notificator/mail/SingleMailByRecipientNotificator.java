@@ -10,6 +10,7 @@ import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Topic;
+import org.notificationengine.mail.MailOptionsUtils;
 import org.notificationengine.mail.Mailer;
 import org.notificationengine.notificator.Notificator;
 import org.notificationengine.spring.SpringUtils;
@@ -86,8 +87,10 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			
 			LOGGER.debug("Notification text after merge : " + notificationText);
 			
+			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContexts(contexts);
+			
 			// sent a mail to the recipient
-			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText);
+			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
 
