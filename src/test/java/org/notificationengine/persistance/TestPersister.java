@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -72,6 +73,45 @@ public class TestPersister {
 		assertEquals(2, persister.getRawNotifications().count());
 	}
 
+	@Test
+	public void testRetrieveNotProcessedRawNotifications() {
+		
+		RawNotification rawNotification1 = new RawNotification();
+		rawNotification1.set_id(new ObjectId());
+		rawNotification1.setProcessed(Boolean.FALSE);
+		rawNotification1.setTopic(new Topic("facturation.societe1"));
+		
+		persister.createRawNotification(rawNotification1);
+		
+		
+		RawNotification rawNotification2 = new RawNotification();
+		rawNotification2.set_id(new ObjectId());
+		rawNotification2.setProcessed(Boolean.FALSE);
+		rawNotification2.setTopic(new Topic("facturation.societe2"));
+		
+		persister.createRawNotification(rawNotification2);
+		
+		
+		RawNotification rawNotification3 = new RawNotification();
+		rawNotification3.set_id(new ObjectId());
+		rawNotification3.setProcessed(Boolean.TRUE);
+		rawNotification3.setTopic(new Topic("helpdesk.societe1"));
+		
+		persister.createRawNotification(rawNotification3);
+		
+		
+		RawNotification rawNotification4 = new RawNotification();
+		rawNotification4.set_id(new ObjectId());
+		rawNotification4.setProcessed(Boolean.FALSE);
+		rawNotification4.setTopic(new Topic("helpdesk.societe2"));
+		
+		persister.createRawNotification(rawNotification4);
+		
+		Collection<RawNotification> rawNotifications = persister.retrieveNotProcessedRawNotifications();
+		
+		assertEquals(3, rawNotifications.size());
+	}
+	
 	@Test
 	public void testRetrieveNotProcessedRawNotificationsForTopic() {
 		
@@ -606,9 +646,18 @@ public class TestPersister {
     @Test
     public void testRetrieveProcessedRawNotificationsForDate() {
 
+    	Date today = new Date();
+    	
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(today);
+    	cal.add(Calendar.DAY_OF_MONTH, -1);
+    	
+    	Date yesterday = cal.getTime();
+    	
         RawNotification rawNotification1 = new RawNotification();
         rawNotification1.set_id(new ObjectId());
-        rawNotification1.setProcessed(Boolean.FALSE);
+        rawNotification1.setProcessed(Boolean.TRUE);
+        rawNotification1.setProcessedAt(yesterday);
         rawNotification1.setTopic(new Topic("facturation.societe1"));
 
         persister.createRawNotification(rawNotification1);
@@ -617,11 +666,10 @@ public class TestPersister {
         RawNotification rawNotification2 = new RawNotification();
         rawNotification2.set_id(new ObjectId());
         rawNotification2.setProcessed(Boolean.TRUE);
+        rawNotification2.setProcessedAt(today);
         rawNotification2.setTopic(new Topic("facturation.societe2"));
 
         persister.createRawNotification(rawNotification2);
-
-        Date today = new Date();
 
         Collection<RawNotification> rawNotifications = this.persister.retrieveProcessedRawNotificationsForDate(today);
 
@@ -666,12 +714,12 @@ public class TestPersister {
 
 
 
-        DecoratedNotification rawNotification5 = new DecoratedNotification();
-        rawNotification5.set_id(new ObjectId());
-        rawNotification5.setSent(Boolean.TRUE);
-        rawNotification5.setRawNotification(new RawNotification(new Topic("facturationDifferente")));
+        DecoratedNotification decoratedNotification5 = new DecoratedNotification();
+        decoratedNotification5.set_id(new ObjectId());
+        decoratedNotification5.setSent(Boolean.TRUE);
+        decoratedNotification5.setRawNotification(new RawNotification(new Topic("facturationDifferente")));
 
-        persister.createDecoratedNotification(rawNotification5);
+        persister.createDecoratedNotification(decoratedNotification5);
 
         Date today = new Date();
 
@@ -683,6 +731,14 @@ public class TestPersister {
     @Test
     public void testGetSentDecoratedNotificationForDate() {
 
+    	Date today = new Date();
+    	
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(today);
+    	cal.add(Calendar.DAY_OF_MONTH, -1);
+    	
+    	Date yesterday = cal.getTime();
+    	
         DecoratedNotification decoratedNotification1 = new DecoratedNotification();
         decoratedNotification1.set_id(new ObjectId());
         decoratedNotification1.setSent(Boolean.FALSE);
@@ -702,6 +758,7 @@ public class TestPersister {
         DecoratedNotification decoratedNotification3 = new DecoratedNotification();
         decoratedNotification3.set_id(new ObjectId());
         decoratedNotification3.setSent(Boolean.TRUE);
+        decoratedNotification3.setSentAt(yesterday);
         decoratedNotification3.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
 
         persister.createDecoratedNotification(decoratedNotification3);
@@ -716,18 +773,19 @@ public class TestPersister {
 
 
 
-        DecoratedNotification rawNotification5 = new DecoratedNotification();
-        rawNotification5.set_id(new ObjectId());
-        rawNotification5.setSent(Boolean.TRUE);
-        rawNotification5.setRawNotification(new RawNotification(new Topic("facturationDifferente")));
+        DecoratedNotification decoratedNotification5 = new DecoratedNotification();
+        decoratedNotification5.set_id(new ObjectId());
+        decoratedNotification5.setSent(Boolean.TRUE);
+        decoratedNotification5.setSentAt(today);
+        decoratedNotification5.setRawNotification(new RawNotification(new Topic("facturationDifferente")));
 
-        persister.createDecoratedNotification(rawNotification5);
+        persister.createDecoratedNotification(decoratedNotification5);
 
-        Date today = new Date();
+        
 
         Collection<DecoratedNotification> decoratedNotifications = this.persister.retrieveSentDecoratedNotificationsForDate(today);
 
-        assertEquals(2, decoratedNotifications.size());
+        assertEquals(1, decoratedNotifications.size());
     }
 
     @Test
