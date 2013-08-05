@@ -42,11 +42,9 @@ public class TestPersister {
 		rawNotification.setProcessed(Boolean.FALSE);
 		rawNotification.setTopic(new Topic("facturation.societe1"));
 		
-		Recipient recipient = new Recipient("email1@societe1.com");
+		Recipient recipient = new Recipient("email1@societe1.com", "Customer");
 
-        String displayName = "Customer";
-		
-		DecoratedNotification decoratedNotification = new DecoratedNotification(rawNotification, recipient, displayName);
+		DecoratedNotification decoratedNotification = new DecoratedNotification(rawNotification, recipient);
 		
 		persister.createDecoratedNotification(decoratedNotification);
 		

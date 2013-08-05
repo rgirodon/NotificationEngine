@@ -23,10 +23,12 @@ public class AdministratorSelector extends Selector {
 		Properties localSettingsProperties = (Properties)SpringUtils.getBean(Constants.LOCAL_SETTINGS_PROPERTIES);
 		
 		String administratorAddress = localSettingsProperties.getProperty(Constants.ADMINISTRATOR_ADDRESS);
+
+        String administratorDisplayName = localSettingsProperties.getProperty(Constants.ADMINISTRATOR_DISPLAY_NAME);
 		
 		Subscription subscription = new Subscription();
 		subscription.setTopic(this.getTopic());
-		subscription.setRecipient(new Recipient(administratorAddress));
+		subscription.setRecipient(new Recipient(administratorAddress, administratorDisplayName));
 		
 		Collection<Subscription> result = new ArrayList<>();
 		result.add(subscription);
@@ -41,9 +43,11 @@ public class AdministratorSelector extends Selector {
 
         String administratorAddress = localSettingsProperties.getProperty(Constants.ADMINISTRATOR_ADDRESS);
 
+        String administratorDisplayName = localSettingsProperties.getProperty(Constants.ADMINISTRATOR_DISPLAY_NAME);
+
         Subscription subscription = new Subscription();
         subscription.setTopic(this.getTopic());
-        subscription.setRecipient(new Recipient(administratorAddress));
+        subscription.setRecipient(new Recipient(administratorAddress, administratorDisplayName));
 
         Collection<Subscription> result = new ArrayList<>();
         result.add(subscription);

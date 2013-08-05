@@ -97,18 +97,18 @@ public class IntegrationTestData {
 
         String displayName = "Customer";
 		
-		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com"), displayName);
+		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com", "Nicolas Moret"));
 
-		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com"), displayName);
+		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com", "Matthis Duclos"));
 		
-		Subscription subscription3 = new Subscription(new Topic("facturation"), new Recipient("rgirodon@sqli.com"), displayName);
+		Subscription subscription3 = new Subscription(new Topic("facturation"), new Recipient("rgirodon@sqli.com", "Remy Girodon"));
 		
 		
-		Subscription subscription4 = new Subscription(new Topic("helpdesk.societe1"), new Recipient("nmoret"), displayName);
+		Subscription subscription4 = new Subscription(new Topic("helpdesk.societe1"), new Recipient("nmoret", "Nicolas Moret"));
 		
-		Subscription subscription5 = new Subscription(new Topic("helpdesk.societe2"), new Recipient("mduclos@sqli.com"), displayName);
+		Subscription subscription5 = new Subscription(new Topic("helpdesk.societe2"), new Recipient("mduclos@sqli.com", "Matthis Duclos"));
 		
-		Subscription subscription6 = new Subscription(new Topic("helpdesk"), new Recipient("rgirodon@sqli.com"), displayName);
+		Subscription subscription6 = new Subscription(new Topic("helpdesk"), new Recipient("rgirodon@sqli.com", "Remy Girodon"));
 		
 		
 		mongoDbSelector.createSubscription(subscription1);

@@ -42,7 +42,7 @@ public abstract class Selector implements ISelector {
 			
 			for (Subscription subscription : subscriptions) {
 				
-				DecoratedNotification decoratedNotification = new DecoratedNotification(rawNotification, subscription.getRecipient(), subscription.getDisplayName());
+				DecoratedNotification decoratedNotification = new DecoratedNotification(rawNotification, subscription.getRecipient());
 				
 				this.createDecoratedNotification(decoratedNotification);
 			}

@@ -39,12 +39,13 @@ public class SubscriptionController {
 		LOGGER.debug("SubscriptionController received : " + subscriptionDTO);
 		
 		if (this.selector instanceof ISelectorWriteEnabled) {
+
+            Recipient recipient = new Recipient(subscriptionDTO.getRecipient(), subscriptionDTO.getDisplayName());
 			
 			Subscription subscription = new Subscription();
 			subscription.set_id(new ObjectId());
 			subscription.setTopic(new Topic(subscriptionDTO.getTopic()));
-			subscription.setRecipient(new Recipient(subscriptionDTO.getRecipient()));
-            subscription.setDisplayName(new String(subscriptionDTO.getDisplayName()));
+			subscription.setRecipient(recipient);
 			
 			((ISelectorWriteEnabled)this.selector).createSubscription(subscription);
 			

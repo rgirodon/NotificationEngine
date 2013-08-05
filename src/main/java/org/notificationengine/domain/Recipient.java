@@ -4,18 +4,29 @@ public class Recipient {
 
 	private String address;
 
+    private String displayName;
+
 	public Recipient() {
 		super();
 	}
 
-	public Recipient(String address) {
+	public Recipient(String address, String displayName) {
 		super();
 		this.address = address;
+        this.displayName = displayName;
 	}
 
-	@Override
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Override
 	public String toString() {
-		return "Recipient [address=" + address + "]";
+		return "Recipient [address=" + address + ", displayName=" + displayName + "]";
 	}
 	
 	@Override
