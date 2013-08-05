@@ -211,21 +211,6 @@ public class Persister implements InitializingBean {
             result.add(rawNotification);
         }
 
-
-        JSONObject likeQueryJsonObject = new JSONObject();
-        likeQueryJsonObject.put(Constants.PROCESSED, Boolean.FALSE);
-
-        String likeQuery = likeQueryJsonObject.toString();
-
-        Iterable<RawNotification> rawNotificationsForLikeQuery = this.rawNotifications.find(likeQuery).as(RawNotification.class);
-
-        for(RawNotification rawNotification : rawNotificationsForLikeQuery) {
-
-            LOGGER.debug("Found RawNotification (like query) : " + rawNotification);
-
-            result.add(rawNotification);
-        }
-
         return result;
     }
 
@@ -248,8 +233,7 @@ public class Persister implements InitializingBean {
 			LOGGER.debug("Found RawNotification (exact query) : " + rawNotification);
 			
 			result.add(rawNotification);
-		}
-		
+		}		
 		
 		JSONObject likeQueryJsonObject = new JSONObject();		
 		likeQueryJsonObject.put(Constants.PROCESSED, Boolean.FALSE);
@@ -316,8 +300,7 @@ public class Persister implements InitializingBean {
 			LOGGER.debug("Found DecoratedNotification (exact query) : " + decoratedNotification);
 			
 			result.add(decoratedNotification);
-		}
-		
+		}		
 		
 		JSONObject likeQueryJsonObject = new JSONObject();		
 		likeQueryJsonObject.put(Constants.SENT, Boolean.FALSE);
@@ -447,18 +430,7 @@ public class Persister implements InitializingBean {
 
         Date endDate = cal.getTime();
 
-        /*JSONObject dateRange = new JSONObject();
-        dateRange.put(Constants.AFTER, Constants.HASH);
-        dateRange.put(Constants.BEFORE, Constants.HASH);
-
-        JSONObject exactQueryJsonObject = new JSONObject();
-        exactQueryJsonObject.put(Constants.CREATED_AT, dateRange);
-
-        String exactQuery = exactQueryJsonObject.toString();*/
-
-        // TODO : see if method above is possible (not working as it is yet)
-
-        // TEMP : query created manually
+        // query created manually
         String exactQuery = "{createdAt: {$gt: #, $lt: #}}";
 
         LOGGER.debug("Date query: " + exactQuery);
@@ -494,19 +466,8 @@ public class Persister implements InitializingBean {
 
         Date endDate = cal.getTime();
 
-        /*JSONObject dateRange = new JSONObject();
-        dateRange.put(Constants.AFTER, Constants.HASH);
-        dateRange.put(Constants.BEFORE, Constants.HASH);
-
-        JSONObject exactQueryJsonObject = new JSONObject();
-        exactQueryJsonObject.put(Constants.CREATED_AT, dateRange);
-
-        String exactQuery = exactQueryJsonObject.toString();*/
-
-        // TODO : see if method above is possible (not working as it is yet)
-
-        // TEMP : query created manually
-        String exactQuery = "{createdAt: {$gt: #, $lt: #}, processed: true}";
+        // query created manually
+        String exactQuery = "{processedAt: {$gt: #, $lt: #}, processed: true}";
 
         LOGGER.debug("Date query: " + exactQuery);
 
@@ -543,19 +504,8 @@ public class Persister implements InitializingBean {
 
         Date endDate = cal.getTime();
 
-        /*JSONObject dateRange = new JSONObject();
-        dateRange.put(Constants.AFTER, Constants.HASH);
-        dateRange.put(Constants.BEFORE, Constants.HASH);
-
-        JSONObject exactQueryJsonObject = new JSONObject();
-        exactQueryJsonObject.put(Constants.CREATED_AT, dateRange);
-
-        String exactQuery = exactQueryJsonObject.toString();*/
-
-        // TODO : see if method above is possible (not working as it is yet)
-
-        // TEMP : query created manually
-        String exactQuery = "{createdAt: {$gt: #, $lt: #}, sent: true}";
+        // query created manually
+        String exactQuery = "{sentAt: {$gt: #, $lt: #}, sent: true}";
 
         LOGGER.debug("Date query: " + exactQuery);
 
@@ -595,18 +545,7 @@ public class Persister implements InitializingBean {
 
         Date endDate = cal.getTime();
 
-        JSONObject dateRange = new JSONObject();
-        dateRange.put(Constants.AFTER, Constants.HASH);
-        dateRange.put(Constants.BEFORE, Constants.HASH);
-
-        JSONObject exactQueryJsonObject = new JSONObject();
-        exactQueryJsonObject.put(Constants.CREATED_AT, dateRange);
-
-        String exactQuery2 = exactQueryJsonObject.toString();
-
-        // TODO : see if method above is possible (not working as it is yet)
-
-        // TEMP : query created manually
+        // query created manually
         String exactQuery = "{createdAt: {$gt: #, $lt: #}}";
 
         Iterable<DecoratedNotification> decoratedNotificationsForDate =
@@ -723,4 +662,10 @@ public class Persister implements InitializingBean {
         this.decoratedNotifications.remove(decoratedNotificationId);
 
     }
+
+	public void saveDecoratedNotification(
+			DecoratedNotification decoratedNotificationToSave) {
+		
+		this.decoratedNotifications.save(decoratedNotificationToSave);
+	}
 }

@@ -4,10 +4,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.Topic;
+import org.notificationengine.mail.MailOptionsUtils;
 import org.notificationengine.mail.Mailer;
 import org.notificationengine.notificator.Notificator;
 import org.notificationengine.spring.SpringUtils;
@@ -44,8 +46,10 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 			
 			LOGGER.debug("Notification text after merge : " + notificationText);
 			
+			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContext(decoratedNotification.getContext());
+			
 			// sent a mail to the recipient
-			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText);
+			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
 

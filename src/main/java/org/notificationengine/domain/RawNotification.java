@@ -45,6 +45,64 @@ public class RawNotification {
 		this.context.put(key, value);
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((_id == null) ? 0 : _id.hashCode());
+		result = prime * result + ((context == null) ? 0 : context.hashCode());
+		result = prime * result
+				+ ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result
+				+ ((processed == null) ? 0 : processed.hashCode());
+		result = prime * result
+				+ ((processedAt == null) ? 0 : processedAt.hashCode());
+		result = prime * result + ((topic == null) ? 0 : topic.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RawNotification other = (RawNotification) obj;
+		if (_id == null) {
+			if (other._id != null)
+				return false;
+		} else if (!_id.equals(other._id))
+			return false;
+		if (context == null) {
+			if (other.context != null)
+				return false;
+		} else if (!context.equals(other.context))
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (processed == null) {
+			if (other.processed != null)
+				return false;
+		} else if (!processed.equals(other.processed))
+			return false;
+		if (processedAt == null) {
+			if (other.processedAt != null)
+				return false;
+		} else if (!processedAt.equals(other.processedAt))
+			return false;
+		if (topic == null) {
+			if (other.topic != null)
+				return false;
+		} else if (!topic.equals(other.topic))
+			return false;
+		return true;
+	}
+
 	public ObjectId get_id() {
 		return _id;
 	}

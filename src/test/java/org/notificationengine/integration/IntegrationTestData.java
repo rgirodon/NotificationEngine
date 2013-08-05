@@ -47,6 +47,8 @@ public class IntegrationTestData {
 		
 		Map<String, Object> context1 = new HashMap<>();
 		context1.put("message", "Tienes que pagar ahora.");
+		context1.put("subject", "Un mensaje del servicio de las notificaciones.");
+		context1.put("from", "rgirodon2000@yahoo.fr");
 		rawNotification1.setContext(context1);
 		
 		persister.createRawNotification(rawNotification1);
@@ -59,6 +61,8 @@ public class IntegrationTestData {
 		
 		Map<String, Object> context2 = new HashMap<>();
 		context2.put("message", "Hey chico, si no pagas tendras problemas.");
+		context2.put("subject", "Un mensaje del servicio de las notificaciones.");
+		context2.put("from", "rgirodon2000@yahoo.fr");
 		rawNotification2.setContext(context2);
 		
 		persister.createRawNotification(rawNotification2);
@@ -71,6 +75,8 @@ public class IntegrationTestData {
 		
 		Map<String, Object> context3 = new HashMap<>();
 		context3.put("message", "Limpia las vitras");
+		context3.put("subject", "Un mensaje del servicio de las notificaciones.");
+		context3.put("from", "rgirodon2000@yahoo.fr");
 		rawNotification3.setContext(context3);
 		
 		persister.createRawNotification(rawNotification3);
@@ -83,11 +89,12 @@ public class IntegrationTestData {
 		
 		Map<String, Object> context4 = new HashMap<>();
 		context4.put("message", "Limpia el coche");
+		context4.put("subject", "Un mensaje del servicio de las notificaciones.");
+		context4.put("from", "rgirodon2000@yahoo.fr");
 		rawNotification4.setContext(context4);
 		
 		persister.createRawNotification(rawNotification4);
 		
-		/*
 		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com"));
 		
 		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com"));
@@ -95,7 +102,7 @@ public class IntegrationTestData {
 		Subscription subscription3 = new Subscription(new Topic("facturation"), new Recipient("rgirodon@sqli.com"));
 		
 		
-		Subscription subscription4 = new Subscription(new Topic("helpdesk.societe1"), new Recipient("nmoret@sqli.com"));
+		Subscription subscription4 = new Subscription(new Topic("helpdesk.societe1"), new Recipient("nmoret"));
 		
 		Subscription subscription5 = new Subscription(new Topic("helpdesk.societe2"), new Recipient("mduclos@sqli.com"));
 		
@@ -108,7 +115,6 @@ public class IntegrationTestData {
 		mongoDbSelector.createSubscription(subscription4);
 		mongoDbSelector.createSubscription(subscription5);
 		mongoDbSelector.createSubscription(subscription6);
-		*/
 	}
 
 }
