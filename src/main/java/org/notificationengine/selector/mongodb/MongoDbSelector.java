@@ -164,4 +164,23 @@ public class MongoDbSelector extends SelectorWriteEnabled {
 		LOGGER.debug("Inserted Subscription : " + subscription);
 	}
 
+    public void deleteSubscription(String email, String topic) {
+
+        JSONObject query = new JSONObject();
+
+        query.put(Constants.TOPIC_NAME, topic);
+
+        query.put(Constants.RECIPIENT_ADDRESS, email);
+
+        Iterable<Subscription> subscriptionsForExactQuery = this.subscriptions.find(query.toString()).as(Subscription.class);
+
+        for(Subscription subscription : subscriptionsForExactQuery) {
+
+            LOGGER.info(subscription + " has been deleted");
+
+            this.subscriptions.remove(subscription.get_id());
+
+        }
+
+    }
 }
