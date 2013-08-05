@@ -63,4 +63,23 @@ public class TestMongoDbSelector {
         assertEquals(4, subscriptions.size());
 
     }
+
+    @Test
+    public void testDeleteSubscription() {
+
+        Subscription subscription1 = new Subscription(new Topic("facturation"), new Recipient("boss@societe.com", "Customer"));
+        mongoDbSelector.createSubscription(subscription1);
+
+        Subscription subscription2 = new Subscription(new Topic("facturation.client1"), new Recipient("accountmanager1@societe.com", "Customer"));
+        mongoDbSelector.createSubscription(subscription2);
+
+        this.mongoDbSelector.deleteSubscription("boss@societe.com", "facturation.client1");
+
+        this.mongoDbSelector.deleteSubscription("boss@societe.com", "facturation");
+
+        Collection<Subscription> subscriptions = mongoDbSelector.retrieveSubscriptions();
+
+        assertEquals(1, subscriptions.size());
+
+    }
 }

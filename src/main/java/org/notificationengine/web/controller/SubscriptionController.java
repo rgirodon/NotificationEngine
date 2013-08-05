@@ -53,6 +53,20 @@ public class SubscriptionController {
 		}
     }
 
+    @RequestMapping(value = "/subscription.do", method = RequestMethod.DELETE, params = {"email", "topic"})
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@RequestParam("email") String email, @RequestParam("topic") String topic) {
+
+        LOGGER.debug("SubscriptionController delete subscription with topic " + topic + " and email " + email);
+
+        if (this.selector instanceof ISelectorWriteEnabled) {
+
+            ((ISelectorWriteEnabled)this.selector).deleteSubscription(email, topic);
+
+        }
+
+    }
+
     @RequestMapping(value = "/countAllSubscriptions.do", method = RequestMethod.GET)
     @ResponseBody
     public Integer countAllSubscriptions() {
