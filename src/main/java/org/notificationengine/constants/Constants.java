@@ -29,7 +29,9 @@ public class Constants {
 	final public static String RAW_NOTIFICATIONS_COLLECTION = "rawnotifications";
 	
 	final public static String DECORATED_NOTIFICATIONS_COLLECTION = "decoratednotifications";
-	
+
+	final public static String DELETED_DECORATED_NOTIFICATIONS_COLLECTION = "deleteddecoratednotifications";
+
 	final public static String SUBSCRIPTIONS_COLLECTION = "subscriptions";
 	
 	final public static String PERSISTER = "persister";
