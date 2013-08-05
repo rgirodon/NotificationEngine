@@ -25,8 +25,11 @@ public class DbHelper {
 	@Value("${jdbc.sql.orderForSubscriptionsByTopic}")
 	private String sqlOrderForSubscriptionsByTopic;
 	
-	@Value("${jdbc.sql.recipient.aliasForSubscriptionsByTopic}")
-	private String recipientAliasForSubscriptionsByTopic;
+	@Value("${jdbc.sql.recipient.address.aliasForSubscriptionsByTopic}")
+	private String recipientAddressAliasForSubscriptionsByTopic;
+	
+	@Value("${jdbc.sql.recipient.displayName.aliasForSubscriptionsByTopic}")
+	private String recipientDisplayNameAliasForSubscriptionsByTopic;
 	
 	@Value("${jdbc.sql.topic.paramForSubscriptionsByTopic}")
 	private String topicParamForSubscriptionsByTopic;
@@ -34,8 +37,11 @@ public class DbHelper {
 	@Value("${jdbc.sql.orderForAllSubscriptions}")
 	private String sqlOrderForAllSubscriptions;
 	
-	@Value("${jdbc.sql.recipient.aliasForAllSubscriptions}")
-	private String recipientAliasForAllSubscriptions;
+	@Value("${jdbc.sql.recipient.address.aliasForAllSubscriptions}")
+	private String recipientAddressAliasForAllSubscriptions;
+	
+	@Value("${jdbc.sql.recipient.displayName.aliasForAllSubscriptions}")
+	private String recipientDisplayNameAliasForAllSubscriptions;
 	
 	@Value("${jdbc.sql.topic.aliasForAllSubscriptions}")
 	private String topicAliasForAllSubscriptions;
@@ -58,7 +64,8 @@ public class DbHelper {
 				
 				Topic topic = new Topic(topicName);
 				
-				Recipient recipient = new Recipient(rs.getString(recipientAliasForSubscriptionsByTopic));
+				Recipient recipient = new Recipient(rs.getString(recipientAddressAliasForSubscriptionsByTopic),
+													rs.getString(recipientDisplayNameAliasForSubscriptionsByTopic));
 				
 				Subscription subscription = new Subscription(topic, recipient);
 
@@ -77,7 +84,8 @@ public class DbHelper {
 				
 				Topic topic = new Topic(rs.getString(topicAliasForAllSubscriptions));
 				
-				Recipient recipient = new Recipient(rs.getString(recipientAliasForAllSubscriptions));
+				Recipient recipient = new Recipient(rs.getString(recipientAddressAliasForAllSubscriptions),
+													rs.getString(recipientDisplayNameAliasForAllSubscriptions));
 				
 				Subscription subscription = new Subscription(topic, recipient);
 
