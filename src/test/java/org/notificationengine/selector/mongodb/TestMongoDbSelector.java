@@ -26,16 +26,16 @@ public class TestMongoDbSelector {
 	@Test
 	public void testRetrieveSubscriptionsForTopic() {
 		
-		Subscription subscription1 = new Subscription(new Topic("facturation"), new Recipient("boss@societe.com"), "Customer");
+		Subscription subscription1 = new Subscription(new Topic("facturation"), new Recipient("boss@societe.com", "Customer"));
 		mongoDbSelector.createSubscription(subscription1);
 		
-		Subscription subscription2 = new Subscription(new Topic("facturation.client1"), new Recipient("accountmanager1@societe.com"), "Customer");
+		Subscription subscription2 = new Subscription(new Topic("facturation.client1"), new Recipient("accountmanager1@societe.com", "Customer"));
 		mongoDbSelector.createSubscription(subscription2);
 		
-		Subscription subscription3 = new Subscription(new Topic("facturation.client1.agence1"), new Recipient("dptresp1@societe.com"), "Customer");
+		Subscription subscription3 = new Subscription(new Topic("facturation.client1.agence1"), new Recipient("dptresp1@societe.com", "Customer"));
 		mongoDbSelector.createSubscription(subscription3);
 		
-		Subscription subscription4 = new Subscription(new Topic("facturation.client2"), new Recipient("accountmanager2@societe.com"), "Customer");
+		Subscription subscription4 = new Subscription(new Topic("facturation.client2"), new Recipient("accountmanager2@societe.com", "Customer"));
 		mongoDbSelector.createSubscription(subscription4);
 		
 		Collection<Subscription> subscriptions = mongoDbSelector.retrieveSubscriptionsForTopic(new Topic("facturation.client1"));
@@ -46,16 +46,16 @@ public class TestMongoDbSelector {
     @Test
     public void testRetrieveAllSubscriptions() {
 
-        Subscription subscription1 = new Subscription(new Topic("facturation"), new Recipient("boss@societe.com"), "Customer");
+        Subscription subscription1 = new Subscription(new Topic("facturation"), new Recipient("boss@societe.com", "Customer"));
         mongoDbSelector.createSubscription(subscription1);
 
-        Subscription subscription2 = new Subscription(new Topic("facturation.client1"), new Recipient("accountmanager1@societe.com"), "Customer");
+        Subscription subscription2 = new Subscription(new Topic("facturation.client1"), new Recipient("accountmanager1@societe.com", "Customer"));
         mongoDbSelector.createSubscription(subscription2);
 
-        Subscription subscription3 = new Subscription(new Topic("facturation.client1.agence1"), new Recipient("dptresp1@societe.com"), "Customer");
+        Subscription subscription3 = new Subscription(new Topic("facturation.client1.agence1"), new Recipient("dptresp1@societe.com", "Customer"));
         mongoDbSelector.createSubscription(subscription3);
 
-        Subscription subscription4 = new Subscription(new Topic("facturation.client2"), new Recipient("accountmanager2@societe.com"), "Customer");
+        Subscription subscription4 = new Subscription(new Topic("facturation.client2"), new Recipient("accountmanager2@societe.com", "Customer"));
         mongoDbSelector.createSubscription(subscription4);
 
         Collection<Subscription> subscriptions = mongoDbSelector.retrieveSubscriptions();

@@ -10,22 +10,20 @@ public class Subscription {
 	
 	private Recipient recipient;
 
-    private String displayName;
 
 	public Subscription() {
 		super();
 	}
 
-	public Subscription(Topic topic, Recipient recipient, String displayName) {
+	public Subscription(Topic topic, Recipient recipient) {
 		super();
 		this.topic = topic;
 		this.recipient = recipient;
-        this.displayName = displayName;
 	}
 
 	@Override
 	public String toString() {
-		return "Subscription [topic=" + topic + ", recipient=" + recipient + ", displayName=" + displayName
+		return "Subscription [topic=" + topic + ", recipient=" + recipient
 				+ "]";
 	}
 
@@ -52,14 +50,5 @@ public class Subscription {
 	public void setRecipient(Recipient recipient) {
 		this.recipient = recipient;
 	}
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-	
 	
 }

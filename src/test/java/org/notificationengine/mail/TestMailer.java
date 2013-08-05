@@ -27,7 +27,7 @@ public class TestMailer {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 		mailSender.setUsername("mduclos@sqli.com");
-		mailSender.setPassword("xxxxxxxx");
+		mailSender.setPassword("xxxxxxxxxxx");
 		
 		Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");
@@ -45,7 +45,7 @@ public class TestMailer {
 	@Test
 	public void testSendMail() {
 
-        assertTrue(this.mailer.sendMail("rgirodon@sqli.com", "Default Test Mail Content.", null));
+        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Default Test Mail Content.", null));
 	}
 
     @Test
@@ -54,7 +54,7 @@ public class TestMailer {
     	Map<String, String> options = new HashMap<>();
     	options.put(Constants.SUBJECT, "NotificationEngine Test with custom subject");
     	
-        assertTrue(this.mailer.sendMail("rgirodon@sqli.com", "Mail with a different subject", options));
+        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Mail with a different subject", options));
     }
 
     @Test
@@ -62,9 +62,9 @@ public class TestMailer {
 
     	Map<String, String> options = new HashMap<>();
     	options.put(Constants.SUBJECT, "NotificationEngine Test with custom subject and from");
-    	options.put(Constants.FROM, "rgirodon2000@yahoo.fr");
+    	options.put(Constants.FROM, "matthis.duclos@gmail.com");
 
-        assertTrue(this.mailer.sendMail("rgirodon@sqli.com",
+        assertTrue(this.mailer.sendMail("mduclos@sqli.com",
                 "Mail with a different subject and from field",
                 options));
     }

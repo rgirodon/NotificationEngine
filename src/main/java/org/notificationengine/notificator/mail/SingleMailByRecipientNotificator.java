@@ -81,6 +81,7 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			// merge the context and the template
 			Map<String, Object> globalContext = new HashMap<>();
 			globalContext.put(Constants.RECIPIENT, recipient.getAddress());
+			globalContext.put(Constants.DISPLAY_NAME, recipient.getDisplayName());
 			globalContext.put(Constants.NOTIFICATIONS_BY_RECIPIENT, contexts);
 			
 			String notificationText = templateEngine.processTemplate(this.mailTemplate, globalContext);
