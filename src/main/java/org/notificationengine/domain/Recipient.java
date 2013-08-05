@@ -34,6 +34,8 @@ public class Recipient {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result
+				+ ((displayName == null) ? 0 : displayName.hashCode());
 		return result;
 	}
 
@@ -50,6 +52,11 @@ public class Recipient {
 			if (other.address != null)
 				return false;
 		} else if (!address.equals(other.address))
+			return false;
+		if (displayName == null) {
+			if (other.displayName != null)
+				return false;
+		} else if (!displayName.equals(other.displayName))
 			return false;
 		return true;
 	}
