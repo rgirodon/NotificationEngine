@@ -64,6 +64,71 @@ public class DecoratedNotification {
 				"]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((_id == null) ? 0 : _id.hashCode());
+		result = prime * result
+				+ ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result
+				+ ((rawNotification == null) ? 0 : rawNotification.hashCode());
+		result = prime * result
+				+ ((recipient == null) ? 0 : recipient.hashCode());
+		result = prime * result
+				+ ((sendingAttempts == null) ? 0 : sendingAttempts.hashCode());
+		result = prime * result + ((sent == null) ? 0 : sent.hashCode());
+		result = prime * result + ((sentAt == null) ? 0 : sentAt.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DecoratedNotification other = (DecoratedNotification) obj;
+		if (_id == null) {
+			if (other._id != null)
+				return false;
+		} else if (!_id.equals(other._id))
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (rawNotification == null) {
+			if (other.rawNotification != null)
+				return false;
+		} else if (!rawNotification.equals(other.rawNotification))
+			return false;
+		if (recipient == null) {
+			if (other.recipient != null)
+				return false;
+		} else if (!recipient.equals(other.recipient))
+			return false;
+		if (sendingAttempts == null) {
+			if (other.sendingAttempts != null)
+				return false;
+		} else if (!sendingAttempts.equals(other.sendingAttempts))
+			return false;
+		if (sent == null) {
+			if (other.sent != null)
+				return false;
+		} else if (!sent.equals(other.sent))
+			return false;
+		if (sentAt == null) {
+			if (other.sentAt != null)
+				return false;
+		} else if (!sentAt.equals(other.sentAt))
+			return false;
+		return true;
+	}
+
 	public ObjectId get_id() {
 		return _id;
 	}

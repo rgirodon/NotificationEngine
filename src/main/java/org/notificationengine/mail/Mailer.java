@@ -1,5 +1,8 @@
 package org.notificationengine.mail;
 
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.notificationengine.constants.Constants;
@@ -20,7 +23,7 @@ public class Mailer {
 	@Autowired
 	private SimpleMailMessage templateMessage;
 
-	public Boolean sendMail(String recipientAddress, String text, String... otherParams) {
+	public Boolean sendMail(String recipientAddress, String text, Map<String, String> options) {
 
         Boolean result = Boolean.FALSE;
 		
@@ -30,20 +33,22 @@ public class Mailer {
         
         msg.setText(text);
 
-        // TODO enable customization of subject, and maybe from field
+        if (options != null) {
 
-        if(otherParams.length > 0) {
+        	String subject = options.get(Constants.SUBJECT);
+        	
+        	if (!StringUtils.isEmpty(subject)) {
 
-            String subject = otherParams[0];
+            	msg.setSubject(subject);
+        	}
+        	
 
-            msg.setSubject(subject);
-        }
+        	String from = options.get(Constants.FROM);
+        	
+        	if (!StringUtils.isEmpty(from)) {
 
-        if(otherParams.length > 1) {
-
-            String fromField = otherParams[1];
-
-            msg.setFrom(fromField);
+            	msg.setFrom(from);
+        	}            
         }
         
         try{
