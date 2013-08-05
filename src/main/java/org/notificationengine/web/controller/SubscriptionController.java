@@ -44,6 +44,7 @@ public class SubscriptionController {
 			subscription.set_id(new ObjectId());
 			subscription.setTopic(new Topic(subscriptionDTO.getTopic()));
 			subscription.setRecipient(new Recipient(subscriptionDTO.getRecipient()));
+            subscription.setDisplayName(new String(subscriptionDTO.getDisplayName()));
 			
 			((ISelectorWriteEnabled)this.selector).createSubscription(subscription);
 			
