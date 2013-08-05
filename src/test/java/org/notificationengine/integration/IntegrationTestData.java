@@ -46,8 +46,8 @@ public class IntegrationTestData {
 		rawNotification1.setTopic(new Topic("facturation.societe1"));
 		
 		Map<String, Object> context1 = new HashMap<>();
-		context1.put("message", "Tienes que pagar ahora.");
-		context1.put("subject", "Un mensaje del servicio de las notificaciones.");
+		context1.put("message", "Wir danken Ihnen, die Rechnung so bald wie möglich zu zahlen");
+		context1.put("subject", "Eine Notification Service Nachricht für Sie");
 		context1.put("from", "rgirodon2000@yahoo.fr");
 		rawNotification1.setContext(context1);
 		
@@ -94,19 +94,21 @@ public class IntegrationTestData {
 		rawNotification4.setContext(context4);
 		
 		persister.createRawNotification(rawNotification4);
+
+        String displayName = "Customer";
 		
-		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com"));
+		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com", "Nicolas Moret"));
+
+		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com", "Matthis Duclos"));
 		
-		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com"));
-		
-		Subscription subscription3 = new Subscription(new Topic("facturation"), new Recipient("rgirodon@sqli.com"));
+		Subscription subscription3 = new Subscription(new Topic("facturation"), new Recipient("rgirodon@sqli.com", "Remy Girodon"));
 		
 		
-		Subscription subscription4 = new Subscription(new Topic("helpdesk.societe1"), new Recipient("nmoret"));
+		Subscription subscription4 = new Subscription(new Topic("helpdesk.societe1"), new Recipient("nmoret", "Nicolas Moret"));
 		
-		Subscription subscription5 = new Subscription(new Topic("helpdesk.societe2"), new Recipient("mduclos@sqli.com"));
+		Subscription subscription5 = new Subscription(new Topic("helpdesk.societe2"), new Recipient("mduclos@sqli.com", "Matthis Duclos"));
 		
-		Subscription subscription6 = new Subscription(new Topic("helpdesk"), new Recipient("rgirodon@sqli.com"));
+		Subscription subscription6 = new Subscription(new Topic("helpdesk"), new Recipient("rgirodon@sqli.com", "Remy Girodon"));
 		
 		
 		mongoDbSelector.createSubscription(subscription1);

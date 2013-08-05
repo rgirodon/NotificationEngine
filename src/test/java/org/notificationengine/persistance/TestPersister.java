@@ -2,9 +2,6 @@ package org.notificationengine.persistance;
 
 import static org.junit.Assert.*;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -16,9 +13,6 @@ import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Topic;
-import org.notificationengine.persistance.Persister;
-
-import com.mongodb.ServerAddress;
 
 public class TestPersister {
 
@@ -42,8 +36,8 @@ public class TestPersister {
 		rawNotification.setProcessed(Boolean.FALSE);
 		rawNotification.setTopic(new Topic("facturation.societe1"));
 		
-		Recipient recipient = new Recipient("email1@societe1.com");
-		
+		Recipient recipient = new Recipient("email1@societe1.com", "Customer");
+
 		DecoratedNotification decoratedNotification = new DecoratedNotification(rawNotification, recipient);
 		
 		persister.createDecoratedNotification(decoratedNotification);
@@ -798,7 +792,7 @@ public class TestPersister {
 
         persister.createDecoratedNotification(decoratedNotification1);
 
-        persister.deleteDecoratedNotification(decoratedNotification1);
+        persister.moveFailedDecoratedNotification(decoratedNotification1);
 
         Collection<DecoratedNotification> decoratedNotifications = persister.retrieveAllDecoratedNotifications();
 

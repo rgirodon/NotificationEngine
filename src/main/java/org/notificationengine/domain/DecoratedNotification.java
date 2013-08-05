@@ -30,7 +30,9 @@ public class DecoratedNotification {
 		context.putAll(this.rawNotification.getContext());
 		
 		context.put(Constants.RECIPIENT, recipient.getAddress());
-		
+
+		context.put(Constants.DISPLAY_NAME, recipient.getDisplayName());
+
 		return context;
 	}
 	

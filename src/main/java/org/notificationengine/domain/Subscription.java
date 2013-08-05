@@ -10,6 +10,7 @@ public class Subscription {
 	
 	private Recipient recipient;
 
+
 	public Subscription() {
 		super();
 	}
@@ -49,6 +50,5 @@ public class Subscription {
 	public void setRecipient(Recipient recipient) {
 		this.recipient = recipient;
 	}
-	
 	
 }

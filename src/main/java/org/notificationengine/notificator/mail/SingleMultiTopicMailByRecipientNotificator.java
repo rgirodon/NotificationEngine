@@ -81,7 +81,8 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				Map<String, Object> globalContext = new HashMap<>();
 				
 				globalContext.put(Constants.RECIPIENT, recipient.getAddress());
-				
+				globalContext.put(Constants.DISPLAY_NAME, recipient.getDisplayName());
+
 				Collection<Map<String, Object>> topicContexts = new HashSet<>();
 				
 				for (Topic topicForThisMailTemplate : topicsForThisMailTemplate) {
@@ -155,7 +156,7 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 
         if(attempts >= Constants.MAX_ATTEMPTS) {
 
-        	persister.deleteDecoratedNotification(decoratedNotification);
+        	persister.moveFailedDecoratedNotification(decoratedNotification);
         }
         else {
         	persister.saveDecoratedNotification(decoratedNotification);

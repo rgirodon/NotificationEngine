@@ -18,4 +18,7 @@ public abstract class SelectorWriteEnabled extends Selector implements
 
 	@Override
 	abstract public void createSubscription(Subscription subscription);
+
+    @Override
+    abstract public void deleteSubscription(String email, String topic);
 }

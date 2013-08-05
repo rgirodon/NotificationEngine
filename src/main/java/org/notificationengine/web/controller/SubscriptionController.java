@@ -39,16 +39,32 @@ public class SubscriptionController {
 		LOGGER.debug("SubscriptionController received : " + subscriptionDTO);
 		
 		if (this.selector instanceof ISelectorWriteEnabled) {
+
+            Recipient recipient = new Recipient(subscriptionDTO.getRecipient(), subscriptionDTO.getDisplayName());
 			
 			Subscription subscription = new Subscription();
 			subscription.set_id(new ObjectId());
 			subscription.setTopic(new Topic(subscriptionDTO.getTopic()));
-			subscription.setRecipient(new Recipient(subscriptionDTO.getRecipient()));
+			subscription.setRecipient(recipient);
 			
 			((ISelectorWriteEnabled)this.selector).createSubscription(subscription);
 			
 			LOGGER.debug("Subscription persisted : " + subscriptionDTO);
 		}
+    }
+
+    @RequestMapping(value = "/subscription.do", method = RequestMethod.DELETE, params = {"email", "topic"})
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@RequestParam("email") String email, @RequestParam("topic") String topic) {
+
+        LOGGER.debug("SubscriptionController delete subscription with topic " + topic + " and email " + email);
+
+        if (this.selector instanceof ISelectorWriteEnabled) {
+
+            ((ISelectorWriteEnabled)this.selector).deleteSubscription(email, topic);
+
+        }
+
     }
 
     @RequestMapping(value = "/countAllSubscriptions.do", method = RequestMethod.GET)

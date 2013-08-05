@@ -9,7 +9,9 @@ public class Constants {
 	final public static String TOPIC = "topic";
 	
 	final public static String TOPIC_NAME = "topic.name";
-	
+
+	final public static String RECIPIENT_ADDRESS = "recipient.address";
+
 	final public static String RAW_NOTIFICATION_TOPIC_NAME = "rawNotification.topic.name";
 
 	final public static String ID = "id";
@@ -29,7 +31,9 @@ public class Constants {
 	final public static String RAW_NOTIFICATIONS_COLLECTION = "rawnotifications";
 	
 	final public static String DECORATED_NOTIFICATIONS_COLLECTION = "decoratednotifications";
-	
+
+	final public static String DELETED_DECORATED_NOTIFICATIONS_COLLECTION = "deleteddecoratednotifications";
+
 	final public static String SUBSCRIPTIONS_COLLECTION = "subscriptions";
 	
 	final public static String PERSISTER = "persister";
@@ -80,6 +84,8 @@ public class Constants {
 
 	public static final String RECIPIENT = "recipient";
 
+	public static final String DISPLAY_NAME = "displayName";
+
 	public static final String NOTIFICATIONS_BY_RECIPIENT = "notificationsByRecipient";
 
 	public static final String SUBSCRIPTION_CONTROLLER = "subscriptionController";
@@ -101,7 +107,9 @@ public class Constants {
 	public static final String SELECTOR_CLASS = "selectorClass";
 	
 	public static final String ADMINISTRATOR_ADDRESS = "administrator.address";
-	
+
+    public static final String ADMINISTRATOR_DISPLAY_NAME = "administrator.name";
+
 	public static final String LOCAL_SETTINGS_PROPERTIES = "localSettingsProperties";
 
 	public static final String NOTIFICATOR_CLASS = "notificatorClass";
