@@ -46,8 +46,8 @@ public class IntegrationTestData {
 		rawNotification1.setTopic(new Topic("facturation.societe1"));
 		
 		Map<String, Object> context1 = new HashMap<>();
-		context1.put("message", "Tienes que pagar ahora.");
-		context1.put("subject", "Un mensaje del servicio de las notificaciones.");
+		context1.put("message", "Wir danken Ihnen, die Rechnung so bald wie möglich zu zahlen");
+		context1.put("subject", "Eine Notification Service Nachricht für Sie");
 		context1.put("from", "rgirodon2000@yahoo.fr");
 		rawNotification1.setContext(context1);
 		

@@ -52,7 +52,7 @@ public abstract class Notificator implements INotificator {
 
                 if(attempts >= Constants.MAX_ATTEMPTS) {
 
-                    this.deleteDecoratedNotification(decoratedNotificationSent.getKey());
+                    this.moveFailedDecoratedNotification(decoratedNotificationSent.getKey());
                 }
                 else {
                 	this.saveDecoratedNotification(decoratedNotificationSent.getKey());
@@ -63,11 +63,11 @@ public abstract class Notificator implements INotificator {
         this.markDecoratedNotificationsAsSent(decoratedNotificationToMarkAsSent);
 	}
 
-    protected void deleteDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
+    protected void moveFailedDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
 
         Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
 
-        persister.deleteDecoratedNotification(decoratedNotificationToDelete);
+        persister.moveFailedDecoratedNotification(decoratedNotificationToDelete);
 
     }
     

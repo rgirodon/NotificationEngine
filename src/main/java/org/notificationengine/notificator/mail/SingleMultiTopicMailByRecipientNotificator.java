@@ -156,7 +156,7 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 
         if(attempts >= Constants.MAX_ATTEMPTS) {
 
-        	persister.deleteDecoratedNotification(decoratedNotification);
+        	persister.moveFailedDecoratedNotification(decoratedNotification);
         }
         else {
         	persister.saveDecoratedNotification(decoratedNotification);

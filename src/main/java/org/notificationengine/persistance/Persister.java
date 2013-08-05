@@ -39,7 +39,9 @@ public class Persister implements InitializingBean {
 	private MongoCollection rawNotifications;
 	
 	private MongoCollection decoratedNotifications;
-	
+
+	private MongoCollection deletedDecoratedNotifications;
+
 	public Persister() {
 		
 		this(Boolean.FALSE);
@@ -101,6 +103,8 @@ public class Persister implements InitializingBean {
 			this.rawNotifications = jongo.getCollection(Constants.RAW_NOTIFICATIONS_COLLECTION);
 			
 			this.decoratedNotifications = jongo.getCollection(Constants.DECORATED_NOTIFICATIONS_COLLECTION);
+
+            this.deletedDecoratedNotifications = jongo.getCollection(Constants.DELETED_DECORATED_NOTIFICATIONS_COLLECTION);
 		} 
 		catch (UnknownHostException e) {
 
@@ -655,11 +659,14 @@ public class Persister implements InitializingBean {
 	}
 
 
-    public void deleteDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
+    public void moveFailedDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
 
         ObjectId decoratedNotificationId = decoratedNotificationToDelete.get_id();
 
         this.decoratedNotifications.remove(decoratedNotificationId);
+
+        //We store deleted decoratedNotifications to have some metrics
+        this.deletedDecoratedNotifications.save(decoratedNotificationToDelete);
 
     }
 
