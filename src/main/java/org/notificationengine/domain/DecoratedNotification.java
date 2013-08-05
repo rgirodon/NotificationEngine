@@ -12,6 +12,8 @@ public class DecoratedNotification {
 	private ObjectId _id;
 	
 	private Recipient recipient;
+
+    private String displayName;
 	
 	private RawNotification rawNotification;
 	
@@ -30,12 +32,14 @@ public class DecoratedNotification {
 		context.putAll(this.rawNotification.getContext());
 		
 		context.put(Constants.RECIPIENT, recipient.getAddress());
-		
+
+		context.put(Constants.DISPLAY_NAME, this.displayName);
+
 		return context;
 	}
 	
 	public DecoratedNotification(RawNotification rawNotification,
-			Recipient recipient) {
+			Recipient recipient, String displayName) {
 		super();
 		this.rawNotification = rawNotification;
 		this.recipient = recipient;
@@ -43,6 +47,7 @@ public class DecoratedNotification {
         this.createdAt = new Date();
         this.sentAt = null;
         this.sendingAttempts = 0;
+        this.displayName = displayName;
 	}
 
     public DecoratedNotification() {
@@ -61,6 +66,7 @@ public class DecoratedNotification {
                 ", createdAt=" + createdAt +
                 ", sentAt=" + sentAt +
                 ", sendingAttempts=" + sendingAttempts +
+                ", displayName=" + displayName +
 				"]";
 	}
 

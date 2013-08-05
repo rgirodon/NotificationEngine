@@ -94,19 +94,21 @@ public class IntegrationTestData {
 		rawNotification4.setContext(context4);
 		
 		persister.createRawNotification(rawNotification4);
+
+        String displayName = "Customer";
 		
-		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com"));
+		Subscription subscription1 = new Subscription(new Topic("facturation.societe1"), new Recipient("nmoret@sqli.com"), displayName);
+
+		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com"), displayName);
 		
-		Subscription subscription2 = new Subscription(new Topic("facturation.societe2"), new Recipient("mduclos@sqli.com"));
-		
-		Subscription subscription3 = new Subscription(new Topic("facturation"), new Recipient("rgirodon@sqli.com"));
+		Subscription subscription3 = new Subscription(new Topic("facturation"), new Recipient("rgirodon@sqli.com"), displayName);
 		
 		
-		Subscription subscription4 = new Subscription(new Topic("helpdesk.societe1"), new Recipient("nmoret"));
+		Subscription subscription4 = new Subscription(new Topic("helpdesk.societe1"), new Recipient("nmoret"), displayName);
 		
-		Subscription subscription5 = new Subscription(new Topic("helpdesk.societe2"), new Recipient("mduclos@sqli.com"));
+		Subscription subscription5 = new Subscription(new Topic("helpdesk.societe2"), new Recipient("mduclos@sqli.com"), displayName);
 		
-		Subscription subscription6 = new Subscription(new Topic("helpdesk"), new Recipient("rgirodon@sqli.com"));
+		Subscription subscription6 = new Subscription(new Topic("helpdesk"), new Recipient("rgirodon@sqli.com"), displayName);
 		
 		
 		mongoDbSelector.createSubscription(subscription1);

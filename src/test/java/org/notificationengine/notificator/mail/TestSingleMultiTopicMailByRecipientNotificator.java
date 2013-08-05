@@ -33,29 +33,31 @@ public class TestSingleMultiTopicMailByRecipientNotificator {
 		this.singleMultiTopicMailByRecipientNotificator.add("newsMailTemplate", new Topic("economics"));
 		
 		Collection<DecoratedNotification> decoratedNotifications = new ArrayList<>();
+
+        String displayName = "Customer";
 		
 		RawNotification rawNotification1 = new RawNotification();
 		rawNotification1.setTopic(new Topic("football"));		
-		Recipient recipient1 = new Recipient("rgirodon@sqli.com");		
-		DecoratedNotification decoratedNotification1 = new DecoratedNotification(rawNotification1, recipient1);		
+		Recipient recipient1 = new Recipient("rgirodon@sqli.com");
+		DecoratedNotification decoratedNotification1 = new DecoratedNotification(rawNotification1, recipient1, displayName);
 		decoratedNotifications.add(decoratedNotification1);
 		
 		RawNotification rawNotification2 = new RawNotification();
 		rawNotification2.setTopic(new Topic("cycling"));		
 		Recipient recipient2 = new Recipient("rgirodon@sqli.com");		
-		DecoratedNotification decoratedNotification2 = new DecoratedNotification(rawNotification2, recipient2);		
+		DecoratedNotification decoratedNotification2 = new DecoratedNotification(rawNotification2, recipient2, displayName);
 		decoratedNotifications.add(decoratedNotification2);
 		
 		RawNotification rawNotification3 = new RawNotification();
 		rawNotification3.setTopic(new Topic("football.asse"));		
 		Recipient recipient3 = new Recipient("mduclos@sqli.com");		
-		DecoratedNotification decoratedNotification3 = new DecoratedNotification(rawNotification3, recipient3);		
+		DecoratedNotification decoratedNotification3 = new DecoratedNotification(rawNotification3, recipient3, displayName);
 		decoratedNotifications.add(decoratedNotification3);
 		
 		RawNotification rawNotification4 = new RawNotification();
 		rawNotification4.setTopic(new Topic("politics"));		
 		Recipient recipient4 = new Recipient("nmoret@sqli.com");		
-		DecoratedNotification decoratedNotification4 = new DecoratedNotification(rawNotification4, recipient4);		
+		DecoratedNotification decoratedNotification4 = new DecoratedNotification(rawNotification4, recipient4, displayName);
 		decoratedNotifications.add(decoratedNotification4);
 				
 		this.singleMultiTopicMailByRecipientNotificator.addDecoratedNotificationsToProcess(decoratedNotifications);
@@ -70,29 +72,31 @@ public class TestSingleMultiTopicMailByRecipientNotificator {
 	public void testRetrieveDecoratedNotificationsToProcessForTopicAndRecipient() {
 		
 		Collection<DecoratedNotification> decoratedNotifications = new ArrayList<>();
+
+        String displayName = "Customer";
 		
 		RawNotification rawNotification1 = new RawNotification();
 		rawNotification1.setTopic(new Topic("football"));		
 		Recipient recipient1 = new Recipient("rgirodon@sqli.com");		
-		DecoratedNotification decoratedNotification1 = new DecoratedNotification(rawNotification1, recipient1);		
+		DecoratedNotification decoratedNotification1 = new DecoratedNotification(rawNotification1, recipient1, displayName);
 		decoratedNotifications.add(decoratedNotification1);
 		
 		RawNotification rawNotification2 = new RawNotification();
 		rawNotification2.setTopic(new Topic("cycling"));		
 		Recipient recipient2 = new Recipient("rgirodon@sqli.com");		
-		DecoratedNotification decoratedNotification2 = new DecoratedNotification(rawNotification2, recipient2);		
+		DecoratedNotification decoratedNotification2 = new DecoratedNotification(rawNotification2, recipient2, displayName);
 		decoratedNotifications.add(decoratedNotification2);
 		
 		RawNotification rawNotification3 = new RawNotification();
 		rawNotification3.setTopic(new Topic("football.asse"));		
 		Recipient recipient3 = new Recipient("mduclos@sqli.com");		
-		DecoratedNotification decoratedNotification3 = new DecoratedNotification(rawNotification3, recipient3);		
+		DecoratedNotification decoratedNotification3 = new DecoratedNotification(rawNotification3, recipient3, displayName);
 		decoratedNotifications.add(decoratedNotification3);
 		
 		RawNotification rawNotification4 = new RawNotification();
 		rawNotification4.setTopic(new Topic("politics"));		
 		Recipient recipient4 = new Recipient("nmoret@sqli.com");		
-		DecoratedNotification decoratedNotification4 = new DecoratedNotification(rawNotification4, recipient4);		
+		DecoratedNotification decoratedNotification4 = new DecoratedNotification(rawNotification4, recipient4, displayName);
 		decoratedNotifications.add(decoratedNotification4);
 				
 		this.singleMultiTopicMailByRecipientNotificator.addDecoratedNotificationsToProcess(decoratedNotifications);

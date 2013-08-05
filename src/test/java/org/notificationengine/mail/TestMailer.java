@@ -27,7 +27,7 @@ public class TestMailer {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 		mailSender.setUsername("mduclos@sqli.com");
-		mailSender.setPassword("*******");
+		mailSender.setPassword("xxxxxxxx");
 		
 		Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");

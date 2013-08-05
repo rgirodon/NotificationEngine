@@ -80,6 +80,8 @@ public class Constants {
 
 	public static final String RECIPIENT = "recipient";
 
+	public static final String DISPLAY_NAME = "displayName";
+
 	public static final String NOTIFICATIONS_BY_RECIPIENT = "notificationsByRecipient";
 
 	public static final String SUBSCRIPTION_CONTROLLER = "subscriptionController";

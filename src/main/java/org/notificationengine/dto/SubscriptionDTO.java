@@ -6,9 +6,11 @@ public class SubscriptionDTO {
 	
 	private String recipient;
 
+    private String displayName;
+
 	@Override
 	public String toString() {
-		return "SubscriptionDTO [topic=" + topic + ", recipient=" + recipient
+		return "SubscriptionDTO [topic=" + topic + ", recipient=" + recipient + ", displayName=" + displayName
 				+ "]";
 	}
 	
@@ -27,4 +29,12 @@ public class SubscriptionDTO {
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 }
