@@ -164,7 +164,11 @@ public class RawNotificationController {
 
         response.put(Constants.COUNT, countRawNotificationsForTopic);
 
-        response.put(Constants.TOPIC, topic);
+        JSONObject topicObject = new JSONObject();
+
+        topicObject.put(Constants.NAME, topic.getName());
+
+        response.put(Constants.TOPIC, topicObject);
 
         return response.toString();
 
@@ -186,7 +190,11 @@ public class RawNotificationController {
 
         response.put(Constants.COUNT, countNotProcessedRawNotificationsForTopic);
 
-        response.put(Constants.TOPIC, topic);
+        JSONObject topicObject = new JSONObject();
+
+        topicObject.put(Constants.NAME, topic.getName());
+
+        response.put(Constants.TOPIC, topicObject);
 
         return response.toString();
 
