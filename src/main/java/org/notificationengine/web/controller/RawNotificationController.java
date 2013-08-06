@@ -3,10 +3,9 @@ package org.notificationengine.web.controller;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.jongo.MongoCollection;
+import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.dto.RawNotificationDTO;
@@ -121,51 +120,59 @@ public class RawNotificationController {
 
     @RequestMapping(value = "/countAllRawNotifications.do", method = RequestMethod.GET)
     @ResponseBody
-    public Integer getCountAllRawNotifications() {
-
-        Integer result = new Integer(0);
+    public String getCountAllRawNotifications() {
 
         Collection<RawNotification> rawNotifications = this.persister.retrieveAllRawNotifications();
 
-        result = rawNotifications.size();
+        Integer countAllRawNotifications = rawNotifications.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT_ALL_RAW_NOTIFICATIONS, countAllRawNotifications);
+
+        return response.toString();
 
     }
 
     @RequestMapping(value = "/countNotProcessedRawNotifications.do", method = RequestMethod.GET)
     @ResponseBody
-    public Integer getCountNotProcessedRawNotifications() {
-
-        Integer result = new Integer(0);
+    public String getCountNotProcessedRawNotifications() {
 
         Collection<RawNotification> rawNotifications = this.persister.retrieveNotProcessedRawNotifications();
 
-        result = rawNotifications.size();
+        Integer countNotProcessedRawNotifications = rawNotifications.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT_NOT_PROCESSED_RAW_NOTIFICATIONS, countNotProcessedRawNotifications);
+
+        return response.toString();
 
     }
 
     @RequestMapping(value = "/countRawNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
     @ResponseBody
-    public Integer getCountRawNotificationsForTopic(@RequestParam(value="topic") String topicName) {
-
-        Integer result = new Integer(0);
+    public String getCountRawNotificationsForTopic(@RequestParam(value="topic") String topicName) {
 
         Topic topic = new Topic(topicName);
 
         Collection<RawNotification> rawNotifications = this.persister.retrieveAllRawNotificationsForTopic(topic);
 
-        result = rawNotifications.size();
+        Integer countRawNotificationsForTopic = rawNotifications.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT_RAW_NOTIFICATIONS_FOR_TOPIC, countRawNotificationsForTopic);
+
+        response.put(Constants.TOPIC, topic);
+
+        return response.toString();
 
     }
 
     @RequestMapping(value = "/countNotProcessedRawNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
     @ResponseBody
-    public Integer getCountNotProcessedRawNotificationsForTopic(@RequestParam(value="topic") String topicName) {
+    public String getCountNotProcessedRawNotificationsForTopic(@RequestParam(value="topic") String topicName) {
 
         Integer result = new Integer(0);
 
@@ -173,9 +180,15 @@ public class RawNotificationController {
 
         Collection<RawNotification> rawNotifications = this.persister.retrieveNotProcessedRawNotificationsForTopic(topic);
 
-        result = rawNotifications.size();
+        Integer countNotProcessedRawNotificationsForTopic = rawNotifications.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT_NOT_PROCESSED_RAW_NOTIFICATIONS_FOR_TOPIC, countNotProcessedRawNotificationsForTopic);
+
+        response.put(Constants.TOPIC, topic);
+
+        return response.toString();
 
     }
 

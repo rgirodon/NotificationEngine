@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
+import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Subscription;
@@ -69,34 +70,41 @@ public class SubscriptionController {
 
     @RequestMapping(value = "/countAllSubscriptions.do", method = RequestMethod.GET)
     @ResponseBody
-    public Integer countAllSubscriptions() {
-
-        Integer result = new Integer(0);
+    public String countAllSubscriptions() {
 
         LOGGER.debug("Subscription controller, countAllSubscriptions");
 
         Collection<Subscription> subscriptions = this.selector.retrieveSubscriptions();
 
-        result = subscriptions.size();
+        Integer countAllSubscriptions = subscriptions.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT_ALL_SUBSCRIPTIONS, countAllSubscriptions);
+
+        return response.toString();
+
     }
 
     @RequestMapping(value = "/countAllSubscriptionsForTopic.do", method = RequestMethod.GET, params = {"topic"})
     @ResponseBody
-    public Integer countAllSubscriptionsForTopic(@RequestParam(value="topic") String topicName) {
-
-        Integer result = new Integer(0);
+    public String countAllSubscriptionsForTopic(@RequestParam(value="topic") String topicName) {
 
         Topic topic = new Topic(topicName);
 
-        LOGGER.debug("Subscription controller, countAllSubscriptions");
+        LOGGER.debug("Subscription controller, countAllSubscriptionsForTopic " + topicName);
 
         Collection<Subscription> subscriptions = this.selector.retrieveSubscriptionsForTopic(topic);
 
-        result = subscriptions.size();
+        Integer countSubscriptionsForTopic = subscriptions.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT_ALL_SUBSCRIPTIONS_FOR_TOPIC, countSubscriptionsForTopic);
+
+        response.put(Constants.TOPIC, topic);
+
+        return response.toString();
 
     }
 
