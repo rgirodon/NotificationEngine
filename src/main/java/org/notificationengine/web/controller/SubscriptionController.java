@@ -102,7 +102,11 @@ public class SubscriptionController {
 
         response.put(Constants.COUNT, countSubscriptionsForTopic);
 
-        response.put(Constants.TOPIC, topic);
+        JSONObject topicObject = new JSONObject();
+
+        topicObject.put(Constants.NAME, topic.getName());
+
+        response.put(Constants.TOPIC, topicObject);
 
         return response.toString();
 

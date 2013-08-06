@@ -99,7 +99,11 @@ public class DecoratedNotificationController {
 
         response.put(Constants.COUNT, countDecoratedNotificationsForTopic);
 
-        response.put(Constants.TOPIC, topic);
+        JSONObject topicObject = new JSONObject();
+
+        topicObject.put(Constants.NAME, topic.getName());
+
+        response.put(Constants.TOPIC, topicObject);
 
         return response.toString();
 
@@ -121,7 +125,11 @@ public class DecoratedNotificationController {
 
         response.put(Constants.COUNT, countNotSentDecoratedNotificationsForTopic);
 
-        response.put(Constants.TOPIC, topic);
+        JSONObject topicObject = new JSONObject();
+
+        topicObject.put(Constants.NAME, topic.getName());
+
+        response.put(Constants.TOPIC, topicObject);
 
         return response.toString();
 
