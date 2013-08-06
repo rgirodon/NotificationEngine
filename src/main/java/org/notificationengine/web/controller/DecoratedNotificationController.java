@@ -127,7 +127,7 @@ public class DecoratedNotificationController {
 
     }
 
-    @RequestMapping(value = "/getSentDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @RequestMapping(value = "/countSentDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
     @ResponseBody
     public String getSentDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
 
@@ -172,7 +172,7 @@ public class DecoratedNotificationController {
 
     }
 
-    @RequestMapping(value = "/getCreatedDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @RequestMapping(value = "/countCreatedDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
     @ResponseBody
     public String getCreatedDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
 
