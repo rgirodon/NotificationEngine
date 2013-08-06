@@ -2,6 +2,8 @@ package org.notificationengine.web.controller;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.persistance.Persister;
@@ -47,51 +49,65 @@ public class DecoratedNotificationController {
 
     @RequestMapping(value = "/countNotSentDecoratedNotifications.do", method = RequestMethod.GET)
     @ResponseBody
-    public Integer getCountNotSentDecoratedNotifications() {
+    public String getCountNotSentDecoratedNotifications() {
 
         LOGGER.debug("getCountNotSentDecoratedNotifications in DecoratedNotificationController");
 
         Collection<DecoratedNotification> decoratedNotifications = this.persister.retrieveNotSentDecoratedNotifications();
 
-        Integer result = decoratedNotifications.size();
+        Integer countNotSentDecoratedNotifications = decoratedNotifications.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT, countNotSentDecoratedNotifications);
+
+        return response.toString();
 
     }
 
     @RequestMapping(value = "/countAllDecoratedNotifications.do", method = RequestMethod.GET)
     @ResponseBody
-    public Integer getCountAllDecoratedNotifications() {
+    public String getCountAllDecoratedNotifications() {
 
         LOGGER.debug("getCountNotSentDecoratedNotifications in DecoratedNotificationController");
 
         Collection<DecoratedNotification> decoratedNotifications = this.persister.retrieveAllDecoratedNotifications();
 
-        Integer result = decoratedNotifications.size();
+        Integer countDecoratedNotifications = decoratedNotifications.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT, countDecoratedNotifications);
+
+        return response.toString();
 
     }
 
     @RequestMapping(value = "/countAllDecoratedNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
     @ResponseBody
-    public Integer getCountAllDecoratedNotificationsForTopic(@RequestParam(value="topic") String topicName) {
+    public String getCountAllDecoratedNotificationsForTopic(@RequestParam(value="topic") String topicName) {
 
-        LOGGER.debug("getCountNotSentDecoratedNotifications in DecoratedNotificationController");
+        LOGGER.debug("getCountNotSentDecoratedNotificationsForTopic " + topicName + " in DecoratedNotificationController");
 
         Topic topic = new Topic(topicName);
 
         Collection<DecoratedNotification> decoratedNotifications = this.persister.retrieveAllDecoratedNotificationsForTopic(topic);
 
-        Integer result = decoratedNotifications.size();
+        Integer countDecoratedNotificationsForTopic = decoratedNotifications.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT, countDecoratedNotificationsForTopic);
+
+        response.put(Constants.TOPIC, topic);
+
+        return response.toString();
 
     }
 
     @RequestMapping(value = "/countNotSentDecoratedNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
     @ResponseBody
-    public Integer getCountNotSentDecoratedNotificationsForTopic(@RequestParam(value="topic") String topicName) {
+    public String getCountNotSentDecoratedNotificationsForTopic(@RequestParam(value="topic") String topicName) {
 
         LOGGER.debug("getCountNotSentDecoratedNotificationsForTopic in DecoratedNotificationController");
 
@@ -99,13 +115,19 @@ public class DecoratedNotificationController {
 
         Collection<DecoratedNotification> decoratedNotifications = this.persister.retrieveNotSentDecoratedNotificationsForTopic(topic);
 
-        Integer result = decoratedNotifications.size();
+        Integer countNotSentDecoratedNotificationsForTopic = decoratedNotifications.size();
 
-        return result;
+        JSONObject response = new JSONObject();
+
+        response.put(Constants.COUNT, countNotSentDecoratedNotificationsForTopic);
+
+        response.put(Constants.TOPIC, topic);
+
+        return response.toString();
 
     }
 
-    @RequestMapping(value = "/getSentDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @RequestMapping(value = "/countSentDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
     @ResponseBody
     public String getSentDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
 
@@ -150,7 +172,7 @@ public class DecoratedNotificationController {
 
     }
 
-    @RequestMapping(value = "/getCreatedDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @RequestMapping(value = "/countCreatedDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
     @ResponseBody
     public String getCreatedDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
 

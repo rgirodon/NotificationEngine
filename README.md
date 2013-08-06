@@ -395,7 +395,8 @@ If content
 ```JSON
 {
 "topic" : "facturation",
-"recipient" : "xxxx@yyyy.com"
+"recipient" : "xxxx@yyyy.com",
+"displayName": "John Doe"
 }
 ```
 
@@ -504,7 +505,7 @@ The template syntax is the one of Mustache framework.
 
 Here is an example of template for this notificator :
 ```
-Dear {{recipient}}
+Dear {{displayName}}
 
 This mail has been sent by Facturation application.
 
@@ -547,7 +548,7 @@ The template syntax is the one of Mustache framework.
 
 Here is an example of template for this notificator :
 ```
-Dear {{recipient}}
+Dear {{displayName}}
 
 This mail has been sent by Helpdesk application.
 
@@ -604,7 +605,7 @@ The template syntax is the one of Mustache framework.
 
 Here is an example of template for this notificator :
 ```
-Dear {{recipient}}
+Dear {{displayName}}
 
 This mail has been sent by Notification application.
 
@@ -714,6 +715,132 @@ It will be in the MongoDB database, in rawnotifications collection, with that fo
 ```
 
 You can retrieve this example in client directory.
+
+## 3.4. Metrics available
+
+Some metrics are available through a REST API. These can be used for a front-end that summarize the activity of the NotificationEngine. 
+
+### 3.4.1. Subscription metrics
+
+It is possible to get two different metrics for subscriptions : 
+- get count of all subscriptions with the url ```countAllSubscriptions.do```
+- get count of all subscriptions for a topic with the url ```countAllSubscriptionsForTopic.do?topic=topicName```
+
+The response would look like this in the first case : 
+```JSON
+{
+	"count": 6
+}
+```
+
+And like this in the second case : 
+```JSON
+{
+	"count": 3,
+	"topic": {
+		"name": "topicName"
+	}
+}
+```
+
+### 3.4.2. RawNotification metrics
+
+The NotificationEngine allows to get 6 different metrics for raw notifications : 
+- get count of all raw notifications created with the url ```countAllRawNotifications.do```. It responds the following JSON : 
+```JSON
+{
+	"count": 42
+}
+```
+
+- get count of all raw notifications for a specific topic (```countRawNotificationsForTopic.do?topic=topicName```) that responds : 
+```JSON
+{
+	"count": 3,
+	"topic": {
+		"name": "topicName"
+	}
+}
+```
+
+- get count of all raw notifications not processed (```countNotProcessedRawNotifications.do```). It gives this JSON : 
+```JSON
+{
+	"count": 42
+}
+```
+
+- get count of all not processed raw notifications for a topic (```countNotProcessedRawNotificationsForTopic.do?topic=topicName```). As a response, one gets : 
+```JSON
+{
+	"count": 3,
+	"topic": {
+		"name": "topicName"
+	}
+}
+```
+
+- get count of all raw notifications created for last x days (```countCreatedRawNotificationsForLastDays.do?days=5```). The response is like : 
+```JSON
+{"2013-08-06":3,"2013-08-04":10,"2013-08-05":6,"2013-08-02":12,"2013-08-03":5}
+```
+where ```"2013-08-06"```is a date at the format ```yyyy-MM-dd```
+
+- get count of all processed raw notifications created for last x days (```countProcessedRawNotificationsForLastDays.do?days=5```). The response is like : 
+```JSON
+{"2013-08-06":2,"2013-08-04":8,"2013-08-05":10,"2013-08-02":12,"2013-08-03":3}
+```
+where ```"2013-08-06"```is a date at the format ```yyyy-MM-dd```
+
+
+### 3.4.3. DecoratedNotification metrics
+
+You can get 6 different metrics for Decorated notifications : 
+- get count of all decorated notifications created with the url ```countAllDecoratedNotifications.do```. It responds the following JSON : 
+```JSON
+{
+	"count": 42
+}
+```
+
+- get count of all decorated notifications for a specific topic (```countAllDecoratedNotificationsForTopic.do?topic=topicName```) that responds : 
+```JSON
+{
+	"count": 3,
+	"topic": {
+		"name": "topicName"
+	}
+}
+```
+
+- get count of not sent decorated notifications (```countNotSentDecoratedNotifications.do```). It gives this JSON : 
+```JSON
+{
+	"count": 42
+}
+```
+
+- get count of all not sent decorated notifications for a topic (```countNotSentDecoratedNotificationsForTopic.do?topic=topicName```). As a response, one gets : 
+```JSON
+{
+	"count": 3,
+	"topic": {
+		"name": "topicName"
+	}
+}
+```
+
+- get count of all decorated notifications created for last x days (```countCreatedDecoratedNotificationsForLastDays.do?days=5```). The response is like : 
+```JSON
+{"2013-08-06":3,"2013-08-04":10,"2013-08-05":6,"2013-08-02":12,"2013-08-03":5}
+```
+where ```"2013-08-06"```is a date at the format ```yyyy-MM-dd```
+
+- get count of all sent decorated notifications created for last x days (```countSentDecoratedNotificationsForLastDays.do?days=5```). The response is like : 
+```JSON
+{"2013-08-06":2,"2013-08-04":8,"2013-08-05":10,"2013-08-02":12,"2013-08-03":3}
+```
+where ```"2013-08-06"```is a date at the format ```yyyy-MM-dd```
 
 # 4. Extending the Notification Engine
 

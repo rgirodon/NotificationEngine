@@ -119,4 +119,29 @@ public class Constants {
 	public static final String SUBJECT = "subject";
 	
 	public static final String FROM = "from";
+
+    public static final String COUNT_NOT_SENT_DECORATED_NOTIFICATIONS_FOR_TOPIC = "countNotSentDecoratedNotificationsForTopic";
+
+    public static final String COUNT_NOT_SENT_DECORATED_NOTIFICATIONS = "countNotSentDecoratedNotifications";
+
+    public static final String COUNT_ALL_DECORATED_NOTIFICATIONS = "countAllDecoratedNotifications";
+
+    public static final String COUNT_ALL_DECORATED_NOTIFICATIONS_FOR_TOPIC = "countAllDecoratedNotificationsForTopic";
+
+    public static final String COUNT_ALL_SUBSCRIPTIONS = "countAllSubscriptions";
+
+    public static final String COUNT_ALL_SUBSCRIPTIONS_FOR_TOPIC = "countAllSubscriptionsForTopic";
+
+    public static final String COUNT_ALL_RAW_NOTIFICATIONS = "countAllRawNotifications";
+
+    public static final String COUNT_NOT_PROCESSED_RAW_NOTIFICATIONS = "countNotProcessedRawNotifications";
+
+    public static final String COUNT_RAW_NOTIFICATIONS_FOR_TOPIC = "countRawNotificationsForTopic";
+
+    public static final String COUNT_NOT_PROCESSED_RAW_NOTIFICATIONS_FOR_TOPIC = "countNotProcessedRawNotificationsForTopic";
+
+    public static final String COUNT_ALL_DELETED_DECORATED_NOTIFICATIONS = "countDeletedDecoratedNotifications";
+
+    public static final String COUNT = "count";
+
 }
