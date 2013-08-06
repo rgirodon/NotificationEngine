@@ -192,7 +192,7 @@ public class RawNotificationController {
 
     }
 
-    @RequestMapping(value = "/getCreatedRawNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @RequestMapping(value = "/countCreatedRawNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
     @ResponseBody
     public String getRawNotificationsCreatedForLastDays(@RequestParam("days") Integer nbDays) {
 
@@ -237,7 +237,7 @@ public class RawNotificationController {
 
     }
 
-    @RequestMapping(value = "/getProcessedRawNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
+    @RequestMapping(value = "/countProcessedRawNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
     @ResponseBody
     public String getRawNotificationsProcessedForLastDays(@RequestParam("days") Integer nbDays) {
 
