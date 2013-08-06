@@ -279,6 +279,11 @@ public class Persister implements InitializingBean {
 		this.decoratedNotifications.remove();
 	}
 
+    public void cleanDeletedDecoratedNotifications() {
+
+        this.deletedDecoratedNotifications.remove();
+    }
+
 	public RawNotification retrieveRawNotificationById(ObjectId id) {
 
 		return this.rawNotifications.findOne(id).as(RawNotification.class);
@@ -665,9 +670,16 @@ public class Persister implements InitializingBean {
 
         this.decoratedNotifications.remove(decoratedNotificationId);
 
-        //We store deleted decoratedNotifications to have some metrics
-        this.deletedDecoratedNotifications.save(decoratedNotificationToDelete);
+        //We store deleted decoratedNotifications in another collection to have some metrics
+        this.saveDeletedDecoratedNotification(decoratedNotificationToDelete);
 
+    }
+
+    public void saveDeletedDecoratedNotification(DecoratedNotification decoratedNotification) {
+
+        decoratedNotification.setDeletedAt(new Date());
+
+        this.deletedDecoratedNotifications.save(decoratedNotification);
     }
 
 	public void saveDecoratedNotification(
@@ -675,4 +687,62 @@ public class Persister implements InitializingBean {
 		
 		this.decoratedNotifications.save(decoratedNotificationToSave);
 	}
+
+    public Collection<DecoratedNotification> retrieveAllDeletedDecoratedNotifications() {
+
+        LOGGER.debug("Retrieve all DecoratedNotifications");
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Iterable<DecoratedNotification> decoratedNotifications = this.deletedDecoratedNotifications.find("{}").as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotifications) {
+
+            LOGGER.debug("Found DeletedDecoratedNotification (exact query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+
+    }
+
+    public Collection<DecoratedNotification> retrieveDeletedDecoratedNotificationForDate(Date date) {
+
+        LOGGER.debug("retrieveDeletedDecoratedNotificationForDate: " + date.toString() );
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        // query created manually
+        String exactQuery = "{deletedAt: {$gt: #, $lt: #}}";
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDate =
+                this.deletedDecoratedNotifications.find(exactQuery, beginDate, endDate).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDate) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+
+        }
+
+        return result;
+
+    }
 }

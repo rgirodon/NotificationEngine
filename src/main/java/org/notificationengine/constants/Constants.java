@@ -140,4 +140,6 @@ public class Constants {
 
     public static final String COUNT_NOT_PROCESSED_RAW_NOTIFICATIONS_FOR_TOPIC = "countNotProcessedRawNotificationsForTopic";
 
+    public static final String COUNT_ALL_DELETED_DECORATED_NOTIFICATIONS = "countDeletedDecoratedNotifications";
+
 }
