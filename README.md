@@ -820,7 +820,7 @@ You can get 6 different metrics for Decorated notifications :
 }
 ```
 
-- get count of all not sent decorated notifications for a topic (```countNotSentDecoratedNotifications.do?topic=topicName```). As a response, one gets : 
+- get count of all not sent decorated notifications for a topic (```countNotSentDecoratedNotificationsForTopic.do?topic=topicName```). As a response, one gets : 
 ```JSON
 {
 	"count": 3,
