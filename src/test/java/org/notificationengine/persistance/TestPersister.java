@@ -26,6 +26,8 @@ public class TestPersister {
 		persister.cleanRawNotifications();
 		
 		persister.cleanDecoratedNotifications();
+
+        persister.cleanDeletedDecoratedNotifications();
 	}
 	
 	@Test
@@ -817,6 +819,70 @@ public class TestPersister {
         DecoratedNotification decoratedNotification2 = persister.retrieveDecoratedNotificationById(decoratedNotification1.get_id());
 
         assertEquals(new Integer(2), decoratedNotification2.getSendingAttempts());
+
+    }
+
+    @Test
+    public void testRetrieveAllDeletedDecoratedNotifications() {
+
+        DecoratedNotification decoratedNotification1 = new DecoratedNotification();
+        decoratedNotification1.set_id(new ObjectId());
+        decoratedNotification1.setSent(Boolean.FALSE);
+        decoratedNotification1.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.saveDeletedDecoratedNotification(decoratedNotification1);
+
+
+        DecoratedNotification decoratedNotification2 = new DecoratedNotification();
+        decoratedNotification2.set_id(new ObjectId());
+        decoratedNotification2.setSent(Boolean.FALSE);
+        decoratedNotification2.setRawNotification(new RawNotification(new Topic("facturation.societe2")));
+
+        persister.saveDeletedDecoratedNotification(decoratedNotification2);
+
+
+        DecoratedNotification decoratedNotification3 = new DecoratedNotification();
+        decoratedNotification3.set_id(new ObjectId());
+        decoratedNotification3.setSent(Boolean.FALSE);
+        decoratedNotification3.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.saveDeletedDecoratedNotification(decoratedNotification3);
+
+        Integer countDeletedDecoratedNotifications = persister.retrieveAllDeletedDecoratedNotifications().size();
+
+        assertEquals(new Integer(3), countDeletedDecoratedNotifications);
+
+    }
+
+    @Test
+    public void testRetrieveAllDeletedDecoratedNotificationsForDate() {
+
+        DecoratedNotification decoratedNotification1 = new DecoratedNotification();
+        decoratedNotification1.set_id(new ObjectId());
+        decoratedNotification1.setSent(Boolean.FALSE);
+        decoratedNotification1.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.saveDeletedDecoratedNotification(decoratedNotification1);
+
+
+        DecoratedNotification decoratedNotification2 = new DecoratedNotification();
+        decoratedNotification2.set_id(new ObjectId());
+        decoratedNotification2.setSent(Boolean.FALSE);
+        decoratedNotification2.setRawNotification(new RawNotification(new Topic("facturation.societe2")));
+
+        persister.saveDeletedDecoratedNotification(decoratedNotification2);
+
+
+        DecoratedNotification decoratedNotification3 = new DecoratedNotification();
+        decoratedNotification3.set_id(new ObjectId());
+        decoratedNotification3.setSent(Boolean.FALSE);
+        decoratedNotification3.setRawNotification(new RawNotification(new Topic("facturation.societe1")));
+
+        persister.saveDeletedDecoratedNotification(decoratedNotification3);
+
+        Integer countDeletedDecoratedNotifications = persister.retrieveDeletedDecoratedNotificationForDate(new Date()).size();
+
+        assertEquals(new Integer(3), countDeletedDecoratedNotifications);
 
     }
 }

@@ -23,6 +23,8 @@ public class DecoratedNotification {
 
     private Integer sendingAttempts;
 
+    private Date deletedAt;
+
 	public Map<String, Object> getContext() {
 		
 		Map<String, Object> context = new HashMap<>();
@@ -43,7 +45,6 @@ public class DecoratedNotification {
 		this.recipient = recipient;
 		this.sent = Boolean.FALSE;
         this.createdAt = new Date();
-        this.sentAt = null;
         this.sendingAttempts = 0;
 	}
 
@@ -186,5 +187,11 @@ public class DecoratedNotification {
         this.sendingAttempts = sendingAttempts;
     }
 
-	
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
+    }
 }
