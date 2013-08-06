@@ -142,4 +142,6 @@ public class Constants {
 
     public static final String COUNT_ALL_DELETED_DECORATED_NOTIFICATIONS = "countDeletedDecoratedNotifications";
 
+    public static final String COUNT = "count";
+
 }

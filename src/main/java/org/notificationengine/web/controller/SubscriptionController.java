@@ -80,7 +80,7 @@ public class SubscriptionController {
 
         JSONObject response = new JSONObject();
 
-        response.put(Constants.COUNT_ALL_SUBSCRIPTIONS, countAllSubscriptions);
+        response.put(Constants.COUNT, countAllSubscriptions);
 
         return response.toString();
 
@@ -100,7 +100,7 @@ public class SubscriptionController {
 
         JSONObject response = new JSONObject();
 
-        response.put(Constants.COUNT_ALL_SUBSCRIPTIONS_FOR_TOPIC, countSubscriptionsForTopic);
+        response.put(Constants.COUNT, countSubscriptionsForTopic);
 
         response.put(Constants.TOPIC, topic);
 
