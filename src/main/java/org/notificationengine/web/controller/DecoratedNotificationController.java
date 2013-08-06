@@ -59,7 +59,7 @@ public class DecoratedNotificationController {
 
         JSONObject response = new JSONObject();
 
-        response.put(Constants.COUNT_NOT_SENT_DECORATED_NOTIFICATIONS, countNotSentDecoratedNotifications);
+        response.put(Constants.COUNT, countNotSentDecoratedNotifications);
 
         return response.toString();
 
@@ -77,7 +77,7 @@ public class DecoratedNotificationController {
 
         JSONObject response = new JSONObject();
 
-        response.put(Constants.COUNT_ALL_DECORATED_NOTIFICATIONS, countDecoratedNotifications);
+        response.put(Constants.COUNT, countDecoratedNotifications);
 
         return response.toString();
 
@@ -97,7 +97,7 @@ public class DecoratedNotificationController {
 
         JSONObject response = new JSONObject();
 
-        response.put(Constants.COUNT_ALL_DECORATED_NOTIFICATIONS_FOR_TOPIC, countDecoratedNotificationsForTopic);
+        response.put(Constants.COUNT, countDecoratedNotificationsForTopic);
 
         response.put(Constants.TOPIC, topic);
 
@@ -119,7 +119,7 @@ public class DecoratedNotificationController {
 
         JSONObject response = new JSONObject();
 
-        response.put(Constants.COUNT_NOT_SENT_DECORATED_NOTIFICATIONS_FOR_TOPIC, countNotSentDecoratedNotificationsForTopic);
+        response.put(Constants.COUNT, countNotSentDecoratedNotificationsForTopic);
 
         response.put(Constants.TOPIC, topic);
 

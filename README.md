@@ -729,16 +729,16 @@ It is possible to get two different metrics for subscriptions :
 The response would look like this in the first case : 
 ```JSON
 {
-	countAllSubscriptions: 6
+	"count": 6
 }
 ```
 
 And like this in the second case : 
 ```JSON
 {
-	countAllSubscriptionsForTopic: 3,
-	topic: {
-		name: 'topicName'
+	"count": 3,
+	"topic": {
+		"name": "topicName"
 	}
 }
 ```
@@ -749,16 +749,16 @@ The NotificationEngine allows to get 6 different metrics for raw notifications :
 - get count of all raw notifications created with the url ```countAllRawNotifications.do```. It responds the following JSON : 
 ```JSON
 {
-	countAllRawNotifications: 42
+	"count": 42
 }
 ```
 
 - get count of all raw notifications for a specific topic (```countRawNotificationsForTopic.do?topic=topicName```) that responds : 
 ```JSON
 {
-	countRawNotificationsForTopic: 3,
-	topic: {
-		name: 'topicName'
+	"count": 3,
+	"topic": {
+		"name": "topicName"
 	}
 }
 ```
@@ -766,16 +766,16 @@ The NotificationEngine allows to get 6 different metrics for raw notifications :
 - get count of all raw notifications not processed (```countNotProcessedRawNotifications.do```). It gives this JSON : 
 ```JSON
 {
-	countNotProcessedRawNotifications: 42
+	"count": 42
 }
 ```
 
 - get count of all not processed raw notifications for a topic (```countNotProcessedRawNotificationsForTopic.do?topic=topicName```). As a response, one gets : 
 ```JSON
 {
-	countRawNotificationsForTopic: 3,
-	topic: {
-		name: 'topicName'
+	"count": 3,
+	"topic": {
+		"name": "topicName"
 	}
 }
 ```
@@ -799,16 +799,16 @@ You can get 6 different metrics for Decorated notifications :
 - get count of all decorated notifications created with the url ```countAllDecoratedNotifications.do```. It responds the following JSON : 
 ```JSON
 {
-	countAllDecoratedNotifications: 42
+	"count": 42
 }
 ```
 
 - get count of all decorated notifications for a specific topic (```countAllDecoratedNotificationsForTopic.do?topic=topicName```) that responds : 
 ```JSON
 {
-	countAllDecoratedNotificationsForTopic: 3,
-	topic: {
-		name: 'topicName'
+	"count": 3,
+	"topic": {
+		"name": "topicName"
 	}
 }
 ```
@@ -816,16 +816,16 @@ You can get 6 different metrics for Decorated notifications :
 - get count of not sent decorated notifications (```countNotSentDecoratedNotifications.do```). It gives this JSON : 
 ```JSON
 {
-	countNotSentDecoratedNotifications: 42
+	"count": 42
 }
 ```
 
 - get count of all not sent decorated notifications for a topic (```countNotSentDecoratedNotifications.do?topic=topicName```). As a response, one gets : 
 ```JSON
 {
-	countNotSentDecoratedNotificationsForTopic: 3,
-	topic: {
-		name: 'topicName'
+	"count": 3,
+	"topic": {
+		"name": "topicName"
 	}
 }
 ```

@@ -41,7 +41,7 @@ public class DeletedDecoratedNotificationController {
 
         JSONObject response = new JSONObject();
 
-        response.put(Constants.COUNT_ALL_DELETED_DECORATED_NOTIFICATIONS, countDeletedDecoratedNotifications);
+        response.put(Constants.COUNT, countDeletedDecoratedNotifications);
 
         return response.toString();
 
