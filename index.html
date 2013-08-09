@@ -13,14 +13,14 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title>Notificationengine by rgirodon</title>
+    <title>NotificationEngine by rgirodon</title>
   </head>
 
   <body>
     <header>
       <div class="inner">
-        <h1>Notificationengine</h1>
-        <h2>NotificationEngine</h2>
+        <h1>NotificationEngine</h1>
+        <h2>He delivers assists in your Information System !</h2>
         <a href="https://github.com/rgirodon/NotificationEngine" class="button"><small>View project on</small>GitHub</a>
       </div>
     </header>
@@ -491,7 +491,8 @@ Note that you can define here a replicaSet, you just have to set the mongo.repli
 
 <div class="highlight"><pre><span class="p">{</span>
 <span class="nt">"topic"</span> <span class="p">:</span> <span class="s2">"facturation"</span><span class="p">,</span>
-<span class="nt">"recipient"</span> <span class="p">:</span> <span class="s2">"xxxx@yyyy.com"</span>
+<span class="nt">"recipient"</span> <span class="p">:</span> <span class="s2">"xxxx@yyyy.com"</span><span class="p">,</span>
+<span class="nt">"displayName"</span><span class="p">:</span> <span class="s2">"John Doe"</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -608,7 +609,7 @@ In our example, the built-in Template Engine will look for a template file named
 
 <p>Here is an example of template for this notificator :</p>
 
-<pre><code>Dear {{recipient}}
+<pre><code>Dear {{displayName}}
 
 This mail has been sent by Facturation application.
 
@@ -652,7 +653,7 @@ In our example, the built-in Template Engine will look for a template file named
 
 <p>Here is an example of template for this notificator :</p>
 
-<pre><code>Dear {{recipient}}
+<pre><code>Dear {{displayName}}
 
 This mail has been sent by Helpdesk application.
 
@@ -714,7 +715,7 @@ In our example, the built-in Template Engine will look for a template file named
 
 <p>Here is an example of template for this notificator :</p>
 
-<pre><code>Dear {{recipient}}
+<pre><code>Dear {{displayName}}
 
 This mail has been sent by Notification application.
 
@@ -823,7 +824,159 @@ We provide a SpingUtils utility class for getting beans.</p>
 
 <p>You can retrieve this example in client directory.</p>
 
-<h1>
+<h2>
+<a name="34-metrics-available" class="anchor" href="#34-metrics-available"><span class="octicon octicon-link"></span></a>3.4. Metrics available</h2>
+
+<p>Some metrics are available through a REST API. These can be used for a front-end that summarize the activity of the NotificationEngine. </p>
+
+<h3>
+<a name="341-subscription-metrics" class="anchor" href="#341-subscription-metrics"><span class="octicon octicon-link"></span></a>3.4.1. Subscription metrics</h3>
+
+<p>It is possible to get two different metrics for subscriptions : </p>
+
+<ul>
+<li>get count of all subscriptions with the url <code>countAllSubscriptions.do</code>
+</li>
+<li>get count of all subscriptions for a topic with the url <code>countAllSubscriptionsForTopic.do?topic=topicName</code>
+</li>
+</ul><p>The response would look like this in the first case : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">6</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>And like this in the second case : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nt">"topic"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"topicName"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="342-rawnotification-metrics" class="anchor" href="#342-rawnotification-metrics"><span class="octicon octicon-link"></span></a>3.4.2. RawNotification metrics</h3>
+
+<p>The NotificationEngine allows to get 6 different metrics for raw notifications : </p>
+
+<ul>
+<li>
+<p>get count of all raw notifications created with the url <code>countAllRawNotifications.do</code>. It responds the following JSON : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+<span class="nt">"count"</span><span class="p">:</span> <span class="mi">42</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>get count of all raw notifications for a specific topic (<code>countRawNotificationsForTopic.do?topic=topicName</code>) that responds : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+<span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="nt">"topic"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"topicName"</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>get count of all raw notifications not processed (<code>countNotProcessedRawNotifications.do</code>). It gives this JSON : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+<span class="nt">"count"</span><span class="p">:</span> <span class="mi">42</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>get count of all not processed raw notifications for a topic (<code>countNotProcessedRawNotificationsForTopic.do?topic=topicName</code>). As a response, one gets : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+<span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="nt">"topic"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"topicName"</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>get count of all raw notifications created for last x days (<code>countCreatedRawNotificationsForLastDays.do?days=5</code>). The response is like : </p>
+
+<div class="highlight"><pre><span class="p">{</span><span class="nt">"2013-08-06"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"2013-08-04"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="nt">"2013-08-05"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">"2013-08-02"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nt">"2013-08-03"</span><span class="p">:</span><span class="mi">5</span><span class="p">}</span>
+</pre></div>
+
+<p>where <code>"2013-08-06"</code>is a date at the format <code>yyyy-MM-dd</code></p>
+</li>
+<li>
+<p>get count of all processed raw notifications created for last x days (<code>countProcessedRawNotificationsForLastDays.do?days=5</code>). The response is like : </p>
+
+<div class="highlight"><pre><span class="p">{</span><span class="nt">"2013-08-06"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"2013-08-04"</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span><span class="nt">"2013-08-05"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="nt">"2013-08-02"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nt">"2013-08-03"</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
+</pre></div>
+
+<p>where <code>"2013-08-06"</code>is a date at the format <code>yyyy-MM-dd</code></p>
+</li>
+</ul><h3>
+<a name="343-decoratednotification-metrics" class="anchor" href="#343-decoratednotification-metrics"><span class="octicon octicon-link"></span></a>3.4.3. DecoratedNotification metrics</h3>
+
+<p>You can get 6 different metrics for Decorated notifications : </p>
+
+<ul>
+<li>
+<p>get count of all decorated notifications created with the url <code>countAllDecoratedNotifications.do</code>. It responds the following JSON : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+<span class="nt">"count"</span><span class="p">:</span> <span class="mi">42</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>get count of all decorated notifications for a specific topic (<code>countAllDecoratedNotificationsForTopic.do?topic=topicName</code>) that responds : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+<span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="nt">"topic"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"topicName"</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>get count of not sent decorated notifications (<code>countNotSentDecoratedNotifications.do</code>). It gives this JSON : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+<span class="nt">"count"</span><span class="p">:</span> <span class="mi">42</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>get count of all not sent decorated notifications for a topic (<code>countNotSentDecoratedNotificationsForTopic.do?topic=topicName</code>). As a response, one gets : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+<span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="nt">"topic"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"topicName"</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>get count of all decorated notifications created for last x days (<code>countCreatedDecoratedNotificationsForLastDays.do?days=5</code>). The response is like : </p>
+
+<div class="highlight"><pre><span class="p">{</span><span class="nt">"2013-08-06"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"2013-08-04"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="nt">"2013-08-05"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">"2013-08-02"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nt">"2013-08-03"</span><span class="p">:</span><span class="mi">5</span><span class="p">}</span>
+</pre></div>
+
+<p>where <code>"2013-08-06"</code>is a date at the format <code>yyyy-MM-dd</code></p>
+</li>
+<li>
+<p>get count of all sent decorated notifications created for last x days (<code>countSentDecoratedNotificationsForLastDays.do?days=5</code>). The response is like : </p>
+
+<div class="highlight"><pre><span class="p">{</span><span class="nt">"2013-08-06"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"2013-08-04"</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span><span class="nt">"2013-08-05"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="nt">"2013-08-02"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nt">"2013-08-03"</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
+</pre></div>
+
+<p>where <code>"2013-08-06"</code>is a date at the format <code>yyyy-MM-dd</code></p>
+</li>
+</ul><h1>
 <a name="4-extending-the-notification-engine" class="anchor" href="#4-extending-the-notification-engine"><span class="octicon octicon-link"></span></a>4. Extending the Notification Engine</h1>
 
 <p>The Notification Engine provides some built-in Selectors and Notificators, but there are chances that you need to create new Selectors or Notificators to fit your needs.</p>
