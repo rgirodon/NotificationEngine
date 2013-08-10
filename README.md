@@ -782,15 +782,57 @@ The NotificationEngine allows to get 6 different metrics for raw notifications :
 
 - get count of all raw notifications created for last x days (```countCreatedRawNotificationsForLastDays.do?days=5```). The response is like : 
 ```JSON
-{"2013-08-06":3,"2013-08-04":10,"2013-08-05":6,"2013-08-02":12,"2013-08-03":5}
+[
+    {
+        "count": 4,
+        "date": "2013-08-09"
+    },
+    {
+        "count": 5,
+        "date": "2013-08-08"
+    },
+    {
+        "count": 2,
+        "date": "2013-08-10"
+    },
+    {
+        "count": 9,
+        "date": "2013-08-06"
+    },
+    {
+        "count": 3,
+        "date": "2013-08-07"
+    }
+]
 ```
-where ```"2013-08-06"```is a date at the format ```yyyy-MM-dd```
+where dates are at the format ```yyyy-MM-dd```
 
 - get count of all processed raw notifications created for last x days (```countProcessedRawNotificationsForLastDays.do?days=5```). The response is like : 
 ```JSON
-{"2013-08-06":2,"2013-08-04":8,"2013-08-05":10,"2013-08-02":12,"2013-08-03":3}
+[
+    {
+        "count": 4,
+        "date": "2013-08-09"
+    },
+    {
+        "count": 3,
+        "date": "2013-08-08"
+    },
+    {
+        "count": 4,
+        "date": "2013-08-10"
+    },
+    {
+        "count": 7,
+        "date": "2013-08-06"
+    },
+    {
+        "count": 3,
+        "date": "2013-08-07"
+    }
+]
 ```
-where ```"2013-08-06"```is a date at the format ```yyyy-MM-dd```
+where dates are at the format ```yyyy-MM-dd```
 
 
 ### 3.4.3. DecoratedNotification metrics
@@ -832,15 +874,57 @@ You can get 6 different metrics for Decorated notifications :
 
 - get count of all decorated notifications created for last x days (```countCreatedDecoratedNotificationsForLastDays.do?days=5```). The response is like : 
 ```JSON
-{"2013-08-06":3,"2013-08-04":10,"2013-08-05":6,"2013-08-02":12,"2013-08-03":5}
+[
+    {
+        "count": 4,
+        "date": "2013-08-09"
+    },
+    {
+        "count": 3,
+        "date": "2013-08-08"
+    },
+    {
+        "count": 4,
+        "date": "2013-08-10"
+    },
+    {
+        "count": 7,
+        "date": "2013-08-06"
+    },
+    {
+        "count": 3,
+        "date": "2013-08-07"
+    }
+]
 ```
-where ```"2013-08-06"```is a date at the format ```yyyy-MM-dd```
+where dates are at the format ```yyyy-MM-dd```
 
 - get count of all sent decorated notifications created for last x days (```countSentDecoratedNotificationsForLastDays.do?days=5```). The response is like : 
 ```JSON
-{"2013-08-06":2,"2013-08-04":8,"2013-08-05":10,"2013-08-02":12,"2013-08-03":3}
+[
+    {
+        "count": 4,
+        "date": "2013-08-09"
+    },
+    {
+        "count": 3,
+        "date": "2013-08-08"
+    },
+    {
+        "count": 4,
+        "date": "2013-08-10"
+    },
+    {
+        "count": 7,
+        "date": "2013-08-06"
+    },
+    {
+        "count": 3,
+        "date": "2013-08-07"
+    }
+]
 ```
-where ```"2013-08-06"```is a date at the format ```yyyy-MM-dd```
+where dates are at the format ```yyyy-MM-dd```
 
 # 4. Extending the Notification Engine
 
