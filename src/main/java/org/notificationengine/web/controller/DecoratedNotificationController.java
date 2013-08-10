@@ -2,6 +2,7 @@ package org.notificationengine.web.controller;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
@@ -172,11 +173,19 @@ public class DecoratedNotificationController {
 
         }
 
-        Gson gson = new Gson();
+        JSONArray result = new JSONArray();
 
-        String result = gson.toJson(stats);
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
 
-        return result;
+            JSONObject oneStat = new JSONObject();
+
+            oneStat.put(Constants.DATE, entry.getKey());
+            oneStat.put(Constants.COUNT, entry.getValue());
+
+            result.add(oneStat);
+        }
+
+        return result.toString();
 
     }
 
@@ -217,11 +226,19 @@ public class DecoratedNotificationController {
 
         }
 
-        Gson gson = new Gson();
+        JSONArray result = new JSONArray();
 
-        String result = gson.toJson(stats);
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
 
-        return result;
+            JSONObject oneStat = new JSONObject();
+
+            oneStat.put(Constants.DATE, entry.getKey());
+            oneStat.put(Constants.COUNT, entry.getValue());
+
+            result.add(oneStat);
+        }
+
+        return result.toString();
 
     }
 
