@@ -3,6 +3,7 @@ package org.notificationengine.web.controller;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.jongo.MongoCollection;
 import org.notificationengine.constants.Constants;
@@ -164,7 +165,11 @@ public class RawNotificationController {
 
         response.put(Constants.COUNT, countRawNotificationsForTopic);
 
-        response.put(Constants.TOPIC, topic);
+        JSONObject topicObject = new JSONObject();
+
+        topicObject.put(Constants.NAME, topic.getName());
+
+        response.put(Constants.TOPIC, topicObject);
 
         return response.toString();
 
@@ -186,7 +191,11 @@ public class RawNotificationController {
 
         response.put(Constants.COUNT, countNotProcessedRawNotificationsForTopic);
 
-        response.put(Constants.TOPIC, topic);
+        JSONObject topicObject = new JSONObject();
+
+        topicObject.put(Constants.NAME, topic.getName());
+
+        response.put(Constants.TOPIC, topicObject);
 
         return response.toString();
 
@@ -229,11 +238,19 @@ public class RawNotificationController {
 
         }
 
-        Gson gson = new Gson();
+        JSONArray result = new JSONArray();
 
-        String result = gson.toJson(stats);
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
 
-        return result;
+            JSONObject oneStat = new JSONObject();
+
+            oneStat.put(Constants.DATE, entry.getKey());
+            oneStat.put(Constants.COUNT, entry.getValue());
+
+            result.add(oneStat);
+        }
+
+        return result.toString();
 
     }
 
@@ -274,11 +291,19 @@ public class RawNotificationController {
 
         }
 
-        Gson gson = new Gson();
+        JSONArray result = new JSONArray();
 
-        String result = gson.toJson(stats);
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
 
-        return result;
+            JSONObject oneStat = new JSONObject();
+
+            oneStat.put(Constants.DATE, entry.getKey());
+            oneStat.put(Constants.COUNT, entry.getValue());
+
+            result.add(oneStat);
+        }
+
+        return result.toString();
 
     }
 
