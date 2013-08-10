@@ -7,7 +7,9 @@ public class Constants {
 	final public static String CHANNELS = "channels";
 	
 	final public static String TOPIC = "topic";
-	
+
+	final public static String NAME = "name";
+
 	final public static String TOPIC_NAME = "topic.name";
 
 	final public static String RECIPIENT_ADDRESS = "recipient.address";
@@ -143,5 +145,7 @@ public class Constants {
     public static final String COUNT_ALL_DELETED_DECORATED_NOTIFICATIONS = "countDeletedDecoratedNotifications";
 
     public static final String COUNT = "count";
+
+    public static final String DATE = "date";
 
 }
