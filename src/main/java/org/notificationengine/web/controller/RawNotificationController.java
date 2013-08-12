@@ -307,6 +307,116 @@ public class RawNotificationController {
 
     }
 
+    @RequestMapping(value = "/countRawNotificationsForDateWithTopic.do", method = RequestMethod.GET, params = {"days","topic"})
+    @ResponseBody
+    public String countRawNotificationsForTopicAndDate(@RequestParam("days") Integer nbDays, @RequestParam("topic") String topicName) {
+
+        Date date = new Date();
+
+        Topic topic = new Topic(topicName);
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < nbDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        //Retrieve data and store it to be sent as response
+
+        Map<String, Integer> stats = new HashMap<>();
+
+        for(Date atDate : datesToGet) {
+
+            Integer nbRowNotificationsCreated = this.persister.retrieveRawNotificationsForDateAndTopic(atDate, topic).size();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = dateFormat.format(atDate);
+
+            stats.put(formattedDate, nbRowNotificationsCreated);
+
+        }
+
+        JSONArray result = new JSONArray();
+
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+
+            JSONObject oneStat = new JSONObject();
+
+            oneStat.put(Constants.DATE, entry.getKey());
+            oneStat.put(Constants.COUNT, entry.getValue());
+
+            result.add(oneStat);
+        }
+
+        return result.toString();
+
+    }
+
+    @RequestMapping(value = "/countProcessedRawNotificationsForDateWithTopic.do", method = RequestMethod.GET, params = {"days","topic"})
+    @ResponseBody
+    public String countProcessedRawNotificationsForTopicAndDate(@RequestParam("days") Integer nbDays, @RequestParam("topic") String topicName) {
+
+        Date date = new Date();
+
+        Topic topic = new Topic(topicName);
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < nbDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        //Retrieve data and store it to be sent as response
+
+        Map<String, Integer> stats = new HashMap<>();
+
+        for(Date atDate : datesToGet) {
+
+            Integer nbRowNotificationsCreated = this.persister.retrieveProcessedRawNotificationsForDateAndTopic(atDate, topic).size();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = dateFormat.format(atDate);
+
+            stats.put(formattedDate, nbRowNotificationsCreated);
+
+        }
+
+        JSONArray result = new JSONArray();
+
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+
+            JSONObject oneStat = new JSONObject();
+
+            oneStat.put(Constants.DATE, entry.getKey());
+            oneStat.put(Constants.COUNT, entry.getValue());
+
+            result.add(oneStat);
+        }
+
+        return result.toString();
+
+    }
+
 	public Persister getPersister() {
 		return persister;
 	}

@@ -456,6 +456,52 @@ public class Persister implements InitializingBean {
 
     }
 
+    public Collection<RawNotification> retrieveRawNotificationsForDateAndTopic(Date date, Topic topic) {
+
+        LOGGER.debug("retrieveRawNotificationsForDate " + date.toString() + " with topic " + topic.getName());
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        // query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}, \"topic.name\": #}";
+
+        Iterable<RawNotification> rawNotificationsForDateAndTopic = this.rawNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForDateAndTopic) {
+
+            result.add(rawNotification);
+
+        }
+
+        String likeQuery = "{createdAt: {$gt: #, $lt: #}, \"topic.name\": {$regex: #}}";
+
+        Iterable<RawNotification> rawNotificationsForDateAndTopicLike = this.rawNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForDateAndTopicLike) {
+
+            result.add(rawNotification);
+
+        }
+
+        return result;
+
+    }
+
     public Collection<RawNotification> retrieveProcessedRawNotificationsForDate(Date date) {
 
         Collection<RawNotification> result = new ArrayList<>();
@@ -483,6 +529,54 @@ public class Persister implements InitializingBean {
         Iterable<RawNotification> rawNotificationsForDate = this.rawNotifications.find(exactQuery, beginDate, endDate).as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForDate) {
+
+            result.add(rawNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<RawNotification> retrieveProcessedRawNotificationsForDateAndTopic(Date date, Topic topic) {
+
+        LOGGER.debug("retrieveProcessedRawNotificationsForDate " + date.toString() + " with topic " + topic.getName());
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        // query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}, processed: true, \"topic.name\": #}";
+
+        Iterable<RawNotification> rawNotificationsForDateAndTopic =
+                this.rawNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForDateAndTopic) {
+
+            result.add(rawNotification);
+
+        }
+
+        String likeQuery = "{createdAt: {$gt: #, $lt: #}, processed: true, \"topic.name\": {$regex: #}}";
+
+        Iterable<RawNotification> rawNotificationsForDateAndTopicLike =
+                this.rawNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForDateAndTopicLike) {
 
             result.add(rawNotification);
 
@@ -533,6 +627,58 @@ public class Persister implements InitializingBean {
 
     }
 
+    public Collection<DecoratedNotification> retrieveSentDecoratedNotificationsForDateAndTopic(Date date, Topic topic) {
+
+        LOGGER.debug("retrieveSentDecoratedNotificationsForDate: " + date.toString() + " with topic " + topic.getName());
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        // query created manually
+        String exactQuery = "{sentAt: {$gt: #, $lt: #}, sent: true, \"topic.name\": #}";
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDateAndTopic =
+                this.decoratedNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDateAndTopic) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+
+        }
+
+        String likeQuery = "{sentAt: {$gt: #, $lt: #}, sent: true, \"topic.name\": {$regex: #}}";
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDateAndLikeTopic =
+                this.decoratedNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDateAndLikeTopic) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+
+        }
+
+        return result;
+
+    }
+
     public Collection<DecoratedNotification> retrieveDecoratedNotificationsForDate(Date date) {
 
         LOGGER.debug("retrieveDecoratedNotificationsForDate: " + date.toString() );
@@ -561,6 +707,58 @@ public class Persister implements InitializingBean {
                 this.decoratedNotifications.find(exactQuery, beginDate, endDate).as(DecoratedNotification.class);
 
         for(DecoratedNotification decoratedNotification : decoratedNotificationsForDate) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<DecoratedNotification> retrieveDecoratedNotificationsForDateAndTopic(Date date, Topic topic) {
+
+        LOGGER.debug("retrieveDecoratedNotificationsForDate: " + date.toString() + " with topic " + topic.getName());
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        // query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}, \"rawNotification.topic.name\": #}";
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDateAndTopic =
+                this.decoratedNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDateAndTopic) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+
+        }
+
+        String likeQuery = "{createdAt: {$gt: #, $lt: #}, \"rawNotification.topic.name\": {$regex: #}}";
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDateAndLikeTopic =
+                this.decoratedNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDateAndLikeTopic) {
 
             LOGGER.debug("Decorated notification found: " + decoratedNotification);
 

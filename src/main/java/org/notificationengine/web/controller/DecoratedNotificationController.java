@@ -242,6 +242,116 @@ public class DecoratedNotificationController {
 
     }
 
+    @RequestMapping(value = "/countCreatedDecoratedNotificationsForLastDaysWithTopic.do", method = RequestMethod.GET, params = {"days", "topic"})
+    @ResponseBody
+    public String getCreatedDecoratedNotificationsForLastDaysWithTopic(@RequestParam("days") Integer nbDays, @RequestParam("topic") String topicName) {
+
+        Topic topic = new Topic(topicName);
+
+        Date date = new Date();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < nbDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        //Retrieve data and store it to be sent as response
+
+        Map<String, Integer> stats = new HashMap<>();
+
+        for(Date atDate : datesToGet) {
+
+            Integer nbRowNotificationsCreated = this.persister.retrieveDecoratedNotificationsForDateAndTopic(atDate, topic).size();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = dateFormat.format(atDate);
+
+            stats.put(formattedDate, nbRowNotificationsCreated);
+
+        }
+
+        JSONArray result = new JSONArray();
+
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+
+            JSONObject oneStat = new JSONObject();
+
+            oneStat.put(Constants.DATE, entry.getKey());
+            oneStat.put(Constants.COUNT, entry.getValue());
+
+            result.add(oneStat);
+        }
+
+        return result.toString();
+
+    }
+
+    @RequestMapping(value = "/countSentDecoratedNotificationsForLastDaysWithTopic.do", method = RequestMethod.GET, params = {"days", "topic"})
+    @ResponseBody
+    public String getSentDecoratedNotificationsForLastDaysWithTopic(@RequestParam("days") Integer nbDays, @RequestParam("topic") String topicName) {
+
+        Topic topic = new Topic(topicName);
+
+        Date date = new Date();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < nbDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        //Retrieve data and store it to be sent as response
+
+        Map<String, Integer> stats = new HashMap<>();
+
+        for(Date atDate : datesToGet) {
+
+            Integer nbRowNotificationsCreated = this.persister.retrieveSentDecoratedNotificationsForDateAndTopic(atDate, topic).size();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = dateFormat.format(atDate);
+
+            stats.put(formattedDate, nbRowNotificationsCreated);
+
+        }
+
+        JSONArray result = new JSONArray();
+
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+
+            JSONObject oneStat = new JSONObject();
+
+            oneStat.put(Constants.DATE, entry.getKey());
+            oneStat.put(Constants.COUNT, entry.getValue());
+
+            result.add(oneStat);
+        }
+
+        return result.toString();
+
+    }
+
     public Persister getPersister() {
         return persister;
     }
