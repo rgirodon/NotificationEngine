@@ -307,9 +307,9 @@ public class RawNotificationController {
 
     }
 
-    @RequestMapping(value = "/countRawNotificationsForDateWithTopic.do", method = RequestMethod.GET, params = {"days","topic"})
+    @RequestMapping(value = "/countRawNotificationsForLastDaysWithTopic.do", method = RequestMethod.GET, params = {"days","topic"})
     @ResponseBody
-    public String countRawNotificationsForTopicAndDate(@RequestParam("days") Integer nbDays, @RequestParam("topic") String topicName) {
+    public String countRawNotificationsForLastDaysWithTopic(@RequestParam("days") Integer nbDays, @RequestParam("topic") String topicName) {
 
         Date date = new Date();
 
@@ -362,9 +362,9 @@ public class RawNotificationController {
 
     }
 
-    @RequestMapping(value = "/countProcessedRawNotificationsForDateWithTopic.do", method = RequestMethod.GET, params = {"days","topic"})
+    @RequestMapping(value = "/countProcessedRawNotificationsForLastDaysWithTopic.do", method = RequestMethod.GET, params = {"days","topic"})
     @ResponseBody
-    public String countProcessedRawNotificationsForTopicAndDate(@RequestParam("days") Integer nbDays, @RequestParam("topic") String topicName) {
+    public String countProcessedRawNotificationsForLastDaysWithTopic(@RequestParam("days") Integer nbDays, @RequestParam("topic") String topicName) {
 
         Date date = new Date();
 
