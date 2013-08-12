@@ -649,7 +649,7 @@ public class Persister implements InitializingBean {
         Date endDate = cal.getTime();
 
         // query created manually
-        String exactQuery = "{sentAt: {$gt: #, $lt: #}, sent: true, \"topic.name\": #}";
+        String exactQuery = "{sentAt: {$gt: #, $lt: #}, sent: true, \"rawNotification.topic.name\": #}";
 
         Iterable<DecoratedNotification> decoratedNotificationsForDateAndTopic =
                 this.decoratedNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(DecoratedNotification.class);
@@ -662,7 +662,7 @@ public class Persister implements InitializingBean {
 
         }
 
-        String likeQuery = "{sentAt: {$gt: #, $lt: #}, sent: true, \"topic.name\": {$regex: #}}";
+        String likeQuery = "{sentAt: {$gt: #, $lt: #}, sent: true, \"rawNotification.topic.name\": {$regex: #}}";
 
         Iterable<DecoratedNotification> decoratedNotificationsForDateAndLikeTopic =
                 this.decoratedNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(DecoratedNotification.class);
