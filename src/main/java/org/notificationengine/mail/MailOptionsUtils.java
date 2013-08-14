@@ -3,9 +3,11 @@ package org.notificationengine.mail;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.notificationengine.constants.Constants;
+import org.notificationengine.spring.SpringUtils;
 
 public class MailOptionsUtils {
 
@@ -100,8 +102,10 @@ public class MailOptionsUtils {
 				}
 				else {
 					if (!StringUtils.equals(subject, contextSubject)) {
+
+                        Properties localSettingsProperties = (Properties) SpringUtils.getBean(Constants.LOCAL_SETTINGS_PROPERTIES);
 						
-						subject = null;
+						subject = localSettingsProperties.getProperty(Constants.DEFAULT_SUBJECT);
 						
 						break;
 					}
