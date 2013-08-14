@@ -14,6 +14,8 @@ public class Constants {
 
 	final public static String RECIPIENT_ADDRESS = "recipient.address";
 
+    final public static String DEFAULT_SUBJECT = "mail.subject";
+
 	final public static String RAW_NOTIFICATION_TOPIC_NAME = "rawNotification.topic.name";
 
 	final public static String ID = "id";
@@ -83,6 +85,8 @@ public class Constants {
 	public static final String TEMPLATE_EXTENSION = ".template";
 	
 	public static final String MAIL_TEMPLATE = "mailTemplate";
+
+    public static final String IS_HTML_TEMPLATE = "isHtmlTemplate";
 
 	public static final String RECIPIENT = "recipient";
 

@@ -26,11 +26,11 @@ public class TestSingleMultiTopicMailByRecipientNotificator {
 	@Test
 	public void testRetrieveRecipientsForTopics() {
 		
-		this.singleMultiTopicMailByRecipientNotificator.add("sportMailTemplate", new Topic("football"));
-		this.singleMultiTopicMailByRecipientNotificator.add("sportMailTemplate", new Topic("cycling"));
+		this.singleMultiTopicMailByRecipientNotificator.add("sportMailTemplate", Boolean.FALSE, new Topic("football"));
+		this.singleMultiTopicMailByRecipientNotificator.add("sportMailTemplate", Boolean.FALSE,new Topic("cycling"));
 		
-		this.singleMultiTopicMailByRecipientNotificator.add("newsMailTemplate", new Topic("politics"));
-		this.singleMultiTopicMailByRecipientNotificator.add("newsMailTemplate", new Topic("economics"));
+		this.singleMultiTopicMailByRecipientNotificator.add("newsMailTemplate", Boolean.FALSE,new Topic("politics"));
+		this.singleMultiTopicMailByRecipientNotificator.add("newsMailTemplate", Boolean.FALSE,new Topic("economics"));
 		
 		Collection<DecoratedNotification> decoratedNotifications = new ArrayList<>();
 

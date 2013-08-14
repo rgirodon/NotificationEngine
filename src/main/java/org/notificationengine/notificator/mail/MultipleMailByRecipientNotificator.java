@@ -20,12 +20,16 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 	private static Logger LOGGER = Logger.getLogger(MultipleMailByRecipientNotificator.class);
 	
 	private String mailTemplate;
+
+    private Boolean isHtmlTemplate;
 	
-	public MultipleMailByRecipientNotificator(Topic topic, String mailTemplate) {
+	public MultipleMailByRecipientNotificator(Topic topic, String mailTemplate, Boolean isHtmlTemplate) {
 		
 		super(topic);
 		
 		this.mailTemplate = mailTemplate;
+
+        this.isHtmlTemplate = isHtmlTemplate;
 	}
 
 	@Override
@@ -49,7 +53,7 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContext(decoratedNotification.getContext());
 			
 			// sent a mail to the recipient
-			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText, options);
+			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText, this.isHtmlTemplate, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
 
@@ -66,4 +70,12 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 	public void setMailTemplate(String mailTemplate) {
 		this.mailTemplate = mailTemplate;
 	}
+
+    public Boolean getHtmlTemplate() {
+        return isHtmlTemplate;
+    }
+
+    public void setHtmlTemplate(Boolean htmlTemplate) {
+        isHtmlTemplate = htmlTemplate;
+    }
 }

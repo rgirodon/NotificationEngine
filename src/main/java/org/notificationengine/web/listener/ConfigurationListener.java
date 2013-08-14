@@ -140,18 +140,20 @@ public class ConfigurationListener implements ServletContextListener {
 			INotificator notificator = null;
 				
 			String mailTemplate = channel.getOption(Constants.MAIL_TEMPLATE);
+
+            Boolean isHtmlTemplate = Boolean.valueOf(channel.getOption(Constants.IS_HTML_TEMPLATE));
 			
 			switch(channel.getNotificatorType()) {
 			
 			case Constants.NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT :
 				
-				notificator = new MultipleMailByRecipientNotificator(topic, mailTemplate);
+				notificator = new MultipleMailByRecipientNotificator(topic, mailTemplate, isHtmlTemplate);
 				
 				break;
 				
 			case Constants.NOTIFICATOR_TYPE_SINGLE_MAIL_BY_RECIPIENT :
 				
-				notificator = new SingleMailByRecipientNotificator(topic, mailTemplate);
+				notificator = new SingleMailByRecipientNotificator(topic, mailTemplate, isHtmlTemplate);
 				
 				break;
 				
@@ -164,7 +166,7 @@ public class ConfigurationListener implements ServletContextListener {
 					LOGGER.debug("SingleMultiTopicMailByRecipientNotificator activated");
 				}
 				
-				singleMultiTopicMailByRecipientNotificator.add(mailTemplate, topic);
+				singleMultiTopicMailByRecipientNotificator.add(mailTemplate, isHtmlTemplate, topic);
 				
 				notificator = new SingleMultiTopicMailByRecipientFeederNotificator(topic);
 				

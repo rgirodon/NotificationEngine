@@ -10,7 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 
 @Component(value=Constants.MAILER)
 public class Mailer {
@@ -18,49 +24,61 @@ public class Mailer {
 	private static Logger LOGGER = Logger.getLogger(Mailer.class);
 	
 	@Autowired
-	private MailSender mailSender;
+	private JavaMailSender mailSender;
 	
 	@Autowired
 	private SimpleMailMessage templateMessage;
 
-	public Boolean sendMail(String recipientAddress, String text, Map<String, String> options) {
+	public Boolean sendMail(String recipientAddress, String text, Boolean isHtmlTemplate, Map<String, String> options) {
 
         Boolean result = Boolean.FALSE;
-		
-        SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-        
-        msg.setTo(recipientAddress);
-        
-        msg.setText(text);
 
-        if (options != null) {
+        try {
 
-        	String subject = options.get(Constants.SUBJECT);
-        	
-        	if (!StringUtils.isEmpty(subject)) {
+            MimeMessage message = this.mailSender.createMimeMessage();
 
-            	msg.setSubject(subject);
-        	}
-        	
+            // use the true flag to indicate you need a multipart message
+            MimeMessageHelper helper = new MimeMessageHelper(message, isHtmlTemplate, "UTF-8");
 
-        	String from = options.get(Constants.FROM);
-        	
-        	if (!StringUtils.isEmpty(from)) {
+            helper.setTo(recipientAddress);
 
-            	msg.setFrom(from);
-        	}            
-        }
-        
-        try{
-            this.mailSender.send(msg);
+            if (options != null) {
+
+                String subject = options.get(Constants.SUBJECT);
+
+                if (!StringUtils.isEmpty(subject)) {
+
+                    helper.setSubject(subject);
+                }
+
+
+                String from = options.get(Constants.FROM);
+
+                if (!StringUtils.isEmpty(from)) {
+
+                    helper.setFrom(from);
+                }
+            }
+
+            // use the true flag to indicate the text included is HTML
+            helper.setText(text, true);
+
+            this.mailSender.send(message);
 
             result = Boolean.TRUE;
-        }
-        catch(MailException ex) {
 
-        	LOGGER.error(ExceptionUtils.getFullStackTrace(ex));
-			
-			LOGGER.error("Unable to send mail");
+        } catch (MailException me) {
+
+            LOGGER.error(ExceptionUtils.getFullStackTrace(me));
+
+            LOGGER.error("Unable to send mail");
+
+        } catch (MessagingException messagingExc) {
+
+            LOGGER.error(ExceptionUtils.getFullStackTrace(messagingExc));
+
+            LOGGER.error("Unable to send mail");
+
         }
 
         return result;
@@ -70,7 +88,7 @@ public class Mailer {
 		return mailSender;
 	}
 
-	public void setMailSender(MailSender mailSender) {
+	public void setMailSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
 	}
 
