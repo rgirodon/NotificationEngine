@@ -21,12 +21,16 @@ public class SingleMailByRecipientNotificator extends Notificator {
 	private static Logger LOGGER = Logger.getLogger(SingleMailByRecipientNotificator.class);
 	
 	private String mailTemplate;
+
+    private Boolean isHtmlTemplate;
 	
-	public SingleMailByRecipientNotificator(Topic topic, String mailTemplate) {
+	public SingleMailByRecipientNotificator(Topic topic, String mailTemplate, Boolean isHtmlTemplate) {
 		
 		super(topic);
 		
 		this.mailTemplate = mailTemplate;
+
+        this.isHtmlTemplate = isHtmlTemplate;
 	}
 
 	@Override
@@ -91,7 +95,7 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContexts(contexts);
 			
 			// sent a mail to the recipient
-			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, options);
+			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, this.isHtmlTemplate, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
 
@@ -112,4 +116,12 @@ public class SingleMailByRecipientNotificator extends Notificator {
 	public void setMailTemplate(String mailTemplate) {
 		this.mailTemplate = mailTemplate;
 	}
+
+    public Boolean getHtmlTemplate() {
+        return isHtmlTemplate;
+    }
+
+    public void setHtmlTemplate(Boolean htmlTemplate) {
+        isHtmlTemplate = htmlTemplate;
+    }
 }

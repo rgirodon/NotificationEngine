@@ -84,6 +84,8 @@ public class Constants {
 	
 	public static final String MAIL_TEMPLATE = "mailTemplate";
 
+    public static final String IS_HTML_TEMPLATE = "isHtmlTemplate";
+
 	public static final String RECIPIENT = "recipient";
 
 	public static final String DISPLAY_NAME = "displayName";

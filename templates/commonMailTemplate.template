@@ -1,19 +1,23 @@
-Dear {{displayName}}
+<p>Dear {{displayName}}</p>
 
-This mail has been sent by Notification application.
+<p>This mail has been sent by Notification application.</p>
 
+<ul>
 {{#topics}}
 
-{{topic}}
+<li><h2>{{topic}}</h2>
 
 {{#notificationsForTopic}}
 
-> {{message}}
+<p>{{{content}}}</p>
 
 {{/notificationsForTopic}}
-
+</li>
 {{/topics}}
+</ul>
 
-Best regards,
+<img src="http://localhost:8080/notificationengine-0.0.1-SNAPSHOT/resources/londres.jpeg" alt=Londres"/>
 
-Notification Team
+<p>Best regards,</p>
+
+<p>Notification Team</p>

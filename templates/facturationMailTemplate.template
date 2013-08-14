@@ -2,7 +2,7 @@ Dear {{displayName}}
 
 This mail has been sent by Facturation application.
 
-{{message}}
+{{{content}}}
 
 Best regards,
 
