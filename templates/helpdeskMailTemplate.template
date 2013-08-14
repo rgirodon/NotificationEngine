@@ -1,13 +1,16 @@
-Dear {{displayName}}
+<p>Dear {{displayName}}</p>
 
-This mail has been sent by Helpdesk application.
+<p>This mail has been sent by Helpdesk application.<p>
 
-Please take into account these actions from Helpdesk :
+<p>Please take into account these actions from Helpdesk :<br/>
 
 {{#notificationsByRecipient}}
-> {{message}}
+> {{{content}}}
 {{/notificationsByRecipient}}
+</p>
 
-Best regards,
+<img src="http://localhost:8080/notificationengine-0.0.1-SNAPSHOT/resources/londres.jpeg" alt=Londres"/>
 
-Helpdesk Team
+<p>Best regards,</p>
+
+<p>Helpdesk Team</p>

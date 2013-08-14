@@ -18,7 +18,7 @@
 
 	<context:component-scan base-package="org.notificationengine"/>
 
-    <mvc:annotation-driven/>        
+    <mvc:annotation-driven/>
             
     <bean id="viewResolver"
 	      class="org.springframework.web.servlet.view.UrlBasedViewResolver">
@@ -49,5 +49,7 @@
 	  <property name="from" value="${mail.from}"/>
 	  <property name="subject" value="${mail.subject}"/>
 	</bean>
+
+    <mvc:resources mapping="/resources/**" location="file:${images.folder}"/>
 
 </beans>

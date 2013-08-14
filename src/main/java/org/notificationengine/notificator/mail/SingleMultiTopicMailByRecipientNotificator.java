@@ -26,7 +26,7 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 	
 	private Boolean activated;
 	
-	private Map<String, Collection<Topic>> mailTemplateAndTopics; 
+	private Map<String, MailTemplateConfiguration> mailTemplateAndTopics;
 	
 	private Collection<DecoratedNotification> decoratedNotificationsToProcess;
 	
@@ -61,11 +61,11 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 			
 			templateEngine.loadTemplate(mailTemplate);
 			
-			Collection<Topic> topicsForThisMailTemplate = this.mailTemplateAndTopics.get(mailTemplate);
+			MailTemplateConfiguration topicsForThisMailTemplate = this.mailTemplateAndTopics.get(mailTemplate);
 			
 			LOGGER.debug("Topics for this MailTemplate : " + topicsForThisMailTemplate);
 			
-			Collection<Recipient> recipientsForTheseTopics = this.retrieveRecipientsForTopics(topicsForThisMailTemplate);
+			Collection<Recipient> recipientsForTheseTopics = this.retrieveRecipientsForTopics(topicsForThisMailTemplate.getTopics());
 			
 			LOGGER.debug("Recipients for these topics : " + recipientsForTheseTopics);
 			
@@ -85,7 +85,7 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 
 				Collection<Map<String, Object>> topicContexts = new HashSet<>();
 				
-				for (Topic topicForThisMailTemplate : topicsForThisMailTemplate) {
+				for (Topic topicForThisMailTemplate : topicsForThisMailTemplate.getTopics()) {
 					
 					LOGGER.debug("Topic : " + topicForThisMailTemplate);
 					
@@ -120,7 +120,7 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContexts(rawNotificationContexts);
 				
 				// sent a mail to the recipient
-				Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, options);
+				Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, Boolean.TRUE ,options);
 
 				LOGGER.debug("Mail sent? " + sentCorrectly);
 				
@@ -231,18 +231,18 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 		return result;
 	}
 
-	public void add(String mailTemplate, Topic topic) {
+	public void add(String mailTemplate, Boolean isHtmlTemplate, Topic topic) {
 		
-		Collection<Topic> topicsForMailTemplate = this.mailTemplateAndTopics.get(mailTemplate);
+		MailTemplateConfiguration topicsForMailTemplate = this.mailTemplateAndTopics.get(mailTemplate);
 		
 		if (topicsForMailTemplate == null) {
 			
-			topicsForMailTemplate = new HashSet<>();
+			topicsForMailTemplate = new MailTemplateConfiguration();
 			
 			this.mailTemplateAndTopics.put(mailTemplate, topicsForMailTemplate);
 		}
 		
-		topicsForMailTemplate.add(topic);
+		topicsForMailTemplate.add(isHtmlTemplate, topic);
 	}
 
 	public void addDecoratedNotificationsToProcess(
@@ -251,11 +251,11 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 		this.decoratedNotificationsToProcess.addAll(notSentDecoratedNotifications);
 	}
 	
-	public Map<String, Collection<Topic>> getMailTemplateAndTopics() {
+	public Map<String, MailTemplateConfiguration> getMailTemplateAndTopics() {
 		return mailTemplateAndTopics;
 	}
 
-	public void setMailTemplateAndTopics(Map<String, Collection<Topic>> mailTemplateAndTopics) {
+	public void setMailTemplateAndTopics(Map<String, MailTemplateConfiguration> mailTemplateAndTopics) {
 		this.mailTemplateAndTopics = mailTemplateAndTopics;
 	}
 
