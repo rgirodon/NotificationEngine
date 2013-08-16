@@ -120,7 +120,7 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContexts(rawNotificationContexts);
 				
 				// sent a mail to the recipient
-				Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, Boolean.TRUE ,options);
+				Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, topicsForThisMailTemplate.getHtmlTemplate(),options);
 
 				LOGGER.debug("Mail sent? " + sentCorrectly);
 				
