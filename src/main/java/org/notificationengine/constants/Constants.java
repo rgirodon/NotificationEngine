@@ -15,6 +15,8 @@ public class Constants {
 	final public static String RECIPIENT_ADDRESS = "recipient.address";
 
     final public static String DEFAULT_SUBJECT = "mail.subject";
+    
+    final public static String DEFAULT_FROM = "mail.from";
 
 	final public static String RAW_NOTIFICATION_TOPIC_NAME = "rawNotification.topic.name";
 

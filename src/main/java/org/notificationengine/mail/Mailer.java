@@ -1,11 +1,13 @@
 package org.notificationengine.mail;
 
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.notificationengine.constants.Constants;
+import org.notificationengine.spring.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
@@ -28,6 +30,9 @@ public class Mailer {
 	
 	@Autowired
 	private SimpleMailMessage templateMessage;
+	
+	@Autowired
+	private Properties localSettingsProperties; 
 
 	public Boolean sendMail(String recipientAddress, String text, Boolean isHtmlTemplate, Map<String, String> options) {
 
@@ -46,18 +51,22 @@ public class Mailer {
 
                 String subject = options.get(Constants.SUBJECT);
 
-                if (!StringUtils.isEmpty(subject)) {
+                if (StringUtils.isEmpty(subject)) {
 
-                    helper.setSubject(subject);
+					subject = this.localSettingsProperties.getProperty(Constants.DEFAULT_SUBJECT);
                 }
+                
+                helper.setSubject(subject);
 
 
                 String from = options.get(Constants.FROM);
 
-                if (!StringUtils.isEmpty(from)) {
+                if (StringUtils.isEmpty(from)) {
 
-                    helper.setFrom(from);
+                	from = this.localSettingsProperties.getProperty(Constants.DEFAULT_FROM);
                 }
+                
+                helper.setFrom(from);
             }
 
             // use the true flag to indicate the text included is HTML
