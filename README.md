@@ -61,9 +61,9 @@ The Context of a Raw Notification is just a Map, i.e. a list of pairs Key - Valu
 For example :
 ```JSON
 {
-'Subject' : 'Tevez is the new Juve striker' 
-'Content' : 'Argentine player has signed a 4-years contract with the Italy last-year champion.'
-'Date'    : '01/06/2013'
+    "Subject" : "Tevez is the new Juve striker", 
+    "Content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
+    "Date"    : "01/06/2013"
 }
 ```
 could be the context of a Raw Notification with Topic Sports.Football.Italy.Juventus

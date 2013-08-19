@@ -1,6 +1,8 @@
 package org.notificationengine.web.controller;
 
 import com.google.gson.Gson;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
@@ -16,7 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,8 +34,11 @@ public class RawNotificationController {
 	
 	@Autowired
 	private Persister persister;
-		
-	public RawNotificationController() {
+
+    @Autowired
+    private Properties localSettingsProperties;
+
+    public RawNotificationController() {
 		
 		LOGGER.debug("RawNotificationController instantiated and listening");
 	}
@@ -49,6 +58,47 @@ public class RawNotificationController {
 		persister.createRawNotification(rawNotification);
 		
 		LOGGER.debug("RawNotification persisted : " + rawNotificationDTO);
+    }
+
+    @RequestMapping(value = "/rawNotificationWithAttach.do", method = RequestMethod.POST)
+    @ResponseBody
+    public String createWithAttach(@RequestParam(value = "files[]", required = false) List<MultipartFile> files, @RequestParam("json") String json) {
+
+        LOGGER.warn("Files.size() = " + files.size());
+
+        if(files.size() > 0) {
+
+            for(MultipartFile file : files) {
+
+                if(!file.isEmpty()) {
+
+                    try {
+
+                        String path = this.localSettingsProperties.getProperty(Constants.IMAGES_FOLDER);
+
+                        File destFile = new File(path + file.getOriginalFilename());
+
+                        InputStream is = file.getInputStream();
+
+                        FileUtils.copyInputStreamToFile(is, destFile);
+
+                    } catch(IOException | IllegalStateException ex ) {
+
+                        LOGGER.error(ExceptionUtils.getFullStackTrace(ex));
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        Gson gson = new Gson();
+        RawNotificationDTO rawNotificationDTO = gson.fromJson(json, RawNotificationDTO.class);
+
+        return rawNotificationDTO.toString();
+
     }
 
     @RequestMapping(value = "/allRawNotifications.do", method = RequestMethod.GET)
