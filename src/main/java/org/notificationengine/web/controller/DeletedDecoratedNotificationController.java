@@ -47,7 +47,7 @@ public class DeletedDecoratedNotificationController {
 
     }
 
-    @RequestMapping(value = "/countDeletedDecoratedNotificationsForLastDays", method = RequestMethod.GET, params = {"days"})
+    @RequestMapping(value = "/countDeletedDecoratedNotificationsForLastDays.do", method = RequestMethod.GET, params = {"days"})
     @ResponseBody
     public String getCountDeletedDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
 

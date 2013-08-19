@@ -1,9 +1,11 @@
-Dear {{displayName}}
+<p>Dear {{displayName}}</p>
 
-This mail has been sent by Facturation application.
+<p>This mail has been sent by Facturation application.</p>
 
 {{{content}}}
 
-Best regards,
+<p>Best regards,</p>
 
-Facturation Team
+<img src="http://serveraddress/resources/my-image.jpeg" alt="My Image"/>
+
+<p>Facturation Team</p>
