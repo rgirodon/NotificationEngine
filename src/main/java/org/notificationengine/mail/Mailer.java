@@ -1,5 +1,7 @@
 package org.notificationengine.mail;
 
+import java.io.File;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 
@@ -34,8 +36,12 @@ public class Mailer {
 	@Autowired
 	private Properties localSettingsProperties; 
 
-    //TODO : add files attachement
-	public Boolean sendMail(String recipientAddress, String text, Boolean isHtmlTemplate, Map<String, String> options) {
+	public Boolean sendMail(
+            String recipientAddress,
+            String text,
+            Boolean isHtmlTemplate,
+            Collection<File> filesToAttach,
+            Map<String, String> options) {
 
         Boolean result = Boolean.FALSE;
 
@@ -68,6 +74,18 @@ public class Mailer {
                 }
                 
                 helper.setFrom(from);
+            }
+
+            //TODO : test size of global attachments and send several emails if too big
+
+            if(filesToAttach != null) {
+
+                for(File file : filesToAttach) {
+
+                    helper.addAttachment(file.getName(), file);
+
+                }
+
             }
 
             // use the true flag to indicate the text included is HTML

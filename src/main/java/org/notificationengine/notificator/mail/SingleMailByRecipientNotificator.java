@@ -1,11 +1,10 @@
 package org.notificationengine.notificator.mail;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.Recipient;
@@ -13,6 +12,7 @@ import org.notificationengine.domain.Topic;
 import org.notificationengine.mail.MailOptionsUtils;
 import org.notificationengine.mail.Mailer;
 import org.notificationengine.notificator.Notificator;
+import org.notificationengine.persistance.Persister;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.templating.TemplateEngine;
 
@@ -67,6 +67,8 @@ public class SingleMailByRecipientNotificator extends Notificator {
 		}
 		
 		LOGGER.debug("NotificationsByRecipient map : " + notificationsByRecipient);
+
+        Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
 		
 		// then, for each recipient, send a mail
 		for (Recipient recipient : notificationsByRecipient.keySet()) {
@@ -74,13 +76,24 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			LOGGER.debug("Processing Notifications for Recipient : " + recipient);
 			
 			Collection<DecoratedNotification> notificationsForThisRecipient = notificationsByRecipient.get(recipient);
+
+            Collection<File> filesToAttach = new HashSet<>();
 			
 			Collection<Map<String, Object>> contexts = new ArrayList<>();
 			for (DecoratedNotification notificationForThisRecipient : notificationsForThisRecipient) {
 				contexts.add(notificationForThisRecipient.getRawNotification().getContext());
-			}
 
-            //TODO: Retrieve all files from decorated notifications
+                Map<String, Object> context = notificationForThisRecipient.getRawNotification().getContext();
+
+                Collection<ObjectId> fileIds = (Collection<ObjectId>) context.get("fileIds");
+
+                for(ObjectId fileId : fileIds) {
+                    File file = persister.retrieveFileFromId(fileId);
+
+                    filesToAttach.add(file);
+                }
+
+            }
 
 			LOGGER.debug("This Recipient has notifications : " + notificationsForThisRecipient);
 			
@@ -97,8 +110,7 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContexts(contexts);
 			
 			// sent a mail to the recipient
-            //TODO : add files to attach
-			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, this.isHtmlTemplate, options);
+			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, this.isHtmlTemplate, filesToAttach, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
 

@@ -45,7 +45,7 @@ public class TestMailer {
 	@Test
 	public void testSendMail() {
 
-        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Default Test Mail Content.", Boolean.FALSE, null));
+        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Default Test Mail Content.", Boolean.FALSE, null, null));
 	}
 
     @Test
@@ -54,7 +54,7 @@ public class TestMailer {
     	Map<String, String> options = new HashMap<>();
     	options.put(Constants.SUBJECT, "NotificationEngine Test with custom subject");
     	
-        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Mail with a different subject", Boolean.FALSE, options));
+        assertTrue(this.mailer.sendMail("mduclos@sqli.com", "Mail with a different subject", Boolean.FALSE, null, options));
     }
 
     @Test
@@ -67,6 +67,7 @@ public class TestMailer {
         assertTrue(this.mailer.sendMail("mduclos@sqli.com",
                 "Mail with a different subject and from field",
                 Boolean.FALSE,
+                null,
                 options));
     }
 
