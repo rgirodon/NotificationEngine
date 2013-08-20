@@ -1,28 +1,30 @@
 package org.notificationengine.web.controller;
 
 import com.google.gson.Gson;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.jongo.MongoCollection;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.dto.RawNotificationDTO;
 import org.notificationengine.persistance.Persister;
-import org.omg.CORBA.Request;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,7 +38,10 @@ public class RawNotificationController {
 	private Persister persister;
 
     @Autowired
-    private Properties localSettingsProperties;
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private SimpleMailMessage simpleMailMessage;
 
     public RawNotificationController() {
 		
@@ -66,38 +71,55 @@ public class RawNotificationController {
 
         LOGGER.warn("Files.size() = " + files.size());
 
-        if(files.size() > 0) {
-
-            for(MultipartFile file : files) {
-
-                if(!file.isEmpty()) {
-
-                    try {
-
-                        String path = this.localSettingsProperties.getProperty(Constants.IMAGES_FOLDER);
-
-                        File destFile = new File(path + file.getOriginalFilename());
-
-                        InputStream is = file.getInputStream();
-
-                        FileUtils.copyInputStreamToFile(is, destFile);
-
-                    } catch(IOException | IllegalStateException ex ) {
-
-                        LOGGER.error(ExceptionUtils.getFullStackTrace(ex));
-
-                    }
-
-                }
-
-            }
-
-        }
-
         Gson gson = new Gson();
         RawNotificationDTO rawNotificationDTO = gson.fromJson(json, RawNotificationDTO.class);
 
-        return rawNotificationDTO.toString();
+        RawNotification rawNotification = new RawNotification();
+        rawNotification.set_id(new ObjectId());
+        rawNotification.setProcessed(Boolean.FALSE);
+        rawNotification.setTopic(new Topic(rawNotificationDTO.getTopic()));
+
+        Collection<ObjectId> filesIds = this.persister.saveFiles(files);
+
+        Map<String, Object> context = rawNotificationDTO.getContext();
+
+        context.put("fileIds", filesIds);
+
+        rawNotification.setContext(context);
+
+        persister.createRawNotification(rawNotification);
+
+        return rawNotification.toString();
+
+    }
+
+    //TODO : remove this
+    @RequestMapping(value = "/getFile.do", method = RequestMethod.GET, params = {"id"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void getFileFromId(@RequestParam("id") String id, HttpServletResponse response) {
+
+        ObjectId objectId = new ObjectId(id);
+
+        File file = this.persister.retrieveFileFromId(objectId);
+
+        MimeMessage message = mailSender.createMimeMessage();
+
+        try{
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom("mduclos@sqli.com");
+            helper.setTo("mduclos@sqli.com");
+            helper.setSubject("New message");
+            helper.setText("Hello, You have a new mail");
+
+            FileSystemResource fileResource = new FileSystemResource(file);
+            helper.addAttachment(fileResource.getFilename(), fileResource);
+
+        }catch (MessagingException e) {
+
+            LOGGER.error(ExceptionUtils.getFullStackTrace(e));
+        }
+        mailSender.send(message);
 
     }
 

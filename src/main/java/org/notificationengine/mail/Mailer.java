@@ -34,6 +34,7 @@ public class Mailer {
 	@Autowired
 	private Properties localSettingsProperties; 
 
+    //TODO : add files attachement
 	public Boolean sendMail(String recipientAddress, String text, Boolean isHtmlTemplate, Map<String, String> options) {
 
         Boolean result = Boolean.FALSE;
