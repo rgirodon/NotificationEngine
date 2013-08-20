@@ -54,6 +54,6 @@
           class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
     </bean>
 
-    <mvc:resources mapping="/resources/**" location="file:${images.folder}"/>
+    <mvc:resources mapping="/resources/**" location="file:${resources.folder}"/>
 
 </beans>

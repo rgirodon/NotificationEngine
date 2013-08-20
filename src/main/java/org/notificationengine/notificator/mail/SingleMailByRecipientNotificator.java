@@ -79,7 +79,9 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			for (DecoratedNotification notificationForThisRecipient : notificationsForThisRecipient) {
 				contexts.add(notificationForThisRecipient.getRawNotification().getContext());
 			}
-			
+
+            //TODO: Retrieve all files from decorated notifications
+
 			LOGGER.debug("This Recipient has notifications : " + notificationsForThisRecipient);
 			
 			// merge the context and the template
@@ -95,6 +97,7 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContexts(contexts);
 			
 			// sent a mail to the recipient
+            //TODO : add files to attach
 			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, this.isHtmlTemplate, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
