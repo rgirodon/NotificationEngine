@@ -1,17 +1,17 @@
 package org.notificationengine.notificator.mail;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.mail.MailOptionsUtils;
 import org.notificationengine.mail.Mailer;
 import org.notificationengine.notificator.Notificator;
+import org.notificationengine.persistance.Persister;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.templating.TemplateEngine;
 
@@ -42,8 +42,22 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 		templateEngine.loadTemplate(mailTemplate);
 
         Map<DecoratedNotification, Boolean> result = new HashMap<>();
+
+        Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
 		
 		for (DecoratedNotification decoratedNotification : notSentDecoratedNotifications) {
+
+            Map<String, Object> context = decoratedNotification.getRawNotification().getContext();
+
+            Collection<ObjectId> fileIds = (Collection<ObjectId>) context.get("fileIds");
+
+            Collection<File> filesToAttach = new HashSet<>();
+
+            for(ObjectId fileId : fileIds) {
+                File file = persister.retrieveFileFromId(fileId);
+
+                filesToAttach.add(file);
+            }
 			
 			// merge the context and the template
 			String notificationText = templateEngine.processTemplate(this.mailTemplate, decoratedNotification.getContext());
@@ -53,7 +67,7 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContext(decoratedNotification.getContext());
 			
 			// sent a mail to the recipient
-			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText, this.isHtmlTemplate, options);
+			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText, this.isHtmlTemplate, filesToAttach, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
 

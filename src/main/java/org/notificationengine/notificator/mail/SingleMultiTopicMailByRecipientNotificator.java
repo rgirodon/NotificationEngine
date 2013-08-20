@@ -1,5 +1,6 @@
 package org.notificationengine.notificator.mail;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.Recipient;
@@ -68,12 +70,16 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 			Collection<Recipient> recipientsForTheseTopics = this.retrieveRecipientsForTopics(topicsForThisMailTemplate.getTopics());
 			
 			LOGGER.debug("Recipients for these topics : " + recipientsForTheseTopics);
+
+            Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
 			
 			for (Recipient recipient : recipientsForTheseTopics) {
 			
 				LOGGER.debug("Recipient : " + recipient);
 				
 				Collection<DecoratedNotification> decoratedNotificationsForThisRecipient = new HashSet<>();
+
+                Collection<File> filesToAttach = new HashSet<>();
 				
 				Collection<Map<String, Object>> rawNotificationContexts = new ArrayList<>();
 				
@@ -104,6 +110,16 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 						contexts.add(decoratedNotificationForThisTopicAndRecipient.getRawNotification().getContext());
 						
 						rawNotificationContexts.add(decoratedNotificationForThisTopicAndRecipient.getRawNotification().getContext());
+
+                        Map<String, Object> context = decoratedNotificationForThisTopicAndRecipient.getRawNotification().getContext();
+
+                        Collection<ObjectId> fileIds = (Collection<ObjectId>) context.get("fileIds");
+
+                        for(ObjectId fileId : fileIds) {
+                            File file = persister.retrieveFileFromId(fileId);
+
+                            filesToAttach.add(file);
+                        }
 					}
 					
 					topicContext.put(Constants.NOTIFICATIONS_FOR_TOPIC, contexts);
@@ -120,11 +136,13 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContexts(rawNotificationContexts);
 				
 				// sent a mail to the recipient
-				Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, topicsForThisMailTemplate.getHtmlTemplate(),options);
+				Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, topicsForThisMailTemplate.getHtmlTemplate(), filesToAttach, options);
 
 				LOGGER.debug("Mail sent? " + sentCorrectly);
 				
 				if (sentCorrectly) {
+
+                    //TODO : delete files created
 					
 					this.markAsSent(decoratedNotificationsForThisRecipient);
 				}

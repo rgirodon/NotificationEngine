@@ -93,36 +93,6 @@ public class RawNotificationController {
 
     }
 
-    //TODO : remove this
-    @RequestMapping(value = "/getFile.do", method = RequestMethod.GET, params = {"id"})
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getFileFromId(@RequestParam("id") String id, HttpServletResponse response) {
-
-        ObjectId objectId = new ObjectId(id);
-
-        File file = this.persister.retrieveFileFromId(objectId);
-
-        MimeMessage message = mailSender.createMimeMessage();
-
-        try{
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-            helper.setFrom("mduclos@sqli.com");
-            helper.setTo("mduclos@sqli.com");
-            helper.setSubject("New message");
-            helper.setText("Hello, You have a new mail");
-
-            FileSystemResource fileResource = new FileSystemResource(file);
-            helper.addAttachment(fileResource.getFilename(), fileResource);
-
-        }catch (MessagingException e) {
-
-            LOGGER.error(ExceptionUtils.getFullStackTrace(e));
-        }
-        mailSender.send(message);
-
-    }
-
     @RequestMapping(value = "/allRawNotifications.do", method = RequestMethod.GET)
     @ResponseBody
     public String listAllRawNotifications() {
