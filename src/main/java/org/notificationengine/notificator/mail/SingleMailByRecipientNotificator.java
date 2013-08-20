@@ -119,6 +119,12 @@ public class SingleMailByRecipientNotificator extends Notificator {
                 result.put(notificationForThisRecipient, sentCorrectly);
             }
 
+            //delete files created after sending (or not)
+            //even if it has not been sent, the file will be created next time
+            for(File file : filesToAttach) {
+                file.delete();
+            }
+
 		}
 
         return result;

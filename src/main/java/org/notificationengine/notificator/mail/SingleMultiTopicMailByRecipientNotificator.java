@@ -141,14 +141,18 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				LOGGER.debug("Mail sent? " + sentCorrectly);
 				
 				if (sentCorrectly) {
-
-                    //TODO : delete files created
 					
 					this.markAsSent(decoratedNotificationsForThisRecipient);
 				}
 				else {					
 					this.markAsNotSent(decoratedNotificationsForThisRecipient);
 				}
+
+                //delete files created after sending (or not)
+                //even if it has not been sent, the file will be created next time
+                for(File file : filesToAttach) {
+                    file.delete();
+                }
 			}
 		}
 	}
