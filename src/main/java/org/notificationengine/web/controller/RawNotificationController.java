@@ -1,7 +1,6 @@
 package org.notificationengine.web.controller;
 
 import com.google.gson.Gson;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
@@ -12,19 +11,11 @@ import org.notificationengine.domain.Topic;
 import org.notificationengine.dto.RawNotificationDTO;
 import org.notificationengine.persistance.Persister;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,12 +27,6 @@ public class RawNotificationController {
 	
 	@Autowired
 	private Persister persister;
-
-    @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
-    private SimpleMailMessage simpleMailMessage;
 
     public RawNotificationController() {
 		
@@ -69,7 +54,7 @@ public class RawNotificationController {
     @ResponseBody
     public String createWithAttach(@RequestParam(value = "files[]", required = false) List<MultipartFile> files, @RequestParam("json") String json) {
 
-        LOGGER.warn("Files.size() = " + files.size());
+        LOGGER.debug("Post new raw notification with files");
 
         Gson gson = new Gson();
         RawNotificationDTO rawNotificationDTO = gson.fromJson(json, RawNotificationDTO.class);

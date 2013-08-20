@@ -2,6 +2,7 @@ package org.notificationengine.mail;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 
@@ -50,7 +51,7 @@ public class Mailer {
             MimeMessage message = this.mailSender.createMimeMessage();
 
             // use the true flag to indicate you need a multipart message
-            MimeMessageHelper helper = new MimeMessageHelper(message, isHtmlTemplate, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(recipientAddress);
 
@@ -78,20 +79,37 @@ public class Mailer {
 
             //TODO : test size of global attachments and send several emails if too big
 
+            double totalSize = 0;
+
+            Collection<File> filesToSendInOtherMails = new HashSet<>();
+
             if(filesToAttach != null) {
 
                 for(File file : filesToAttach) {
 
-                    helper.addAttachment(file.getName(), file);
+                    LOGGER.warn(file.getName() + ": " + file.length());
+
+                    totalSize = totalSize + file.length();
+
+                    if(totalSize < Constants.MAX_ATTACHMENT_SIZE) {
+
+                        helper.addAttachment(file.getName(), file);
+                    }
+                    else {
+
+                        filesToSendInOtherMails.add(file);
+                    }
 
                 }
 
             }
 
             // use the true flag to indicate the text included is HTML
-            helper.setText(text, true);
+            helper.setText(text, isHtmlTemplate);
 
             this.mailSender.send(message);
+
+            this.sendOtherAttachments(recipientAddress, filesToSendInOtherMails, options);
 
             result = Boolean.TRUE;
 
@@ -110,6 +128,72 @@ public class Mailer {
         }
 
         return result;
+    }
+
+    private void sendOtherAttachments(String recipientAddress,
+                                      Collection<File> filesToSendInOtherMails,
+                                      Map<String, String> options)
+            throws MailException, MessagingException {
+
+        Integer attempts = 0;
+
+        while(filesToSendInOtherMails.size() > 0 && attempts < 5) {
+
+            MimeMessage message = this.mailSender.createMimeMessage();
+
+            // use the true flag to indicate you need a multipart message
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(recipientAddress);
+
+            if (options != null) {
+
+                String subject = options.get(Constants.SUBJECT);
+
+                if (StringUtils.isEmpty(subject)) {
+
+                    subject = this.localSettingsProperties.getProperty(Constants.DEFAULT_SUBJECT);
+                }
+
+                helper.setSubject(subject);
+
+
+                String from = options.get(Constants.FROM);
+
+                if (StringUtils.isEmpty(from)) {
+
+                    from = this.localSettingsProperties.getProperty(Constants.DEFAULT_FROM);
+                }
+
+                helper.setFrom(from);
+            }
+
+            helper.setText(Constants.MAIL_TEXT_OTHER_ATTACHMENTS);
+
+            double totalSize = 0;
+
+            for(File file : filesToSendInOtherMails) {
+
+                totalSize = totalSize + file.length();
+
+                if(totalSize < Constants.MAX_ATTACHMENT_SIZE) {
+
+                    helper.addAttachment(file.getName(), file);
+
+                    filesToSendInOtherMails.remove(file);
+                }
+                else {
+                    break;
+                }
+
+            }
+
+            this.mailSender.send(message);
+
+            attempts ++;
+
+        }
+
     }
 	
 	public MailSender getMailSender() {

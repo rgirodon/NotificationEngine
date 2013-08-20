@@ -156,4 +156,8 @@ public class Constants {
 
     public static final String RESOURCES_FOLDER = "resources.folder";
 
+    public static final double MAX_ATTACHMENT_SIZE = 1024*1024*10;
+
+    public static final String MAIL_TEXT_OTHER_ATTACHMENTS = "Please find attachments for previous email";
+
 }
