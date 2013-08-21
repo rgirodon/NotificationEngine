@@ -1,6 +1,8 @@
 package org.notificationengine.web.controller;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
@@ -26,20 +28,24 @@ public class SubscriptionController {
 
 	private static Logger LOGGER = Logger.getLogger(SubscriptionController.class);
 	
-	private ISelector selector;
+	private Map<String, ISelector> selectors;
 	
 	public SubscriptionController() {
 		
 		LOGGER.debug("SubscriptionController instantiated and listening");
+
+        this.selectors = new HashMap<>();
 	}
 
-	@RequestMapping(value = "/subscription.do", method = RequestMethod.PUT, consumes = "application/json")
+	@RequestMapping(value = "/subscription.do", method = RequestMethod.PUT, consumes = "application/json", params = {"selector"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void create(@RequestBody SubscriptionDTO subscriptionDTO) {
+    public void create(@RequestBody SubscriptionDTO subscriptionDTO, @RequestParam("selector") String selectorName) {
 		
 		LOGGER.debug("SubscriptionController received : " + subscriptionDTO);
+
+        ISelector selector = this.getSelectorByName(selectorName);
 		
-		if (this.selector instanceof ISelectorWriteEnabled) {
+		if (selector instanceof ISelectorWriteEnabled) {
 
             Recipient recipient = new Recipient(subscriptionDTO.getRecipient(), subscriptionDTO.getDisplayName());
 			
@@ -48,33 +54,37 @@ public class SubscriptionController {
 			subscription.setTopic(new Topic(subscriptionDTO.getTopic()));
 			subscription.setRecipient(recipient);
 			
-			((ISelectorWriteEnabled)this.selector).createSubscription(subscription);
+			((ISelectorWriteEnabled)selector).createSubscription(subscription);
 			
 			LOGGER.debug("Subscription persisted : " + subscriptionDTO);
 		}
     }
 
-    @RequestMapping(value = "/subscription.do", method = RequestMethod.DELETE, params = {"email", "topic"})
+    @RequestMapping(value = "/subscription.do", method = RequestMethod.DELETE, params = {"email", "topic", "selector"})
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@RequestParam("email") String email, @RequestParam("topic") String topic) {
+    public void delete(@RequestParam("email") String email, @RequestParam("topic") String topic, @RequestParam("selector") String selectorName) {
 
         LOGGER.debug("SubscriptionController delete subscription with topic " + topic + " and email " + email);
 
-        if (this.selector instanceof ISelectorWriteEnabled) {
+        ISelector selector = this.getSelectorByName(selectorName);
 
-            ((ISelectorWriteEnabled)this.selector).deleteSubscription(email, topic);
+        if (selector instanceof ISelectorWriteEnabled) {
+
+            ((ISelectorWriteEnabled)selector).deleteSubscription(email, topic);
 
         }
 
     }
 
-    @RequestMapping(value = "/countAllSubscriptions.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/countAllSubscriptions.do", method = RequestMethod.GET, params = {"selector"})
     @ResponseBody
-    public String countAllSubscriptions() {
+    public String countAllSubscriptions(@RequestParam("selector") String selectorName) {
 
         LOGGER.debug("Subscription controller, countAllSubscriptions");
 
-        Collection<Subscription> subscriptions = this.selector.retrieveSubscriptions();
+        ISelector selector = this.getSelectorByName(selectorName);
+
+        Collection<Subscription> subscriptions = selector.retrieveSubscriptions();
 
         Integer countAllSubscriptions = subscriptions.size();
 
@@ -86,15 +96,17 @@ public class SubscriptionController {
 
     }
 
-    @RequestMapping(value = "/countAllSubscriptionsForTopic.do", method = RequestMethod.GET, params = {"topic"})
+    @RequestMapping(value = "/countAllSubscriptionsForTopic.do", method = RequestMethod.GET, params = {"topic", "selector"})
     @ResponseBody
-    public String countAllSubscriptionsForTopic(@RequestParam(value="topic") String topicName) {
+    public String countAllSubscriptionsForTopic(@RequestParam(value="topic") String topicName, @RequestParam("selector") String selectorName) {
 
         Topic topic = new Topic(topicName);
 
         LOGGER.debug("Subscription controller, countAllSubscriptionsForTopic " + topicName);
 
-        Collection<Subscription> subscriptions = this.selector.retrieveSubscriptionsForTopic(topic);
+        ISelector selector = this.getSelectorByName(selectorName);
+
+        Collection<Subscription> subscriptions = selector.retrieveSubscriptionsForTopic(topic);
 
         Integer countSubscriptionsForTopic = subscriptions.size();
 
@@ -112,11 +124,19 @@ public class SubscriptionController {
 
     }
 
-	public ISelector getSelector() {
-		return selector;
-	}
+    public Map<String, ISelector> getSelectors() {
+        return selectors;
+    }
 
-	public void setSelector(ISelector selector) {
-		this.selector = selector;
-	}
+    public void setSelectors(Map<String, ISelector> selectors) {
+        this.selectors = selectors;
+    }
+
+    public void addSelector(String selectorClassName, ISelector selector) {
+        this.selectors.put(selectorClassName, selector);
+    }
+
+    public ISelector getSelectorByName(String selectorName) {
+        return this.selectors.get(selectorName);
+    }
 }
