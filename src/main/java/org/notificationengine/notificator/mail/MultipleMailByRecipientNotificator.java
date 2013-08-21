@@ -53,12 +53,15 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 
             Collection<File> filesToAttach = new HashSet<>();
 
-            for(ObjectId fileId : fileIds) {
-                File file = persister.retrieveFileFromId(fileId);
+            if(fileIds != null) {
 
-                filesToAttach.add(file);
+                for(ObjectId fileId : fileIds) {
+                    File file = persister.retrieveFileFromId(fileId);
+
+                    filesToAttach.add(file);
+                }
             }
-			
+
 			// merge the context and the template
 			String notificationText = templateEngine.processTemplate(this.mailTemplate, decoratedNotification.getContext());
 			

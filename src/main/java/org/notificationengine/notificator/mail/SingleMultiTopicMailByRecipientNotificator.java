@@ -115,10 +115,14 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 
                         Collection<ObjectId> fileIds = (Collection<ObjectId>) context.get("fileIds");
 
-                        for(ObjectId fileId : fileIds) {
-                            File file = persister.retrieveFileFromId(fileId);
+                        if(fileIds != null) {
 
-                            filesToAttach.add(file);
+                            for(ObjectId fileId : fileIds) {
+
+                                File file = persister.retrieveFileFromId(fileId);
+
+                                filesToAttach.add(file);
+                            }
                         }
 					}
 					
