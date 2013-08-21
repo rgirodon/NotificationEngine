@@ -741,6 +741,9 @@ It will be in the MongoDB database, in rawnotifications collection, with that fo
 }
 ```
 
+You can also send a rawNotification with files attachments. In order to do that, you just have to do a POST on this URL : ```http://host:port/notificationengine/rawNotificationWithAttach.do```. The elements to post are a JSON named json which has the same format as shown before and files, each one named files[]. The Content-Type in the header should be multipart/form-data. 
+
+
 You can retrieve this example in client directory.
 
 ## 3.4. Metrics available
