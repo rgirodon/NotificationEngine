@@ -172,6 +172,8 @@ public class Mailer {
 
             double totalSize = 0;
 
+            Collection<File> filesToSendInNextMail = new HashSet<>();
+
             for(File file : filesToSendInOtherMails) {
 
                 totalSize = totalSize + file.length();
@@ -180,13 +182,14 @@ public class Mailer {
 
                     helper.addAttachment(file.getName(), file);
 
-                    filesToSendInOtherMails.remove(file);
                 }
                 else {
-                    break;
+                    filesToSendInNextMail.add(file);
                 }
 
             }
+
+            filesToSendInOtherMails = filesToSendInNextMail;
 
             this.mailSender.send(message);
 
