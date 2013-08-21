@@ -57,7 +57,8 @@ public class ConfigurationListener implements ServletContextListener {
 		
 		Timer timer = new Timer();
 		
-		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator = (SingleMultiTopicMailByRecipientNotificator)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
+		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator =
+                (SingleMultiTopicMailByRecipientNotificator)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
 		
 		SubscriptionController subscriptionController = (SubscriptionController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SUBSCRIPTION_CONTROLLER);
 		
@@ -70,12 +71,15 @@ public class ConfigurationListener implements ServletContextListener {
 			Topic topic = channel.getTopic();
 			
 			ISelector selector = null;
+            String selectorName = null;
 			
 			switch(channel.getSelectorType()) {
 			
 			case Constants.SELECTOR_TYPE_MONGODB :
 				
 				LOGGER.debug("Detected Selector of type " + Constants.SELECTOR_TYPE_MONGODB);
+
+                selectorName = Constants.SELECTOR_TYPE_MONGODB;
 				
 				selector = new MongoDbSelector(topic);
 				
@@ -97,6 +101,8 @@ public class ConfigurationListener implements ServletContextListener {
 					Constructor constructor = clazz.getConstructor(Topic.class, Map.class);
 					
 					selector = (ISelector)constructor.newInstance(topic, channel.getOptions());
+
+                    selectorName = selectorClass;
 				}
 				catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 
@@ -135,7 +141,7 @@ public class ConfigurationListener implements ServletContextListener {
 			
 			timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, selectorTaskPeriod);
 			
-			subscriptionController.setSelector(selector);
+			subscriptionController.addSelector(selectorName, selector);
 			
 			INotificator notificator = null;
 				
@@ -229,5 +235,5 @@ public class ConfigurationListener implements ServletContextListener {
 			cptChannel++;
 		}
 	}
-	
+
 }
