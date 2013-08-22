@@ -58,12 +58,6 @@ public class Constants {
 
 	public static final Object REGEX = "$regex";
 
-    public static final Object AFTER = "$gte";
-
-    public static final Object BEFORE = "$lt";
-
-    public static final Object HASH = "#";
-
 	public static final long SELECTOR_TASK_DELAY = 10000;
 
 	public static final long SELECTOR_TASK_PERIOD = 60000;
@@ -98,6 +92,8 @@ public class Constants {
 
 	public static final String SUBSCRIPTION_CONTROLLER = "subscriptionController";
 
+	public static final String CONFIGURATION_CONTROLLER = "configurationController";
+
 	public static final String NOTIFICATIONS_FOR_TOPIC = "notificationsForTopic";
 
 	public static final String TOPICS = "topics";
@@ -113,7 +109,9 @@ public class Constants {
 	public static final String MONGODB_SETTINGS = "mongoDbSettings";
 
 	public static final String SELECTOR_CLASS = "selectorClass";
-	
+
+	public static final String IS_SELECTOR_WRITE_ENABLED = "isSelectorWriteEnabled";
+
 	public static final String ADMINISTRATOR_ADDRESS = "administrator.address";
 
     public static final String ADMINISTRATOR_DISPLAY_NAME = "administrator.name";
@@ -127,28 +125,6 @@ public class Constants {
 	public static final String SUBJECT = "subject";
 	
 	public static final String FROM = "from";
-
-    public static final String COUNT_NOT_SENT_DECORATED_NOTIFICATIONS_FOR_TOPIC = "countNotSentDecoratedNotificationsForTopic";
-
-    public static final String COUNT_NOT_SENT_DECORATED_NOTIFICATIONS = "countNotSentDecoratedNotifications";
-
-    public static final String COUNT_ALL_DECORATED_NOTIFICATIONS = "countAllDecoratedNotifications";
-
-    public static final String COUNT_ALL_DECORATED_NOTIFICATIONS_FOR_TOPIC = "countAllDecoratedNotificationsForTopic";
-
-    public static final String COUNT_ALL_SUBSCRIPTIONS = "countAllSubscriptions";
-
-    public static final String COUNT_ALL_SUBSCRIPTIONS_FOR_TOPIC = "countAllSubscriptionsForTopic";
-
-    public static final String COUNT_ALL_RAW_NOTIFICATIONS = "countAllRawNotifications";
-
-    public static final String COUNT_NOT_PROCESSED_RAW_NOTIFICATIONS = "countNotProcessedRawNotifications";
-
-    public static final String COUNT_RAW_NOTIFICATIONS_FOR_TOPIC = "countRawNotificationsForTopic";
-
-    public static final String COUNT_NOT_PROCESSED_RAW_NOTIFICATIONS_FOR_TOPIC = "countNotProcessedRawNotificationsForTopic";
-
-    public static final String COUNT_ALL_DELETED_DECORATED_NOTIFICATIONS = "countDeletedDecoratedNotifications";
 
     public static final String COUNT = "count";
 
