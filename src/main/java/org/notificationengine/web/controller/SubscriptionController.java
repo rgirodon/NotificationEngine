@@ -45,7 +45,7 @@ public class SubscriptionController {
 
         ISelector selector = this.getSelectorByName(selectorName);
 		
-		if (selector instanceof ISelectorWriteEnabled) {
+		if (selector != null && selector instanceof ISelectorWriteEnabled) {
 
             Recipient recipient = new Recipient(subscriptionDTO.getRecipient(), subscriptionDTO.getDisplayName());
 			
@@ -68,7 +68,7 @@ public class SubscriptionController {
 
         ISelector selector = this.getSelectorByName(selectorName);
 
-        if (selector instanceof ISelectorWriteEnabled) {
+        if (selector != null && selector instanceof ISelectorWriteEnabled) {
 
             ((ISelectorWriteEnabled)selector).deleteSubscription(email, topic);
 
@@ -84,21 +84,38 @@ public class SubscriptionController {
 
         ISelector selector = this.getSelectorByName(selectorName);
 
-        Collection<Subscription> subscriptions = selector.retrieveSubscriptions();
+        String result = "";
 
-        Integer countAllSubscriptions = subscriptions.size();
+        if(selector != null) {
 
-        JSONObject response = new JSONObject();
+            Collection<Subscription> subscriptions = selector.retrieveSubscriptions();
 
-        response.put(Constants.COUNT, countAllSubscriptions);
+            Integer countAllSubscriptions = subscriptions.size();
 
-        return response.toString();
+            JSONObject response = new JSONObject();
 
+            response.put(Constants.COUNT, countAllSubscriptions);
+
+            result = response.toString();
+        }
+        else {
+
+            JSONObject response = new JSONObject();
+
+            response.put(Constants.COUNT, 0);
+
+            result = response.toString();
+
+        }
+
+        return result;
     }
 
     @RequestMapping(value = "/countAllSubscriptionsForTopic.do", method = RequestMethod.GET, params = {"topic", "selector"})
     @ResponseBody
     public String countAllSubscriptionsForTopic(@RequestParam(value="topic") String topicName, @RequestParam("selector") String selectorName) {
+
+        String result = "";
 
         Topic topic = new Topic(topicName);
 
@@ -106,22 +123,42 @@ public class SubscriptionController {
 
         ISelector selector = this.getSelectorByName(selectorName);
 
-        Collection<Subscription> subscriptions = selector.retrieveSubscriptionsForTopic(topic);
+        if(selector != null) {
 
-        Integer countSubscriptionsForTopic = subscriptions.size();
+            Collection<Subscription> subscriptions = selector.retrieveSubscriptionsForTopic(topic);
 
-        JSONObject response = new JSONObject();
+            Integer countSubscriptionsForTopic = subscriptions.size();
 
-        response.put(Constants.COUNT, countSubscriptionsForTopic);
+            JSONObject response = new JSONObject();
 
-        JSONObject topicObject = new JSONObject();
+            response.put(Constants.COUNT, countSubscriptionsForTopic);
 
-        topicObject.put(Constants.NAME, topic.getName());
+            JSONObject topicObject = new JSONObject();
 
-        response.put(Constants.TOPIC, topicObject);
+            topicObject.put(Constants.NAME, topic.getName());
 
-        return response.toString();
+            response.put(Constants.TOPIC, topicObject);
 
+            result = response.toString();
+        }
+        else {
+
+            JSONObject response = new JSONObject();
+
+            response.put(Constants.COUNT, 0);
+
+            JSONObject topicObject = new JSONObject();
+
+            topicObject.put(Constants.NAME, topic.getName());
+
+            response.put(Constants.TOPIC, topicObject);
+
+            result = response.toString();
+
+
+        }
+
+        return result;
     }
 
     public Map<String, ISelector> getSelectors() {
@@ -137,6 +174,6 @@ public class SubscriptionController {
     }
 
     public ISelector getSelectorByName(String selectorName) {
-        return this.selectors.get(selectorName);
+        return  this.selectors.get(selectorName);
     }
 }
