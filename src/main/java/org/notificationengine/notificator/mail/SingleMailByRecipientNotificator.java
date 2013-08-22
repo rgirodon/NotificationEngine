@@ -1,11 +1,10 @@
 package org.notificationengine.notificator.mail;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.Recipient;
@@ -13,6 +12,7 @@ import org.notificationengine.domain.Topic;
 import org.notificationengine.mail.MailOptionsUtils;
 import org.notificationengine.mail.Mailer;
 import org.notificationengine.notificator.Notificator;
+import org.notificationengine.persistance.Persister;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.templating.TemplateEngine;
 
@@ -67,6 +67,8 @@ public class SingleMailByRecipientNotificator extends Notificator {
 		}
 		
 		LOGGER.debug("NotificationsByRecipient map : " + notificationsByRecipient);
+
+        Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
 		
 		// then, for each recipient, send a mail
 		for (Recipient recipient : notificationsByRecipient.keySet()) {
@@ -74,12 +76,29 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			LOGGER.debug("Processing Notifications for Recipient : " + recipient);
 			
 			Collection<DecoratedNotification> notificationsForThisRecipient = notificationsByRecipient.get(recipient);
+
+            Collection<File> filesToAttach = new HashSet<>();
 			
 			Collection<Map<String, Object>> contexts = new ArrayList<>();
 			for (DecoratedNotification notificationForThisRecipient : notificationsForThisRecipient) {
 				contexts.add(notificationForThisRecipient.getRawNotification().getContext());
-			}
-			
+
+                Map<String, Object> context = notificationForThisRecipient.getRawNotification().getContext();
+
+                Collection<ObjectId> fileIds = (Collection<ObjectId>) context.get("fileIds");
+
+                if(fileIds != null) {
+
+                    for(ObjectId fileId : fileIds) {
+                        File file = persister.retrieveFileFromId(fileId);
+
+                        filesToAttach.add(file);
+                    }
+
+                }
+
+            }
+
 			LOGGER.debug("This Recipient has notifications : " + notificationsForThisRecipient);
 			
 			// merge the context and the template
@@ -95,13 +114,22 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContexts(contexts);
 			
 			// sent a mail to the recipient
-			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, this.isHtmlTemplate, options);
+			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, this.isHtmlTemplate, filesToAttach, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
 
             for (DecoratedNotification notificationForThisRecipient : notificationsForThisRecipient) {
 
                 result.put(notificationForThisRecipient, sentCorrectly);
+            }
+
+            //delete files created after sending (or not)
+            //even if it has not been sent, the file will be created next time
+            if(filesToAttach != null) {
+
+                for(File file : filesToAttach) {
+                    file.delete();
+                }
             }
 
 		}

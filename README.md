@@ -61,9 +61,9 @@ The Context of a Raw Notification is just a Map, i.e. a list of pairs Key - Valu
 For example :
 ```JSON
 {
-'Subject' : 'Tevez is the new Juve striker' 
-'Content' : 'Argentine player has signed a 4-years contract with the Italy last-year champion.'
-'Date'    : '01/06/2013'
+    "Subject" : "Tevez is the new Juve striker", 
+    "Content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
+    "Date"    : "01/06/2013"
 }
 ```
 could be the context of a Raw Notification with Topic Sports.Football.Italy.Juventus
@@ -488,7 +488,8 @@ To register this notificator in a Channel, here is an example :
 				  "selectorType" : "customSelector",
 				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
 				  "notificatorType" : "multipleMailByRecipient",
-				  "mailTemplate" : "facturationMailTemplate"
+				  "mailTemplate" : "facturationMailTemplate",
+				  "isHtmlTemplate": "true"
 				}
 			 ]
 }
@@ -496,6 +497,11 @@ To register this notificator in a Channel, here is an example :
 
 As you can see, this notificator needs an option "mailTemplate".
 In our example, the built-in Template Engine will look for a template file named facturationMailTemplate.template in the template directory specified in localsettings.properties.
+
+We also added on option to indicate if the template is written in HTML or not. If it is the case, you can add HTML tags in the template and add some resources. If you want to add static resources, you can set the folder in the ```localsettings.properties```file and then you have to set the source of the resource in the template like this:
+```HTML
+<img src="http://serveraddress/resources/my-image.jpeg" alt="My Image"/>
+```
 
 For building the mail content, this notificator will merge this template with a Context containing :
 - all the entries of the Raw Notification Context
@@ -515,6 +521,23 @@ Best regards,
 
 Facturation Team
 ```
+
+And here is an example of an HTML template fort this notificator : 
+```
+<p>Dear {{displayName}}</p>
+
+<p>This mail has been sent by Facturation application.</p>
+
+{{{content}}}
+
+<p>Best regards,</p>
+
+<img src="http://serveraddress/resources/my-image.jpeg" alt="My Image"/>
+
+<p>Facturation Team</p>
+```
+
+Please note that if your ```content``` is written in HTML, you have to use the annotation with three curly braces in order to have the HTML unescaped (it comes from the Mustache documentation)
 
 ### 3.2.2.3 SingleMailByRecipientNotificator
 
@@ -539,6 +562,8 @@ To register this notificator in a Channel, here is an example :
 
 As you can see, this notificator needs an option "mailTemplate".
 In our example, the built-in Template Engine will look for a template file named helpdeskMailTemplate.template in the template directory specified in localsettings.properties.
+
+If you want to write HTML templates, you just have to do the same as explained in the previous part (3.2.2.2 MultipleMailByRecipientNotificator) 
 
 For building the mail content, this notificator will merge this template with a Context containing :
 - an entry named "notificationsByRecipient" which is the list of the Contexts of the grouped RawNotifications
@@ -594,6 +619,8 @@ To register this notificator in a Channel, here is an example :
 
 As you can see, this notificator needs an option "mailTemplate".
 In our example, the built-in Template Engine will look for a template file named commonMailTemplate.template in the template directory specified in localsettings.properties.
+
+In order to send an HTML mail, you have to follow what is indicated in part 3.2.2.2 MultipleMailByRecipientNotificator. 
 
 For building the mail content, this notificator will merge this template with a Context containing :
 - an entry named "topics" which is a list of Contexts containing :
@@ -713,6 +740,9 @@ It will be in the MongoDB database, in rawnotifications collection, with that fo
   }
 }
 ```
+
+You can also send a rawNotification with files attachments. In order to do that, you just have to do a POST on this URL : ```http://host:port/notificationengine/rawNotificationWithAttach.do```. The elements to post are a JSON named json which has the same format as shown before and files, each one named files[]. The Content-Type in the header should be multipart/form-data. 
+
 
 You can retrieve this example in client directory.
 
@@ -925,6 +955,86 @@ where dates are at the format ```yyyy-MM-dd```
 ]
 ```
 where dates are at the format ```yyyy-MM-dd```
+
+### 3.4.4. Deleted Decorated Notifications
+
+When a decorated notification cannot be sent 5 times, we suppose that there is an issue with the recipient's address and the code is made that the email will not be sent anymore. Instead of simply delete this email from the decorated notifications table in the database, we put it in another table named deleted decorated notifications. In that way, it is possible to know how many notifications were not sent. 
+
+To get metrics about this, you can call 2 different URLs : 
+- ```/countDeletedDecoratedNotifications.do```to get a global count of not sent notifications
+- ```/countDeletedDecoratedNotificationsForLastDays.do?days=30```to get a count per day of deleted decorated notifications. 
+
+The JSON sent in response are the same as described in previous parts. 
+
+### 3.4.5. Topics
+
+Thanks to the REST API, it is possible to get a list of topics and sub topics. 
+
+If you want to get a list of all topics, the URL to call is ```/topics.do```. 
+The response looks like this JSON : 
+```JSON
+[
+    {
+        "name": "facturation"
+    },
+    {
+        "name": "helpdesk.societe1"
+    },
+    {
+        "name": "facturation.societe2"
+    },
+    {
+        "name": "helpdesk.societe2"
+    },
+    {
+        "name": "facturation.societe1"
+    }
+]
+```
+
+And if you want to get all sub-topics of a topic you have to call the following URL : ```/subTopicsForTopic.do?topic=facturation```
+You will receive this response : 
+```JSON
+[
+    {
+        "name": "facturation.societe2"
+    },
+    {
+        "name": "facturation"
+    },
+    {
+        "name": "facturation.societe1"
+    }
+]
+```
+
+### 3.4.6. Subscriptions
+
+The REST API also provides a way to get informations about subscriptions. 
+
+To get the number of total subscriptions, you have to call the URL ```/countAllSubscriptions.do```. 
+
+If you want to count all subscriptions for a particular topic, you can call ```/countAllSubscriptionsForTopic.do?topic=facturation```
+
+In both above cases, the answer will be (for instance) : 
+```JSON
+{"count":6}
+```
+
+If your selector is an instance of ISelectorWriteEnabled, you also have the ability of creating and removing subscriptions. 
+In order to do that, you have to call ```subscriptions.do```. 
+
+If you want to create a subscription, you have to do an HTTP PUT on this URL and to provide a JSON in the body and to set the content-type to ```application/json```. 
+The JSON to provide should be like this : 
+```JSON
+{
+    "topic": "facturation",
+    "recipient": "superguy@email.com",
+    "displayName": "Super Guy"
+}
+```
+
+If you want to remove a subscription, the URL is still the same but the HTTP method is DELETE. You also have to provide two parameters : the recipient email and the topic. If the deletion is successful, you will receive an HTTP Status of OK (200) 
 
 # 4. Extending the Notification Engine
 

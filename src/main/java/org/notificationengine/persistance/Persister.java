@@ -1,10 +1,18 @@
 package org.notificationengine.persistance;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSInputFile;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -25,6 +33,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component(value=Constants.PERSISTER)
 public class Persister implements InitializingBean {
@@ -33,14 +42,19 @@ public class Persister implements InitializingBean {
 	
 	@Autowired
 	private MongoDbSettings mongoDbSettings;
-	
-	private Boolean modeTest; 
+
+    @Autowired
+    private Properties localSettingsProperties;
+
+    private Boolean modeTest;
 	
 	private MongoCollection rawNotifications;
 	
 	private MongoCollection decoratedNotifications;
 
 	private MongoCollection deletedDecoratedNotifications;
+
+    private DB db;
 
 	public Persister() {
 		
@@ -67,14 +81,22 @@ public class Persister implements InitializingBean {
 		
 		this.init();
 	}
-	
-	private void init() {
+
+    public DB getDb() {
+        return db;
+    }
+
+    public void setDb(DB db) {
+        this.db = db;
+    }
+
+    private void init() {
 		
 		try {
-			DB db = null;
+			this.db = null;
 			
 			if (this.modeTest) {
-				db = new MongoClient().getDB(Constants.DATABASE_TEST);
+				this.db = new MongoClient().getDB(Constants.DATABASE_TEST);
 			}
 			else {
 				MongoClient mongoClient = null;
@@ -95,10 +117,10 @@ public class Persister implements InitializingBean {
 					mongoClient = new MongoClient(addrs);
 				}
 				
-				db = mongoClient.getDB(this.mongoDbSettings.getDatabase());
+				this.db = mongoClient.getDB(this.mongoDbSettings.getDatabase());
 			}
 			
-			Jongo jongo = new Jongo(db);
+			Jongo jongo = new Jongo(this.db);
 			
 			this.rawNotifications = jongo.getCollection(Constants.RAW_NOTIFICATIONS_COLLECTION);
 			
@@ -129,6 +151,83 @@ public class Persister implements InitializingBean {
 		
 		LOGGER.debug("Inserted RawNotification : " + rawNotification);
 	}
+
+    public Collection<ObjectId> saveFiles(List<MultipartFile> files) {
+
+        Collection<ObjectId> fileIds = new HashSet<>();
+
+        if(files != null) {
+
+            for(MultipartFile file : files) {
+
+                try {
+                    InputStream inputStream = null;
+
+                    String fileName = file.getOriginalFilename();
+
+                    inputStream = file.getInputStream();
+
+                    GridFS gfsResources = new GridFS(this.db, "resources");
+
+                    GridFSInputFile gfsFile = gfsResources.createFile(inputStream);
+
+                    gfsFile.setFilename(fileName);
+
+                    gfsFile.setContentType(file.getContentType());
+
+                    gfsFile.save();
+
+                    ObjectId fileId = (ObjectId) gfsFile.getId();
+
+                    fileIds.add(fileId);
+
+                    inputStream.close();
+
+                    LOGGER.debug("File " + fileName + " has been saved with id " + fileId);
+
+                }
+                catch(Exception e) {
+
+                    LOGGER.warn(ExceptionUtils.getFullStackTrace(e));
+                }
+            }
+        }
+
+        return fileIds;
+
+    }
+
+    public File retrieveFileFromId(ObjectId id) {
+
+        LOGGER.debug("Retrieve file from id " + id.toString());
+
+        GridFS gfsResources = new GridFS(this.db, "resources");
+
+        GridFSDBFile gfsDbFile = gfsResources.findOne(id);
+
+        String fileName = gfsDbFile.getFilename();
+
+        String path = this.localSettingsProperties.getProperty(Constants.RESOURCES_FOLDER);
+
+        File file = new File(path + fileName);
+
+        try {
+
+            InputStream is = gfsDbFile.getInputStream();
+
+            FileUtils.copyInputStreamToFile(is, file);
+
+            is.close();
+
+        }
+        catch (IOException ex) {
+
+            LOGGER.error(ExceptionUtils.getFullStackTrace(ex));
+        }
+
+        return file;
+
+    }
 	
 	public Collection<RawNotification> retrieveAllRawNotifications() {
 		

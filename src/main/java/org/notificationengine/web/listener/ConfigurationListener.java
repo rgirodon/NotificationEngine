@@ -25,6 +25,7 @@ import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.task.NotificatorTask;
 import org.notificationengine.task.SelectorTask;
+import org.notificationengine.web.controller.ConfigurationController;
 import org.notificationengine.web.controller.SubscriptionController;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -57,10 +58,13 @@ public class ConfigurationListener implements ServletContextListener {
 		
 		Timer timer = new Timer();
 		
-		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator = (SingleMultiTopicMailByRecipientNotificator)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
+		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator =
+                (SingleMultiTopicMailByRecipientNotificator)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
 		
 		SubscriptionController subscriptionController = (SubscriptionController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.SUBSCRIPTION_CONTROLLER);
-		
+
+		ConfigurationController configurationController = (ConfigurationController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.CONFIGURATION_CONTROLLER);
+
 		timer.schedule(new NotificatorTask(singleMultiTopicMailByRecipientNotificator), Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
 		
 		int cptChannel = 2;
@@ -70,12 +74,15 @@ public class ConfigurationListener implements ServletContextListener {
 			Topic topic = channel.getTopic();
 			
 			ISelector selector = null;
+            String selectorName = null;
 			
 			switch(channel.getSelectorType()) {
 			
 			case Constants.SELECTOR_TYPE_MONGODB :
 				
 				LOGGER.debug("Detected Selector of type " + Constants.SELECTOR_TYPE_MONGODB);
+
+                selectorName = Constants.SELECTOR_TYPE_MONGODB;
 				
 				selector = new MongoDbSelector(topic);
 				
@@ -97,6 +104,8 @@ public class ConfigurationListener implements ServletContextListener {
 					Constructor constructor = clazz.getConstructor(Topic.class, Map.class);
 					
 					selector = (ISelector)constructor.newInstance(topic, channel.getOptions());
+
+                    selectorName = selectorClass;
 				}
 				catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 
@@ -135,8 +144,9 @@ public class ConfigurationListener implements ServletContextListener {
 			
 			timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, selectorTaskPeriod);
 			
-			subscriptionController.setSelector(selector);
-			
+			subscriptionController.addSelector(selectorName, selector);
+			configurationController.addSelector(selectorName, selector);
+
 			INotificator notificator = null;
 				
 			String mailTemplate = channel.getOption(Constants.MAIL_TEMPLATE);
@@ -229,5 +239,5 @@ public class ConfigurationListener implements ServletContextListener {
 			cptChannel++;
 		}
 	}
-	
+
 }

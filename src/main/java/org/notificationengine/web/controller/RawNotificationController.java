@@ -5,17 +5,16 @@ import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.jongo.MongoCollection;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.dto.RawNotificationDTO;
 import org.notificationengine.persistance.Persister;
-import org.omg.CORBA.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,8 +27,8 @@ public class RawNotificationController {
 	
 	@Autowired
 	private Persister persister;
-		
-	public RawNotificationController() {
+
+    public RawNotificationController() {
 		
 		LOGGER.debug("RawNotificationController instantiated and listening");
 	}
@@ -49,6 +48,34 @@ public class RawNotificationController {
 		persister.createRawNotification(rawNotification);
 		
 		LOGGER.debug("RawNotification persisted : " + rawNotificationDTO);
+    }
+
+    @RequestMapping(value = "/rawNotificationWithAttach.do", method = RequestMethod.POST)
+    @ResponseBody
+    public String createWithAttach(@RequestParam(value = "files[]", required = false) List<MultipartFile> files, @RequestParam("json") String json) {
+
+        LOGGER.debug("Post new raw notification with files");
+
+        Gson gson = new Gson();
+        RawNotificationDTO rawNotificationDTO = gson.fromJson(json, RawNotificationDTO.class);
+
+        RawNotification rawNotification = new RawNotification();
+        rawNotification.set_id(new ObjectId());
+        rawNotification.setProcessed(Boolean.FALSE);
+        rawNotification.setTopic(new Topic(rawNotificationDTO.getTopic()));
+
+        Collection<ObjectId> filesIds = this.persister.saveFiles(files);
+
+        Map<String, Object> context = rawNotificationDTO.getContext();
+
+        context.put("fileIds", filesIds);
+
+        rawNotification.setContext(context);
+
+        persister.createRawNotification(rawNotification);
+
+        return rawNotification.toString();
+
     }
 
     @RequestMapping(value = "/allRawNotifications.do", method = RequestMethod.GET)
