@@ -1,34 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <title>NotificationEngine by rgirodon</title>
 
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-    <title>NotificationEngine by rgirodon</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
+    <div class="wrapper">
+      <header>
         <h1>NotificationEngine</h1>
-        <h2>It delivers assists in your Information System !</h2>
-        <a href="https://github.com/rgirodon/NotificationEngine" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+        <p>It delivers assists in your Information System !</p>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+        <p class="view"><a href="https://github.com/rgirodon/NotificationEngine">View the Project on GitHub <small>rgirodon/NotificationEngine</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/rgirodon/NotificationEngine/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rgirodon/NotificationEngine/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rgirodon/NotificationEngine">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
 <a name="1-understanding-the-notification-engine" class="anchor" href="#1-understanding-the-notification-engine"><span class="octicon octicon-link"></span></a>1. Understanding the Notification Engine</h1>
 
 <h2>
@@ -100,9 +100,9 @@ It just holds :</p>
 <p>For example :</p>
 
 <div class="highlight"><pre><span class="p">{</span>
-<span class="err">'Subject'</span> <span class="err">:</span> <span class="err">'Tevez</span> <span class="err">is</span> <span class="err">the</span> <span class="err">new</span> <span class="err">Juve</span> <span class="err">striker'</span> 
-<span class="err">'Content'</span> <span class="err">:</span> <span class="err">'Argentine</span> <span class="err">player</span> <span class="err">has</span> <span class="err">signed</span> <span class="err">a</span> <span class="err">4-years</span> <span class="err">contract</span> <span class="err">with</span> <span class="err">the</span> <span class="err">Italy</span> <span class="err">last-year</span> <span class="err">champion.'</span>
-<span class="err">'Date'</span>    <span class="err">:</span> <span class="err">'01/06/2013'</span>
+    <span class="nt">"Subject"</span> <span class="p">:</span> <span class="s2">"Tevez is the new Juve striker"</span><span class="p">,</span> 
+    <span class="nt">"Content"</span> <span class="p">:</span> <span class="s2">"Argentine player has signed a 4-years contract with the Italy last-year champion."</span><span class="p">,</span>
+    <span class="nt">"Date"</span>    <span class="p">:</span> <span class="s2">"01/06/2013"</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -591,7 +591,8 @@ Note that you can define here a replicaSet, you just have to set the mongo.repli
                   <span class="nt">"selectorType"</span> <span class="p">:</span> <span class="s2">"customSelector"</span><span class="p">,</span>
                   <span class="nt">"selectorClass"</span> <span class="p">:</span> <span class="s2">"org.notificationengine.selector.AdministratorSelector"</span><span class="p">,</span>
                   <span class="nt">"notificatorType"</span> <span class="p">:</span> <span class="s2">"multipleMailByRecipient"</span><span class="p">,</span>
-                  <span class="nt">"mailTemplate"</span> <span class="p">:</span> <span class="s2">"facturationMailTemplate"</span>
+                  <span class="nt">"mailTemplate"</span> <span class="p">:</span> <span class="s2">"facturationMailTemplate"</span><span class="p">,</span>
+                  <span class="nt">"isHtmlTemplate"</span><span class="p">:</span> <span class="s2">"true"</span>
                 <span class="p">}</span>
              <span class="p">]</span>
 <span class="p">}</span>
@@ -599,6 +600,11 @@ Note that you can define here a replicaSet, you just have to set the mongo.repli
 
 <p>As you can see, this notificator needs an option "mailTemplate".
 In our example, the built-in Template Engine will look for a template file named facturationMailTemplate.template in the template directory specified in localsettings.properties.</p>
+
+<p>We also added on option to indicate if the template is written in HTML or not. If it is the case, you can add HTML tags in the template and add some resources. If you want to add static resources, you can set the folder in the <code>localsettings.properties</code>file and then you have to set the source of the resource in the template like this:</p>
+
+<div class="highlight"><pre><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"http://serveraddress/resources/my-image.jpeg"</span> <span class="na">alt=</span><span class="s">"My Image"</span><span class="nt">/&gt;</span>
+</pre></div>
 
 <p>For building the mail content, this notificator will merge this template with a Context containing :</p>
 
@@ -619,6 +625,23 @@ Best regards,
 
 Facturation Team
 </code></pre>
+
+<p>And here is an example of an HTML template fort this notificator : </p>
+
+<pre><code>&lt;p&gt;Dear {{displayName}}&lt;/p&gt;
+
+&lt;p&gt;This mail has been sent by Facturation application.&lt;/p&gt;
+
+{{{content}}}
+
+&lt;p&gt;Best regards,&lt;/p&gt;
+
+&lt;img src="http://serveraddress/resources/my-image.jpeg" alt="My Image"/&gt;
+
+&lt;p&gt;Facturation Team&lt;/p&gt;
+</code></pre>
+
+<p>Please note that if your <code>content</code> is written in HTML, you have to use the annotation with three curly braces in order to have the HTML unescaped (it comes from the Mustache documentation)</p>
 
 <h3>
 <a name="3223-singlemailbyrecipientnotificator" class="anchor" href="#3223-singlemailbyrecipientnotificator"><span class="octicon octicon-link"></span></a>3.2.2.3 SingleMailByRecipientNotificator</h3>
@@ -643,6 +666,8 @@ Facturation Team
 
 <p>As you can see, this notificator needs an option "mailTemplate".
 In our example, the built-in Template Engine will look for a template file named helpdeskMailTemplate.template in the template directory specified in localsettings.properties.</p>
+
+<p>If you want to write HTML templates, you just have to do the same as explained in the previous part (3.2.2.2 MultipleMailByRecipientNotificator) </p>
 
 <p>For building the mail content, this notificator will merge this template with a Context containing :</p>
 
@@ -699,6 +724,8 @@ Helpdesk Team
 
 <p>As you can see, this notificator needs an option "mailTemplate".
 In our example, the built-in Template Engine will look for a template file named commonMailTemplate.template in the template directory specified in localsettings.properties.</p>
+
+<p>In order to send an HTML mail, you have to follow what is indicated in part 3.2.2.2 MultipleMailByRecipientNotificator. </p>
 
 <p>For building the mail content, this notificator will merge this template with a Context containing :</p>
 
@@ -805,7 +832,7 @@ We provide a SpingUtils utility class for getting beans.</p>
 <span class="p">}</span>
 </pre></div>
 
-<p>is sent to URL http://host:port/notificationengine/rawNotification.do with method PUT and header Content-Type set to application/json, then a Raw Notification with such Topic and Context will be persisted.</p>
+<p>is sent to URL http://host:port/notificationengine/rawNotification.do with method POST and header Content-Type set to application/json, then a Raw Notification with such Topic and Context will be persisted.</p>
 
 <p>It will be in the MongoDB database, in rawnotifications collection, with that format :</p>
 
@@ -821,6 +848,8 @@ We provide a SpingUtils utility class for getting beans.</p>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
+
+<p>You can also send a rawNotification with files attachments. In order to do that, you just have to do a POST on this URL : <code>http://host:port/notificationengine/rawNotificationWithAttach.do</code>. The elements to post are a JSON named json which has the same format as shown before and files, each one named files[]. The Content-Type in the header should be multipart/form-data. </p>
 
 <p>You can retrieve this example in client directory.</p>
 
@@ -903,18 +932,60 @@ We provide a SpingUtils utility class for getting beans.</p>
 <li>
 <p>get count of all raw notifications created for last x days (<code>countCreatedRawNotificationsForLastDays.do?days=5</code>). The response is like : </p>
 
-<div class="highlight"><pre><span class="p">{</span><span class="nt">"2013-08-06"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"2013-08-04"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="nt">"2013-08-05"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">"2013-08-02"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nt">"2013-08-03"</span><span class="p">:</span><span class="mi">5</span><span class="p">}</span>
+<div class="highlight"><pre><span class="p">[</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-09"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-08"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-10"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-06"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-07"</span>
+<span class="p">}</span>
+<span class="p">]</span>
 </pre></div>
 
-<p>where <code>"2013-08-06"</code>is a date at the format <code>yyyy-MM-dd</code></p>
+<p>where dates are at the format <code>yyyy-MM-dd</code></p>
 </li>
 <li>
 <p>get count of all processed raw notifications created for last x days (<code>countProcessedRawNotificationsForLastDays.do?days=5</code>). The response is like : </p>
 
-<div class="highlight"><pre><span class="p">{</span><span class="nt">"2013-08-06"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"2013-08-04"</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span><span class="nt">"2013-08-05"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="nt">"2013-08-02"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nt">"2013-08-03"</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
+<div class="highlight"><pre><span class="p">[</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-09"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-08"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-10"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-06"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-07"</span>
+<span class="p">}</span>
+<span class="p">]</span>
 </pre></div>
 
-<p>where <code>"2013-08-06"</code>is a date at the format <code>yyyy-MM-dd</code></p>
+<p>where dates are at the format <code>yyyy-MM-dd</code></p>
 </li>
 </ul><h3>
 <a name="343-decoratednotification-metrics" class="anchor" href="#343-decoratednotification-metrics"><span class="octicon octicon-link"></span></a>3.4.3. DecoratedNotification metrics</h3>
@@ -963,20 +1034,148 @@ We provide a SpingUtils utility class for getting beans.</p>
 <li>
 <p>get count of all decorated notifications created for last x days (<code>countCreatedDecoratedNotificationsForLastDays.do?days=5</code>). The response is like : </p>
 
-<div class="highlight"><pre><span class="p">{</span><span class="nt">"2013-08-06"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"2013-08-04"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="nt">"2013-08-05"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">"2013-08-02"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nt">"2013-08-03"</span><span class="p">:</span><span class="mi">5</span><span class="p">}</span>
+<div class="highlight"><pre><span class="p">[</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-09"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-08"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-10"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-06"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-07"</span>
+<span class="p">}</span>
+<span class="p">]</span>
 </pre></div>
 
-<p>where <code>"2013-08-06"</code>is a date at the format <code>yyyy-MM-dd</code></p>
+<p>where dates are at the format <code>yyyy-MM-dd</code></p>
 </li>
 <li>
 <p>get count of all sent decorated notifications created for last x days (<code>countSentDecoratedNotificationsForLastDays.do?days=5</code>). The response is like : </p>
 
-<div class="highlight"><pre><span class="p">{</span><span class="nt">"2013-08-06"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"2013-08-04"</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span><span class="nt">"2013-08-05"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="nt">"2013-08-02"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nt">"2013-08-03"</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
+<div class="highlight"><pre><span class="p">[</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-09"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-08"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-10"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-06"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="nt">"count"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-08-07"</span>
+<span class="p">}</span>
+<span class="p">]</span>
 </pre></div>
 
-<p>where <code>"2013-08-06"</code>is a date at the format <code>yyyy-MM-dd</code></p>
+<p>where dates are at the format <code>yyyy-MM-dd</code></p>
 </li>
-</ul><h1>
+</ul><h3>
+<a name="344-deleted-decorated-notifications" class="anchor" href="#344-deleted-decorated-notifications"><span class="octicon octicon-link"></span></a>3.4.4. Deleted Decorated Notifications</h3>
+
+<p>When a decorated notification cannot be sent 5 times, we suppose that there is an issue with the recipient's address and the code is made that the email will not be sent anymore. Instead of simply delete this email from the decorated notifications table in the database, we put it in another table named deleted decorated notifications. In that way, it is possible to know how many notifications were not sent. </p>
+
+<p>To get metrics about this, you can call 2 different URLs : </p>
+
+<ul>
+<li>
+<code>/countDeletedDecoratedNotifications.do</code>to get a global count of not sent notifications</li>
+<li>
+<code>/countDeletedDecoratedNotificationsForLastDays.do?days=30</code>to get a count per day of deleted decorated notifications. </li>
+</ul><p>The JSON sent in response are the same as described in previous parts. </p>
+
+<h3>
+<a name="345-topics" class="anchor" href="#345-topics"><span class="octicon octicon-link"></span></a>3.4.5. Topics</h3>
+
+<p>Thanks to the REST API, it is possible to get a list of topics and sub topics. </p>
+
+<p>If you want to get a list of all topics, the URL to call is <code>/topics.do</code>. 
+The response looks like this JSON : </p>
+
+<div class="highlight"><pre><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"facturation"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"helpdesk.societe1"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"facturation.societe2"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"helpdesk.societe2"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"facturation.societe1"</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+
+<p>And if you want to get all sub-topics of a topic you have to call the following URL : <code>/subTopicsForTopic.do?topic=facturation</code>
+You will receive this response : </p>
+
+<div class="highlight"><pre><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"facturation.societe2"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"facturation"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"facturation.societe1"</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+
+<h3>
+<a name="346-subscriptions" class="anchor" href="#346-subscriptions"><span class="octicon octicon-link"></span></a>3.4.6. Subscriptions</h3>
+
+<p>The REST API also provides a way to get informations about subscriptions. </p>
+
+<p>To get the number of total subscriptions, you have to call the URL <code>/countAllSubscriptions.do</code>. </p>
+
+<p>If you want to count all subscriptions for a particular topic, you can call <code>/countAllSubscriptionsForTopic.do?topic=facturation</code></p>
+
+<p>In both above cases, the answer will be (for instance) : </p>
+
+<div class="highlight"><pre><span class="p">{</span><span class="nt">"count"</span><span class="p">:</span><span class="mi">6</span><span class="p">}</span>
+</pre></div>
+
+<p>If your selector is an instance of ISelectorWriteEnabled, you also have the ability of creating and removing subscriptions. 
+In order to do that, you have to call <code>subscriptions.do</code>. </p>
+
+<p>If you want to create a subscription, you have to do an HTTP PUT on this URL and to provide a JSON in the body and to set the content-type to <code>application/json</code>. 
+The JSON to provide should be like this : </p>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">"topic"</span><span class="p">:</span> <span class="s2">"facturation"</span><span class="p">,</span>
+    <span class="nt">"recipient"</span><span class="p">:</span> <span class="s2">"superguy@email.com"</span><span class="p">,</span>
+    <span class="nt">"displayName"</span><span class="p">:</span> <span class="s2">"Super Guy"</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>If you want to remove a subscription, the URL is still the same but the HTTP method is DELETE. You also have to provide two parameters : the recipient email and the topic. If the deletion is successful, you will receive an HTTP Status of OK (200) </p>
+
+<h1>
 <a name="4-extending-the-notification-engine" class="anchor" href="#4-extending-the-notification-engine"><span class="octicon octicon-link"></span></a>4. Extending the Notification Engine</h1>
 
 <p>The Notification Engine provides some built-in Selectors and Notificators, but there are chances that you need to create new Selectors or Notificators to fit your needs.</p>
@@ -1172,25 +1371,13 @@ This is not very "state of the art", please be indulgent :)</p>
 <p>We also use it to list the bugs we find.</p>
 
 <p>Feel free to contribute, and we would really welcome any of your suggestions for improving the Notification Engine.</p>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/rgirodon/NotificationEngine/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/rgirodon/NotificationEngine/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/rgirodon/NotificationEngine"></a> is maintained by <a href="https://github.com/rgirodon">rgirodon</a>.</p>
-
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rgirodon">rgirodon</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
-
-  
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
