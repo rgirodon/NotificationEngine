@@ -33,7 +33,7 @@ public class RawNotificationController {
 		LOGGER.debug("RawNotificationController instantiated and listening");
 	}
 
-	@RequestMapping(value = "/rawNotification.do", method = RequestMethod.PUT, consumes = "application/json")
+	@RequestMapping(value = "/rawNotification.do", method = RequestMethod.POST, consumes = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void create(@RequestBody RawNotificationDTO rawNotificationDTO) {
 		

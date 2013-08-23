@@ -207,7 +207,7 @@ public class Persister implements InitializingBean {
 
         String fileName = gfsDbFile.getFilename();
 
-        String path = this.localSettingsProperties.getProperty(Constants.RESOURCES_FOLDER);
+        String path = this.localSettingsProperties.getProperty(Constants.WORKING_DIRECTORY);
 
         File file = new File(path + fileName);
 
