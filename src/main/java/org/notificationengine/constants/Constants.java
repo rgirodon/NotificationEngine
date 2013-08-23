@@ -131,6 +131,8 @@ public class Constants {
     public static final String DATE = "date";
 
     public static final String RESOURCES_FOLDER = "resources.folder";
+    
+    public static final String WORKING_DIRECTORY = "working.directory";
 
     public static final double MAX_ATTACHMENT_SIZE = 1024*1024*10;
 
