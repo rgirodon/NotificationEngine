@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.Recipient;
@@ -73,6 +74,43 @@ public class SubscriptionController {
             ((ISelectorWriteEnabled)selector).deleteSubscription(email, topic);
 
         }
+
+    }
+
+    @RequestMapping(value = "/getSubscriptions.do", method = RequestMethod.GET, params = {"selector"})
+    @ResponseBody
+    public String getAllSubscriptions(@RequestParam("selector") String selectorName) {
+
+        LOGGER.debug("SubscriptionController get subscriptions for selector " + selectorName);
+
+        ISelector selector = this.getSelectorByName(selectorName);
+
+        String result = "";
+
+        if(selector != null) {
+
+            JSONArray subscriptionsJsonArray = new JSONArray();
+
+            Collection<Subscription> subscriptions = selector.retrieveSubscriptions();
+
+            for(Subscription subscription : subscriptions) {
+
+                JSONObject subscriptionJsonObject = new JSONObject();
+
+                subscriptionJsonObject.put(Constants.DISPLAY_NAME, subscription.getRecipient().getDisplayName());
+
+                subscriptionJsonObject.put(Constants.EMAIL, subscription.getRecipient().getAddress());
+
+                subscriptionJsonObject.put(Constants.TOPIC, subscription.getTopic().getName());
+
+                subscriptionsJsonArray.add(subscriptionJsonObject);
+            }
+
+            result = subscriptionsJsonArray.toString();
+
+        }
+
+        return result;
 
     }
 
