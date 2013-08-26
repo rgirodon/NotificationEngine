@@ -5,6 +5,7 @@ data/
 scripts/
 .classpath
 .project
+notificationengine.iml
 custom/jdbcselector/target
 custom/jdbcselector/.settings
 custom/jdbcselector/.classpath
