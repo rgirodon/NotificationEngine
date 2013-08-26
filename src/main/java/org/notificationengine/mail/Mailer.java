@@ -77,8 +77,6 @@ public class Mailer {
                 helper.setFrom(from);
             }
 
-            //TODO : test size of global attachments and send several emails if too big
-
             double totalSize = 0;
 
             Collection<File> filesToSendInOtherMails = new HashSet<>();
@@ -135,9 +133,7 @@ public class Mailer {
                                       Map<String, String> options)
             throws MailException, MessagingException {
 
-        Integer attempts = 0;
-
-        while(filesToSendInOtherMails.size() > 0 && attempts < 5) {
+        while(filesToSendInOtherMails.size() > 0) {
 
             MimeMessage message = this.mailSender.createMimeMessage();
 
@@ -184,7 +180,14 @@ public class Mailer {
 
                 }
                 else {
-                    filesToSendInNextMail.add(file);
+                	if (file.length() < Constants.MAX_ATTACHMENT_SIZE) {
+                		filesToSendInNextMail.add(file);
+                	}
+                	else {
+                		// TODO send a mail with that warning message
+                		
+                		LOGGER.warn("File " + file.getName() + " is too big and will not be sent.");
+                	}
                 }
 
             }
@@ -192,9 +195,6 @@ public class Mailer {
             filesToSendInOtherMails = filesToSendInNextMail;
 
             this.mailSender.send(message);
-
-            attempts ++;
-
         }
 
     }
