@@ -103,6 +103,8 @@ public class SubscriptionController {
 
                 subscriptionJsonObject.put(Constants.TOPIC, subscription.getTopic().getName());
 
+                subscriptionJsonObject.put(Constants.SELECTOR_TYPE, selectorName);
+
                 subscriptionsJsonArray.add(subscriptionJsonObject);
             }
 
