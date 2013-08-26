@@ -10,6 +10,8 @@ public class Constants {
 
 	final public static String NAME = "name";
 
+	final public static String EMAIL = "email";
+
 	final public static String TOPIC_NAME = "topic.name";
 
 	final public static String RECIPIENT_ADDRESS = "recipient.address";
