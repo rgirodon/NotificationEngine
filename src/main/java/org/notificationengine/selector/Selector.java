@@ -38,7 +38,7 @@ public abstract class Selector implements ISelector {
 		
 		for (RawNotification rawNotification : rawNotifications) {
 			
-			Collection<Subscription> subscriptions = this.retrieveSubscriptionsForTopic(rawNotification.getTopic());
+			Collection<Subscription> subscriptions = this.retrieveSubscriptionsForRawNotification(rawNotification);
 			
 			for (Subscription subscription : subscriptions) {
 				
@@ -58,7 +58,9 @@ public abstract class Selector implements ISelector {
 		persister.markRawNotificationAsProcessed(rawNotification);
 	}
 
-	abstract public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+    abstract public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+
+    abstract public Collection<Subscription> retrieveSubscriptionsForRawNotification(RawNotification rawNotification);
 
     abstract public Collection<Subscription> retrieveSubscriptions();
 

@@ -21,6 +21,7 @@ import org.notificationengine.notificator.mail.SingleMailByRecipientNotificator;
 import org.notificationengine.notificator.mail.SingleMultiTopicMailByRecipientFeederNotificator;
 import org.notificationengine.notificator.mail.SingleMultiTopicMailByRecipientNotificator;
 import org.notificationengine.selector.ISelector;
+import org.notificationengine.selector.holdinnotification.HoldInNotificationSelector;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.task.NotificatorTask;
@@ -87,6 +88,16 @@ public class ConfigurationListener implements ServletContextListener {
 				selector = new MongoDbSelector(topic);
 				
 				break;
+
+                case Constants.SELECTOR_TYPE_HOLD_IN_NOTIFICATION :
+
+                    LOGGER.debug("Detected Selector of type " + Constants.SELECTOR_TYPE_HOLD_IN_NOTIFICATION);
+
+                    selectorName = Constants.SELECTOR_TYPE_HOLD_IN_NOTIFICATION;
+
+                    selector = new HoldInNotificationSelector(topic);
+
+                    break;
 				
 			case Constants.SELECTOR_TYPE_CUSTOM :
 				

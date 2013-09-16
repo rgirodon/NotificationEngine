@@ -25,7 +25,9 @@ public class ConfigurationReader {
 
 	private static Logger LOGGER = Logger.getLogger(ConfigurationReader.class);
 	
-	private static String[] KNOWN_SELECTOR_TYPES = {Constants.SELECTOR_TYPE_CUSTOM, Constants.SELECTOR_TYPE_MONGODB};
+	private static String[] KNOWN_SELECTOR_TYPES = {Constants.SELECTOR_TYPE_CUSTOM,
+                                                    Constants.SELECTOR_TYPE_MONGODB,
+                                                    Constants.SELECTOR_TYPE_HOLD_IN_NOTIFICATION};
 	
 	private static String[] KNOWN_NOTIFICATOR_TYPES = {Constants.NOTIFICATOR_TYPE_CUSTOM, 
 														Constants.NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT,

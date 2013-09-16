@@ -140,4 +140,8 @@ public class Constants {
 
     public static final String MAIL_TEXT_OTHER_ATTACHMENTS = "Please find attachments for previous email";
 
+    public static final String RECIPIENTS = "recipients";
+
+    public static final String SELECTOR_TYPE_HOLD_IN_NOTIFICATION = "holdInNotificationSelector";
+
 }
