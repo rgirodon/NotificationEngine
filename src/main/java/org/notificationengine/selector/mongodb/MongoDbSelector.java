@@ -11,6 +11,7 @@ import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
+import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Subscription;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.persistance.MongoDbSettings;
@@ -103,7 +104,7 @@ public class MongoDbSelector extends SelectorWriteEnabled {
 		}
 	}
 
-	@Override
+    @Override
 	public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
 		
 		Collection<Subscription> result = new ArrayList<>();
@@ -131,6 +132,14 @@ public class MongoDbSelector extends SelectorWriteEnabled {
 		
 		return result;
 	}
+
+    @Override
+    public Collection<Subscription> retrieveSubscriptionsForRawNotification(RawNotification rawNotification) {
+
+        Topic topic = rawNotification.getTopic();
+
+        return this.retrieveSubscriptionsForTopic(topic);
+    }
 
     @Override
     public Collection<Subscription> retrieveSubscriptions() {

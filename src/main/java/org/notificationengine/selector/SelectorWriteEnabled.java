@@ -10,14 +10,14 @@ public abstract class SelectorWriteEnabled extends Selector implements
 
 	public SelectorWriteEnabled(Topic topic) {
 		super(topic);
-	}
-	
-	public SelectorWriteEnabled(Topic topic, Map<String, String> options) {
-		super(topic, options);
-	}
+    }
 
-	@Override
-	abstract public void createSubscription(Subscription subscription);
+    public SelectorWriteEnabled(Topic topic, Map<String, String> options) {
+        super(topic, options);
+    }
+
+    @Override
+    abstract public void createSubscription(Subscription subscription);
 
     @Override
     abstract public void deleteSubscription(String email, String topic);
