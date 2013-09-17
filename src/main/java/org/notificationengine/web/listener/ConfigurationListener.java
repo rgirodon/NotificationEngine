@@ -21,6 +21,8 @@ import org.notificationengine.notificator.mail.SingleMailByRecipientNotificator;
 import org.notificationengine.notificator.mail.SingleMultiTopicMailByRecipientFeederNotificator;
 import org.notificationengine.notificator.mail.SingleMultiTopicMailByRecipientNotificator;
 import org.notificationengine.selector.ISelector;
+import org.notificationengine.selector.Selector;
+import org.notificationengine.selector.holdinnotification.HoldInNotificationSelector;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.task.NotificatorTask;
@@ -74,8 +76,19 @@ public class ConfigurationListener implements ServletContextListener {
 			Topic topic = channel.getTopic();
 			
 			ISelector selector = null;
+            ISelector urgentSelector = null;
             String selectorName = null;
-			
+
+            Boolean urgentEnabled = Boolean.FALSE;
+
+            String strUrgentEnabled = channel.getOption(Constants.URGENT_ENABLED);
+
+            if( strUrgentEnabled != null ) {
+                urgentEnabled = Boolean.valueOf(strUrgentEnabled);
+            }
+
+            LOGGER.debug("This channel is urgent enabled: " + urgentEnabled);
+
 			switch(channel.getSelectorType()) {
 			
 			case Constants.SELECTOR_TYPE_MONGODB :
@@ -85,8 +98,34 @@ public class ConfigurationListener implements ServletContextListener {
                 selectorName = Constants.SELECTOR_TYPE_MONGODB;
 				
 				selector = new MongoDbSelector(topic);
+
+                if(urgentEnabled) {
+
+                    LOGGER.debug("An urgent " + Constants.SELECTOR_TYPE_MONGODB + " is instantiated");
+
+                    urgentSelector = new MongoDbSelector(topic);
+                    urgentSelector.setUrgentSelector(Boolean.TRUE);
+                }
 				
 				break;
+
+            case Constants.SELECTOR_TYPE_HOLD_IN_NOTIFICATION :
+
+                LOGGER.debug("Detected Selector of type " + Constants.SELECTOR_TYPE_HOLD_IN_NOTIFICATION);
+
+                selectorName = Constants.SELECTOR_TYPE_HOLD_IN_NOTIFICATION;
+
+                selector = new HoldInNotificationSelector(topic);
+
+                if(urgentEnabled) {
+
+                    LOGGER.debug("An urgent " + Constants.SELECTOR_TYPE_HOLD_IN_NOTIFICATION + " is instantiated");
+
+                    urgentSelector = new HoldInNotificationSelector(topic);
+                    urgentSelector.setUrgentSelector(Boolean.TRUE);
+                }
+
+                break;
 				
 			case Constants.SELECTOR_TYPE_CUSTOM :
 				
@@ -106,6 +145,15 @@ public class ConfigurationListener implements ServletContextListener {
 					selector = (ISelector)constructor.newInstance(topic, channel.getOptions());
 
                     selectorName = selectorClass;
+
+                    if(urgentEnabled) {
+
+                        LOGGER.debug("An urgent " + Constants.SELECTOR_TYPE_CUSTOM + " is instantiated");
+
+                        urgentSelector = (ISelector)constructor.newInstance(topic, channel.getOptions());
+                        urgentSelector.setUrgentSelector(Boolean.TRUE);
+                    }
+
 				}
 				catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 
@@ -141,8 +189,16 @@ public class ConfigurationListener implements ServletContextListener {
 			else {
 				LOGGER.debug("selectorTaskPeriod set to default");
 			}
+
 			
 			timer.schedule(new SelectorTask(selector), cptChannel * Constants.SELECTOR_TASK_DELAY, selectorTaskPeriod);
+
+            if(urgentEnabled) {
+
+                LOGGER.debug("Urgent selection task is added to timer");
+
+                timer.schedule(new SelectorTask(urgentSelector), cptChannel * Constants.URGENT_SELECTOR_TASK_DELAY, Constants.URGENT_SELECTOR_TASK_PERIOD);
+            }
 			
 			subscriptionController.addSelector(selectorName, selector);
 			configurationController.addSelector(selectorName, selector);
@@ -150,6 +206,35 @@ public class ConfigurationListener implements ServletContextListener {
 			INotificator notificator = null;
 				
 			String mailTemplate = channel.getOption(Constants.MAIL_TEMPLATE);
+
+            String urgentMailTemplate = null;
+
+            if(urgentEnabled) {
+                urgentMailTemplate = channel.getOption(Constants.URGENT_MAIL_TEMPLATE);
+
+                Boolean isUrgentHtmlTemplate = Boolean.valueOf(channel.getOption(Constants.IS_URGENT_MAIL_TEMPLATE));
+
+                if(isUrgentHtmlTemplate == null) {
+
+                    isUrgentHtmlTemplate = Boolean.FALSE;
+                }
+
+                if (urgentMailTemplate == null) {
+
+                    LOGGER.error("No urgentMailTemplate defined, no notificator will be set!");
+                }
+                else {
+
+                    INotificator urgentNotificator = new MultipleMailByRecipientNotificator(topic, urgentMailTemplate, isUrgentHtmlTemplate);
+
+                    urgentNotificator.setUrgentEnabled(Boolean.TRUE);
+
+                    LOGGER.debug("An urgent notification task is added to the timer");
+
+                    timer.schedule(new NotificatorTask(urgentNotificator), cptChannel * Constants.URGENT_NOTIFICATOR_TASK_DELAY, Constants.URGENT_NOTIFICATOR_TASK_PERIOD);
+
+                }
+            }
 
             Boolean isHtmlTemplate = Boolean.valueOf(channel.getOption(Constants.IS_HTML_TEMPLATE));
 			

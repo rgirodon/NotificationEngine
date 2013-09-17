@@ -15,12 +15,16 @@ import org.notificationengine.spring.SpringUtils;
 public abstract class Selector implements ISelector {
 
 	private Topic topic;
+
+    private Boolean isUrgentSelector;
 	
 	private Map<String, String> options;
 	
 	public Selector(Topic topic) {
 		
 		this.topic = topic;
+
+        this.isUrgentSelector = Boolean.FALSE;
 		
 		this.options = new HashMap<>();
 	}
@@ -28,7 +32,9 @@ public abstract class Selector implements ISelector {
 	public Selector(Topic topic, Map<String, String> options) {
 		
 		this.topic = topic;
-		
+
+        this.isUrgentSelector = Boolean.FALSE;
+
 		this.options = options;
 	}
 
@@ -38,7 +44,7 @@ public abstract class Selector implements ISelector {
 		
 		for (RawNotification rawNotification : rawNotifications) {
 			
-			Collection<Subscription> subscriptions = this.retrieveSubscriptionsForTopic(rawNotification.getTopic());
+			Collection<Subscription> subscriptions = this.retrieveSubscriptionsForRawNotification(rawNotification);
 			
 			for (Subscription subscription : subscriptions) {
 				
@@ -58,7 +64,9 @@ public abstract class Selector implements ISelector {
 		persister.markRawNotificationAsProcessed(rawNotification);
 	}
 
-	abstract public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+    abstract public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+
+    abstract public Collection<Subscription> retrieveSubscriptionsForRawNotification(RawNotification rawNotification);
 
     abstract public Collection<Subscription> retrieveSubscriptions();
 
@@ -73,8 +81,16 @@ public abstract class Selector implements ISelector {
 	private Collection<RawNotification> retrieveRawNotifications() {
 		
 		Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
-		
-		return persister.retrieveNotProcessedRawNotificationsForTopic(this.topic);
+
+        if(this.isUrgentSelector) {
+
+            return persister.retrieveUrgentAndNotProcessedRawNotificationsForTopic(this.topic);
+
+        } else {
+
+            return persister.retrieveNotProcessedRawNotificationsForTopic(this.topic);
+        }
+
 	}
 	
 	public Topic getTopic() {
@@ -92,6 +108,14 @@ public abstract class Selector implements ISelector {
 	public void setOptions(Map<String, String> options) {
 		this.options = options;
 	}
-	
-	
+
+    @Override
+    public Boolean getUrgentSelector() {
+        return isUrgentSelector;
+    }
+
+    @Override
+    public void setUrgentSelector(Boolean urgentSelector) {
+        isUrgentSelector = urgentSelector;
+    }
 }

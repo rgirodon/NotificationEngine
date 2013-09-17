@@ -140,4 +140,26 @@ public class Constants {
 
     public static final String MAIL_TEXT_OTHER_ATTACHMENTS = "Please find attachments for previous email";
 
+    public static final String RECIPIENTS = "recipients";
+
+    public static final String SELECTOR_TYPE_HOLD_IN_NOTIFICATION = "holdInNotificationSelector";
+
+    public static final String CONTEXT_URGENT = "context.urgent";
+
+    public static final String RAW_NOTIFICATION_CONTEXT_URGENT = "rawNotification.context.urgent";
+
+    public static final String URGENT_ENABLED = "urgentEnabled";
+
+    public static final long URGENT_SELECTOR_TASK_DELAY = 5000;
+
+    public static final long URGENT_NOTIFICATOR_TASK_DELAY = 5000;
+
+    public static final long URGENT_SELECTOR_TASK_PERIOD = 5000;
+
+    public static final long URGENT_NOTIFICATOR_TASK_PERIOD = 5000;
+
+    public static final String URGENT_MAIL_TEMPLATE = "urgentMailTemplate";
+
+    public static final String IS_URGENT_MAIL_TEMPLATE = "isUrgentHtmlTemplate";
+
 }

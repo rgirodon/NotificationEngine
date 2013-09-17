@@ -1,0 +1,12 @@
+{
+    "channels" : [
+        {
+            "id" : "facturationChannel",
+            "topic" : "facturation",
+            "selectorType" : "holdInNotificationSelector",
+            "notificatorType" : "singleMultiTopicMailByRecipient",
+            "mailTemplate" : "commonMailTemplate",
+            "isHtmlTemplate": "true"
+        }
+    ]
+}
