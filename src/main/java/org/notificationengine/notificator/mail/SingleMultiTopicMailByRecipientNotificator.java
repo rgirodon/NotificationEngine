@@ -31,17 +31,30 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 	private Map<String, MailTemplateConfiguration> mailTemplateAndTopics;
 	
 	private Collection<DecoratedNotification> decoratedNotificationsToProcess;
+
+    private Boolean urgentEnabled;
 	
 	public SingleMultiTopicMailByRecipientNotificator() {
 		
 		this.activated = Boolean.FALSE;
+
+        this.urgentEnabled = Boolean.FALSE;
 		
 		this.mailTemplateAndTopics = new HashMap<>();
 		
 		this.decoratedNotificationsToProcess = new HashSet<>();
 	}
-	
-	public Boolean isActivated() {
+
+    @Override
+    public void setUrgentEnabled(Boolean urgentEnabled) {
+        this.urgentEnabled = urgentEnabled;
+    }
+
+    public Boolean getUrgentEnabled() {
+        return urgentEnabled;
+    }
+
+    public Boolean isActivated() {
 
 		return this.activated;
 	}
