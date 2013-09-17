@@ -294,6 +294,52 @@ public class Persister implements InitializingBean {
 
     }
 
+    public Collection<RawNotification> retrieveUrgentAndNotProcessedRawNotificationsForTopic(Topic topic) {
+
+        LOGGER.debug("Retrieve urgent and not processed RawNotifications for Topic : " + topic);
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.PROCESSED, Boolean.FALSE);
+        exactQueryJsonObject.put(Constants.TOPIC_NAME, topic.getName());
+        exactQueryJsonObject.put(Constants.CONTEXT_URGENT, Boolean.TRUE);
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForExactQuery) {
+
+            LOGGER.debug("Found RawNotification (exact query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+        JSONObject likeQueryJsonObject = new JSONObject();
+
+        JSONObject regularExpressionJsonObject = new JSONObject();
+        regularExpressionJsonObject.put(Constants.REGEX, topic.getName() + "\\..*");
+
+        likeQueryJsonObject.put(Constants.TOPIC_NAME, regularExpressionJsonObject);
+        likeQueryJsonObject.put(Constants.CONTEXT_URGENT, Boolean.TRUE);
+        likeQueryJsonObject.put(Constants.PROCESSED, Boolean.FALSE);
+
+        String likeQuery = likeQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForLikeQuery = this.rawNotifications.find(likeQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForLikeQuery) {
+
+            LOGGER.debug("Found RawNotification (like query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+        return result;
+
+    }
+
     public Collection<RawNotification> retrieveNotProcessedRawNotifications() {
 
         LOGGER.debug("Retrieve not processed RawNotifications");
@@ -431,6 +477,52 @@ public class Persister implements InitializingBean {
 		
 		return result;
 	}
+
+    public Collection<DecoratedNotification> retrieveUrgentAndNotSentDecoratedNotificationsForTopic(
+            Topic topic) {
+
+        LOGGER.debug("Retrieve urgent and not sent DecoratedNotifications for Topic : " + topic);
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.SENT, Boolean.FALSE);
+        exactQueryJsonObject.put(Constants.RAW_NOTIFICATION_TOPIC_NAME, topic.getName());
+        exactQueryJsonObject.put(Constants.RAW_NOTIFICATION_CONTEXT_URGENT, Boolean.TRUE);
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<DecoratedNotification> decoratedNotificationsForExactQuery = this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForExactQuery) {
+
+            LOGGER.debug("Found DecoratedNotification (exact query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        JSONObject likeQueryJsonObject = new JSONObject();
+        likeQueryJsonObject.put(Constants.SENT, Boolean.FALSE);
+
+        JSONObject regularExpressionJsonObject = new JSONObject();
+        regularExpressionJsonObject.put(Constants.REGEX, topic.getName() + "\\..*");
+
+        likeQueryJsonObject.put(Constants.RAW_NOTIFICATION_TOPIC_NAME, regularExpressionJsonObject);
+        likeQueryJsonObject.put(Constants.RAW_NOTIFICATION_CONTEXT_URGENT, Boolean.TRUE);
+
+        String likeQuery = likeQueryJsonObject.toString();
+
+        Iterable<DecoratedNotification> decoratedNotificationsForLikeQuery = this.decoratedNotifications.find(likeQuery).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForLikeQuery) {
+
+            LOGGER.debug("Found DecoratedNotification (like query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+    }
 
     public Collection<DecoratedNotification> retrieveAllDecoratedNotifications() {
 

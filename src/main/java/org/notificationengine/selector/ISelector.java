@@ -15,4 +15,8 @@ public interface ISelector {
 	public Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
 
 	public Collection<Subscription> retrieveSubscriptions();
+
+    public Boolean getUrgentSelector();
+
+    public void setUrgentSelector(Boolean urgentSelector);
 }
