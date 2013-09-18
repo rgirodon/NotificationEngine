@@ -23,7 +23,8 @@ public class SingleMultiTopicMailByRecipientFeederNotificator extends Notificato
 
         Map<DecoratedNotification, Boolean> result = new HashMap<>();
 		
-		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator = (SingleMultiTopicMailByRecipientNotificator)SpringUtils.getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
+		SingleMultiTopicMailByRecipientNotificator singleMultiTopicMailByRecipientNotificator =
+                (SingleMultiTopicMailByRecipientNotificator)SpringUtils.getBean(Constants.SINGLE_MULTI_TOPIC_MAIL_BY_RECIPIENT_NOTIFICATOR);
 		
 		singleMultiTopicMailByRecipientNotificator.addDecoratedNotificationsToProcess(notSentDecoratedNotifications);
 

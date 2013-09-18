@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
+import org.notificationengine.domain.PhysicalNotification;
 import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.mail.MailOptionsUtils;
@@ -93,6 +94,8 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				Collection<DecoratedNotification> decoratedNotificationsForThisRecipient = new HashSet<>();
 
                 Collection<File> filesToAttach = new HashSet<>();
+
+                Collection<ObjectId> allFileIds = new HashSet<>();
 				
 				Collection<Map<String, Object>> rawNotificationContexts = new ArrayList<>();
 				
@@ -132,6 +135,8 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 
                             for(ObjectId fileId : fileIds) {
 
+                                allFileIds.add(fileId);
+
                                 File file = persister.retrieveFileFromId(fileId);
 
                                 filesToAttach.add(file);
@@ -160,6 +165,9 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				if (sentCorrectly) {
 					
 					this.markAsSent(decoratedNotificationsForThisRecipient);
+
+                    this.savePhysicalNotification(recipient, mailer.getSubject(options), notificationText, allFileIds);
+
 				}
 				else {					
 					this.markAsNotSent(decoratedNotificationsForThisRecipient);
@@ -217,6 +225,18 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 		
 		persister.markDecoratedNotificationAsSent(decoratedNotification);
 	}
+
+    public void savePhysicalNotification(
+            Recipient recipient, String subject, String notificationContent, Collection<ObjectId> filesAttachedIds) {
+
+        PhysicalNotification physicalNotification =
+                new PhysicalNotification(recipient, subject, notificationContent, filesAttachedIds);
+
+        Persister persister = (Persister) SpringUtils.getBean(Constants.PERSISTER);
+
+        persister.savePhysicalNotification(physicalNotification);
+
+    }
 
 	public Collection<Recipient> retrieveRecipientsForTopics(
 			Collection<Topic> topics) {

@@ -12,6 +12,12 @@ public class Constants {
 
 	final public static String EMAIL = "email";
 
+    final public static String FILE_NAME = "fileName";
+
+    final public static String FILES_ATTACHED = "filesAttached";
+
+	final public static String NOTIFICATION_CONTENT = "notificationContent";
+
 	final public static String TOPIC_NAME = "topic.name";
 
 	final public static String RECIPIENT_ADDRESS = "recipient.address";
@@ -42,6 +48,8 @@ public class Constants {
 
 	final public static String DELETED_DECORATED_NOTIFICATIONS_COLLECTION = "deleteddecoratednotifications";
 
+	final public static String PHYSICAL_NOTIFICATIONS_COLLECTION = "physicalnotifications";
+
 	final public static String SUBSCRIPTIONS_COLLECTION = "subscriptions";
 	
 	final public static String PERSISTER = "persister";
@@ -67,6 +75,8 @@ public class Constants {
 	public static final String DOT = ".";
 
 	public static final String SENT = "sent";
+
+	public static final String SENT_AT = "sentAt";
 
 	public static final String NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT = "multipleMailByRecipient";
 	

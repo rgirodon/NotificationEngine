@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
+import org.notificationengine.domain.PhysicalNotification;
+import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.mail.MailOptionsUtils;
 import org.notificationengine.mail.Mailer;
@@ -53,6 +55,8 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 
             Collection<File> filesToAttach = new HashSet<>();
 
+            Recipient recipient = decoratedNotification.getRecipient();
+
             if(fileIds != null) {
 
                 for(ObjectId fileId : fileIds) {
@@ -70,11 +74,16 @@ public class MultipleMailByRecipientNotificator extends Notificator {
 			Map<String, String> options = MailOptionsUtils.buildMailOptionsFromContext(decoratedNotification.getContext());
 			
 			// sent a mail to the recipient
-			Boolean sentCorrectly = mailer.sendMail(decoratedNotification.getRecipient().getAddress(), notificationText, this.isHtmlTemplate, filesToAttach, options);
+			Boolean sentCorrectly = mailer.sendMail(recipient.getAddress(), notificationText, this.isHtmlTemplate, filesToAttach, options);
 
             LOGGER.debug("Mail sent? " + sentCorrectly);
 
             result.put(decoratedNotification, sentCorrectly);
+
+            if(sentCorrectly) {
+
+                this.savePhysicalNotification(recipient, mailer.getSubject(options), notificationText, fileIds);
+            }
 
             //delete files created after sending (or not)
             //even if it has not been sent, the file will be created next time

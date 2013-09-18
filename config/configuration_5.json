@@ -1,0 +1,26 @@
+{
+    "channels" : [
+        {
+            "id" : "facturationChannel",
+            "topic" : "facturation",
+            "selectorType" : "mongoDbSelector",
+            "notificatorType" : "singleMultiTopicMailByRecipient",
+            "mailTemplate" : "commonMailTemplate",
+            "isHtmlTemplate": "true",
+            "notificatorTaskPeriod" : "600000",
+            "urgentEnabled": "true",
+            "urgentMailTemplate": "facturationMailTemplate",
+            "isUrgentHtmlTemplate": "true"
+        },
+        {
+            "id" : "helpdeskChannel",
+            "topic" : "facturation",
+            "selectorType" : "mongoDbSelector",
+            "selectorTaskPeriod" : "5000",
+            "notificatorType" : "singleMultiTopicMailByRecipient",
+            "notificatorTaskPeriod" : "5000",
+            "mailTemplate" : "commonMailTemplate",
+            "isHtmlTemplate": "true"
+        }
+    ]
+}

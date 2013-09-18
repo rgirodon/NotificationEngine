@@ -22,6 +22,7 @@ import org.jongo.MongoCollection;
 import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
+import org.notificationengine.domain.PhysicalNotification;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Topic;
 import org.springframework.beans.factory.InitializingBean;
@@ -53,6 +54,8 @@ public class Persister implements InitializingBean {
 	private MongoCollection decoratedNotifications;
 
 	private MongoCollection deletedDecoratedNotifications;
+
+	private MongoCollection physicalNotifications;
 
     private DB db;
 
@@ -127,7 +130,9 @@ public class Persister implements InitializingBean {
 			this.decoratedNotifications = jongo.getCollection(Constants.DECORATED_NOTIFICATIONS_COLLECTION);
 
             this.deletedDecoratedNotifications = jongo.getCollection(Constants.DELETED_DECORATED_NOTIFICATIONS_COLLECTION);
-		} 
+
+            this.physicalNotifications = jongo.getCollection(Constants.PHYSICAL_NOTIFICATIONS_COLLECTION);
+		}
 		catch (UnknownHostException e) {
 
 			LOGGER.error(ExceptionUtils.getFullStackTrace(e));
@@ -151,6 +156,13 @@ public class Persister implements InitializingBean {
 		
 		LOGGER.debug("Inserted RawNotification : " + rawNotification);
 	}
+
+    public void createPhysicalNotification(PhysicalNotification physicalNotification) {
+
+        this.physicalNotifications.save(physicalNotification);
+
+        LOGGER.debug("Inserted physicalNotification: " + physicalNotification);
+    }
 
     public Collection<ObjectId> saveFiles(List<MultipartFile> files) {
 
@@ -1052,6 +1064,21 @@ public class Persister implements InitializingBean {
 		this.decoratedNotifications = decoratedNotifications;
 	}
 
+    public MongoCollection getDeletedDecoratedNotifications() {
+        return deletedDecoratedNotifications;
+    }
+
+    public void setDeletedDecoratedNotifications(MongoCollection deletedDecoratedNotifications) {
+        this.deletedDecoratedNotifications = deletedDecoratedNotifications;
+    }
+
+    public MongoCollection getPhysicalNotifications() {
+        return physicalNotifications;
+    }
+
+    public void setPhysicalNotifications(MongoCollection physicalNotifications) {
+        this.physicalNotifications = physicalNotifications;
+    }
 
     public void moveFailedDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
 
@@ -1076,6 +1103,11 @@ public class Persister implements InitializingBean {
 		
 		this.decoratedNotifications.save(decoratedNotificationToSave);
 	}
+
+    public void savePhysicalNotification(PhysicalNotification physicalNotification) {
+
+        this.physicalNotifications.save(physicalNotification);
+    }
 
     public Collection<DecoratedNotification> retrieveAllDeletedDecoratedNotifications() {
 
@@ -1128,6 +1160,52 @@ public class Persister implements InitializingBean {
             LOGGER.debug("Decorated notification found: " + decoratedNotification);
 
             result.add(decoratedNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<PhysicalNotification> retrieveAllPhysicalNotifications() {
+
+        LOGGER.debug("Retrieve all physical notifications");
+
+        Collection<PhysicalNotification> result = new ArrayList<>();
+
+        Iterable<PhysicalNotification> physicalNotifications = this.physicalNotifications.find("{}").as(PhysicalNotification.class);
+
+        for(PhysicalNotification physicalNotification : physicalNotifications) {
+
+            LOGGER.debug("PhysicalNotification found: " + physicalNotification);
+
+            result.add(physicalNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<PhysicalNotification> retrievePhysicalNotificationForEmail(String email) {
+
+        LOGGER.debug("Retrieve physical notifications sent to " + email);
+
+        Collection<PhysicalNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJson = new JSONObject();
+
+        exactQueryJson.put(Constants.RECIPIENT_ADDRESS, email);
+
+        String query = exactQueryJson.toString();
+
+        Iterable<PhysicalNotification> physicalNotifications = this.physicalNotifications.find(query).as(PhysicalNotification.class);
+
+        for(PhysicalNotification physicalNotification : physicalNotifications) {
+
+            LOGGER.debug("Physical notification found:" + physicalNotification);
+
+            result.add(physicalNotification);
 
         }
 

@@ -2,8 +2,11 @@ package org.notificationengine.notificator;
 
 import java.util.*;
 
+import org.bson.types.ObjectId;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
+import org.notificationengine.domain.PhysicalNotification;
+import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.persistance.Persister;
 import org.notificationengine.spring.SpringUtils;
@@ -118,6 +121,18 @@ public abstract class Notificator implements INotificator {
         }
 
 	}
+
+    public void savePhysicalNotification(
+            Recipient recipient, String subject, String notificationContent, Collection<ObjectId> filesAttachedIds) {
+
+        PhysicalNotification physicalNotification =
+                new PhysicalNotification(recipient, subject, notificationContent, filesAttachedIds);
+
+        Persister persister = (Persister) SpringUtils.getBean(Constants.PERSISTER);
+
+        persister.savePhysicalNotification(physicalNotification);
+
+    }
 
 	protected abstract Map<DecoratedNotification, Boolean> processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications);
