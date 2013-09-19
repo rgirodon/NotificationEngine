@@ -82,4 +82,9 @@ public class PhysicalNotification {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

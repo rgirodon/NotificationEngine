@@ -82,6 +82,8 @@ public class PhysicalNotificationController {
 
         JSONObject jsonPhysicalNotification = new JSONObject();
 
+        jsonPhysicalNotification.put(Constants.ID, physicalNotification.hashCode());
+
         //recipient
         Recipient recipient = physicalNotification.getRecipient();
         JSONObject jsonRecipient = new JSONObject();

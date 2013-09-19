@@ -240,6 +240,36 @@ public class Persister implements InitializingBean {
         return file;
 
     }
+
+    public File retrieveFileFromFileName(String fileName) {
+
+        LOGGER.debug("Retrieve file from filename " + fileName);
+
+        GridFS gfsResources = new GridFS(this.db, "resources");
+
+        GridFSDBFile gfsDbFile = gfsResources.findOne(fileName);
+
+        String path = this.localSettingsProperties.getProperty(Constants.WORKING_DIRECTORY);
+
+        File file = new File(path + fileName);
+
+        try {
+
+            InputStream is = gfsDbFile.getInputStream();
+
+            FileUtils.copyInputStreamToFile(is, file);
+
+            is.close();
+
+        }
+        catch (IOException ex) {
+
+            LOGGER.error(ExceptionUtils.getFullStackTrace(ex));
+        }
+
+        return file;
+
+    }
 	
 	public Collection<RawNotification> retrieveAllRawNotifications() {
 		
