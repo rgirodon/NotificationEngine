@@ -21,7 +21,6 @@ import org.notificationengine.notificator.mail.SingleMailByRecipientNotificator;
 import org.notificationengine.notificator.mail.SingleMultiTopicMailByRecipientFeederNotificator;
 import org.notificationengine.notificator.mail.SingleMultiTopicMailByRecipientNotificator;
 import org.notificationengine.selector.ISelector;
-import org.notificationengine.selector.Selector;
 import org.notificationengine.selector.holdinnotification.HoldInNotificationSelector;
 import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.notificationengine.spring.SpringUtils;

@@ -2,7 +2,7 @@
 
 <p>This mail has been sent by Facturation application.</p>
 
-{{{content}}}
+> {{content}}
 
 <p>Best regards,</p>
 

@@ -78,6 +78,8 @@ public class SingleMailByRecipientNotificator extends Notificator {
 			Collection<DecoratedNotification> notificationsForThisRecipient = notificationsByRecipient.get(recipient);
 
             Collection<File> filesToAttach = new HashSet<>();
+
+            Collection<ObjectId> allFileIds = new HashSet<>();
 			
 			Collection<Map<String, Object>> contexts = new ArrayList<>();
 			for (DecoratedNotification notificationForThisRecipient : notificationsForThisRecipient) {
@@ -90,6 +92,9 @@ public class SingleMailByRecipientNotificator extends Notificator {
                 if(fileIds != null) {
 
                     for(ObjectId fileId : fileIds) {
+
+                        allFileIds.add(fileId);
+
                         File file = persister.retrieveFileFromId(fileId);
 
                         filesToAttach.add(file);
@@ -130,6 +135,12 @@ public class SingleMailByRecipientNotificator extends Notificator {
                 for(File file : filesToAttach) {
                     file.delete();
                 }
+            }
+
+            if(sentCorrectly) {
+
+                this.savePhysicalNotification(recipient, mailer.getSubject(options),notificationText, allFileIds);
+
             }
 
 		}
