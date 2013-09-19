@@ -53,7 +53,9 @@ public class Constants {
 	final public static String SUBSCRIPTIONS_COLLECTION = "subscriptions";
 	
 	final public static String PERSISTER = "persister";
-	
+
+	final public static String CLEANER_TOOL = "cleanerTool";
+
 	final public static String TEMPLATE_ENGINE = "templateEngine";
 	
 	final public static String MAILER = "mailer";
@@ -71,6 +73,10 @@ public class Constants {
 	public static final long SELECTOR_TASK_DELAY = 10000;
 
 	public static final long SELECTOR_TASK_PERIOD = 60000;
+
+	public static final long CLEAN_TASK_PERDIOD = 60000;
+
+	public static final long CLEAN_TASK_DELAY = 60000;
 
 	public static final String DOT = ".";
 

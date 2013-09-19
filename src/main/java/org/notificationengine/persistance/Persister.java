@@ -3,17 +3,13 @@ package org.notificationengine.persistance;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
@@ -27,11 +23,9 @@ import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Topic;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.DB;
-import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import org.springframework.web.multipart.MultipartFile;
@@ -241,15 +235,27 @@ public class Persister implements InitializingBean {
 
     }
 
-    public File retrieveFileFromFileName(String fileName) {
+    public File retrieveFileFromIdAndFileName(ObjectId objectId, String fileName) {
 
         LOGGER.debug("Retrieve file from filename " + fileName);
 
         GridFS gfsResources = new GridFS(this.db, "resources");
 
-        GridFSDBFile gfsDbFile = gfsResources.findOne(fileName);
+        GridFSDBFile gfsDbFile = gfsResources.findOne(objectId);
 
-        String path = this.localSettingsProperties.getProperty(Constants.WORKING_DIRECTORY);
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(this.localSettingsProperties.getProperty(Constants.WORKING_DIRECTORY));
+
+        sb.append("/");
+
+        long now = new Date().getTime();
+
+        sb.append(now);
+
+        sb.append("/");
+
+        String path = sb.toString();
 
         File file = new File(path + fileName);
 
@@ -277,7 +283,8 @@ public class Persister implements InitializingBean {
 		
 		Collection<RawNotification> result = new ArrayList<>();
 		
-		Iterable<RawNotification> rawNotificationsForGetAll = this.rawNotifications.find("{}").as(RawNotification.class);
+		Iterable<RawNotification> rawNotificationsForGetAll =
+                this.rawNotifications.find().sort("{createdAt: -1}").as(RawNotification.class);
 		
 		for(RawNotification rawNotification : rawNotificationsForGetAll) {
 			
@@ -304,7 +311,8 @@ public class Persister implements InitializingBean {
 
         String exactQuery = exactQueryJsonObject.toString();
 
-        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+        Iterable<RawNotification> rawNotificationsForExactQuery =
+                this.rawNotifications.find(exactQuery).sort("{createdAt: -1}").as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForExactQuery) {
 
@@ -393,7 +401,8 @@ public class Persister implements InitializingBean {
 
         String exactQuery = exactQueryJsonObject.toString();
 
-        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+        Iterable<RawNotification> rawNotificationsForExactQuery =
+                this.rawNotifications.find(exactQuery).sort("{createdAt: -1}").as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForExactQuery) {
 
@@ -572,7 +581,34 @@ public class Persister implements InitializingBean {
 
         Collection<DecoratedNotification> result = new ArrayList<>();
 
-        Iterable<DecoratedNotification> decoratedNotifications = this.decoratedNotifications.find("{}").as(DecoratedNotification.class);
+        Iterable<DecoratedNotification> decoratedNotifications =
+                this.decoratedNotifications.find().sort("{sentAt: -1}").as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotifications) {
+
+            LOGGER.debug("Found DecoratedNotification (exact query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+
+    }
+
+    public Collection<DecoratedNotification> retrieveDecoratedNotificationsForEmail(String email) {
+
+        LOGGER.debug("Retrieve DecoratedNotifications for email");
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        JSONObject jsonQuery = new JSONObject();
+
+        jsonQuery.put(Constants.RECIPIENT_ADDRESS, email);
+
+        String query = jsonQuery.toString();
+
+        Iterable<DecoratedNotification> decoratedNotifications =
+                this.decoratedNotifications.find(query).sort("{sentAt: -1}").as(DecoratedNotification.class);
 
         for(DecoratedNotification decoratedNotification : decoratedNotifications) {
 
@@ -641,7 +677,8 @@ public class Persister implements InitializingBean {
 
         String exactQuery = exactQueryJsonObject.toString();
 
-        Iterable<DecoratedNotification> decoratedNotificationsForExactQuery = this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
+        Iterable<DecoratedNotification> decoratedNotificationsForExactQuery =
+                this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
 
         for(DecoratedNotification decoratedNotification : decoratedNotificationsForExactQuery) {
 
@@ -713,7 +750,8 @@ public class Persister implements InitializingBean {
         // query created manually
         String exactQuery = "{createdAt: {$gt: #, $lt: #}, \"topic.name\": #}";
 
-        Iterable<RawNotification> rawNotificationsForDateAndTopic = this.rawNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(RawNotification.class);
+        Iterable<RawNotification> rawNotificationsForDateAndTopic =
+                this.rawNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForDateAndTopic) {
 
@@ -723,7 +761,8 @@ public class Persister implements InitializingBean {
 
         String likeQuery = "{createdAt: {$gt: #, $lt: #}, \"topic.name\": {$regex: #}}";
 
-        Iterable<RawNotification> rawNotificationsForDateAndTopicLike = this.rawNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(RawNotification.class);
+        Iterable<RawNotification> rawNotificationsForDateAndTopicLike =
+                this.rawNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForDateAndTopicLike) {
 
@@ -1145,7 +1184,7 @@ public class Persister implements InitializingBean {
 
         Collection<DecoratedNotification> result = new ArrayList<>();
 
-        Iterable<DecoratedNotification> decoratedNotifications = this.deletedDecoratedNotifications.find("{}").as(DecoratedNotification.class);
+        Iterable<DecoratedNotification> decoratedNotifications = this.deletedDecoratedNotifications.find().as(DecoratedNotification.class);
 
         for(DecoratedNotification decoratedNotification : decoratedNotifications) {
 
@@ -1203,7 +1242,8 @@ public class Persister implements InitializingBean {
 
         Collection<PhysicalNotification> result = new ArrayList<>();
 
-        Iterable<PhysicalNotification> physicalNotifications = this.physicalNotifications.find("{}").as(PhysicalNotification.class);
+        Iterable<PhysicalNotification> physicalNotifications =
+                this.physicalNotifications.find().sort("{sentAt: -1}").as(PhysicalNotification.class);
 
         for(PhysicalNotification physicalNotification : physicalNotifications) {
 

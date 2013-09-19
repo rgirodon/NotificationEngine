@@ -23,7 +23,7 @@ import java.util.HashSet;
 @Controller
 public class PhysicalNotificationController {
 
-    public static Logger LOGGER = Logger.getLogger(PhysicalNotificationController.class);
+    private static Logger LOGGER = Logger.getLogger(PhysicalNotificationController.class);
 
     @Autowired
     private Persister persister;

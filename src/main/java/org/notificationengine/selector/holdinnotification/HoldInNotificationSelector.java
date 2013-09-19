@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class HoldInNotificationSelector extends Selector {
 
-    public static Logger LOGGER = Logger.getLogger(HoldInNotificationSelector.class);
+    private static Logger LOGGER = Logger.getLogger(HoldInNotificationSelector.class);
 
     public HoldInNotificationSelector(Topic topic) {
         super(topic);

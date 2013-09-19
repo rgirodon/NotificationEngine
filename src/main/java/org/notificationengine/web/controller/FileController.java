@@ -18,7 +18,7 @@ import java.io.File;
 @Controller
 public class FileController {
 
-    public static Logger LOGGER = Logger.getLogger(FileController.class);
+    private static Logger LOGGER = Logger.getLogger(FileController.class);
 
     @Autowired
     private Persister persister;
@@ -42,14 +42,16 @@ public class FileController {
         return new FileSystemResource(file);
     }
 
-    @RequestMapping(value = "files/{filename}.{ext}", method = RequestMethod.GET)
+    @RequestMapping(value = "files/{objectId}/{filename}.{ext}", method = RequestMethod.GET)
     @ResponseBody
     public FileSystemResource getFileFromFileName(
-            @PathVariable("filename") String fileName, @PathVariable("ext") String ext) {
+            @PathVariable("objectId") String objectIdString, @PathVariable("filename") String fileName, @PathVariable("ext") String ext) {
+
+        ObjectId objectId = new ObjectId(objectIdString);
 
         String realFileName = fileName + "." + ext;
 
-        File file = this.persister.retrieveFileFromFileName(realFileName);
+        File file = this.persister.retrieveFileFromIdAndFileName(objectId, realFileName);
 
         return new FileSystemResource(file);
     }
