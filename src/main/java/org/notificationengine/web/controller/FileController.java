@@ -42,7 +42,7 @@ public class FileController {
         return new FileSystemResource(file);
     }
 
-    @RequestMapping(value = "files/{objectId}/{filename}.{ext}", method = RequestMethod.GET)
+    @RequestMapping(value = "/files/{objectId}/{filename}.{ext}", method = RequestMethod.GET)
     @ResponseBody
     public FileSystemResource getFileFromFileName(
             @PathVariable("objectId") String objectIdString, @PathVariable("filename") String fileName, @PathVariable("ext") String ext) {

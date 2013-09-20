@@ -109,7 +109,6 @@ public abstract class Selector implements ISelector {
 		this.options = options;
 	}
 
-    @Override
     public Boolean getUrgentSelector() {
         return isUrgentSelector;
     }
