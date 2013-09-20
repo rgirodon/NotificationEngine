@@ -45,7 +45,11 @@ public abstract class Selector implements ISelector {
 		for (RawNotification rawNotification : rawNotifications) {
 			
 			Collection<Subscription> subscriptions = this.retrieveSubscriptionsForRawNotification(rawNotification);
-			
+
+            //Mark raw notification as processed in order to have a correct decorated notification
+            //If not, rawNotification in decorated notification is marked as not processed
+            rawNotification.setProcessed(Boolean.TRUE);
+
 			for (Subscription subscription : subscriptions) {
 				
 				DecoratedNotification decoratedNotification = new DecoratedNotification(rawNotification, subscription.getRecipient());
