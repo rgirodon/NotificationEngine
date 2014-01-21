@@ -56,4 +56,13 @@
 
     <mvc:resources mapping="/resources/**" location="file:${resources.folder}"/>
 
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/login.do"/>
+            <bean class="org.notificationengine.web.interceptor.TokenInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>

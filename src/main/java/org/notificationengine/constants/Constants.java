@@ -51,7 +51,11 @@ public class Constants {
 	final public static String PHYSICAL_NOTIFICATIONS_COLLECTION = "physicalnotifications";
 
 	final public static String SUBSCRIPTIONS_COLLECTION = "subscriptions";
-	
+
+	final public static String USERS_COLLECTION = "users";
+
+	final public static String TOKENS_COLLECTION = "tokens";
+
 	final public static String PERSISTER = "persister";
 
 	final public static String CLEANER_TOOL = "cleanerTool";
@@ -178,4 +182,23 @@ public class Constants {
 
     public static final String IS_URGENT_MAIL_TEMPLATE = "isUrgentHtmlTemplate";
 
+    public static final String USERNAME = "username";
+
+    public static final String PASSWORD = "password";
+
+    public static final String USER_CONTROLLER = "userController";
+
+    public static final String MONGO_AUTHENTICATOR = "mongoAuthenticator";
+
+    public static final String CUSTOM_AUTHENTICATOR = "customAuthenticator";
+
+    public static final String AUTHENTICATION_TYPE = "authenticationType";
+
+    public static final String CUSTOM_AUTHENTICATOR_CLASS = "customAuthenticatorClass";
+
+    public static final String TOKEN = "token";
+
+    public static final String TOKEN_INTERCEPTOR = "tokenInterceptor";
+
+    public static final String TOKEN_CONTROLLER = "tokenController";
 }

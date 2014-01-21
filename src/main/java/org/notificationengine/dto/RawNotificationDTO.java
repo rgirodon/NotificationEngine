@@ -15,16 +15,12 @@ public class RawNotificationDTO {
 		
 		this.context = new HashMap<>();
 	}
-	
-	
-	
+
 	@Override
 	public String toString() {
 		return "RawNotificationDTO [topic=" + topic + ", context=" + context
 				+ "]";
 	}
-
-
 
 	public String getTopic() {
 		return topic;

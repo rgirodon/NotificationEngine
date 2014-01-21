@@ -1,9 +1,6 @@
 package org.notificationengine.selector.holdinnotification;
 
-import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Recipient;

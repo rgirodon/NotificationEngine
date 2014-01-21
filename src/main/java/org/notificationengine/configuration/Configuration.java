@@ -10,6 +10,10 @@ public class Configuration {
 
 	private Collection<Channel> channels;
 
+    private String authenticationType;
+
+    private String customAuthenticatorClass;
+
 	public Configuration() {
 		super();
 		
@@ -72,4 +76,20 @@ public class Configuration {
 		
 		return result;
 	}
+
+    public String getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public void setAuthenticationType(String authenticationType) {
+        this.authenticationType = authenticationType;
+    }
+
+    public String getCustomAuthenticatorClass() {
+        return customAuthenticatorClass;
+    }
+
+    public void setCustomAuthenticatorClass(String customAuthenticatorClass) {
+        this.customAuthenticatorClass = customAuthenticatorClass;
+    }
 }

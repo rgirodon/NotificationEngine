@@ -10,6 +10,10 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.notificationengine.authentication.Authenticator;
+import org.notificationengine.authentication.TokenService;
+import org.notificationengine.authentication.mongodb.MongoAuthenticator;
+import org.notificationengine.authentication.mongodb.MongoTokenService;
 import org.notificationengine.configuration.Configuration;
 import org.notificationengine.configuration.ConfigurationReader;
 import org.notificationengine.constants.Constants;
@@ -28,6 +32,9 @@ import org.notificationengine.task.NotificatorTask;
 import org.notificationengine.task.SelectorTask;
 import org.notificationengine.web.controller.ConfigurationController;
 import org.notificationengine.web.controller.SubscriptionController;
+import org.notificationengine.web.controller.TokenController;
+import org.notificationengine.web.controller.UserController;
+import org.notificationengine.web.interceptor.TokenInterceptor;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -66,9 +73,60 @@ public class ConfigurationListener implements ServletContextListener {
 
 		ConfigurationController configurationController = (ConfigurationController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.CONFIGURATION_CONTROLLER);
 
+		UserController userController = (UserController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.USER_CONTROLLER);
+
+        TokenInterceptor tokenInterceptor = (TokenInterceptor)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.TOKEN_INTERCEPTOR);
+
+        TokenController tokenController = (TokenController)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.TOKEN_CONTROLLER);
+
+        TokenService tokenService = new MongoTokenService();
+
+        tokenInterceptor.setTokenService(tokenService);
+
+        userController.setTokenService(tokenService);
+
+        tokenController.setTokenService(tokenService);
+
 		timer.schedule(new NotificatorTask(singleMultiTopicMailByRecipientNotificator), Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
 		
 		int cptChannel = 2;
+
+        String authenticationType = configuration.getAuthenticationType();
+
+        switch (authenticationType) {
+
+            case Constants.MONGO_AUTHENTICATOR:
+
+                LOGGER.debug("Detected authenticator of type " + Constants.MONGO_AUTHENTICATOR);
+
+                userController.setAuthenticator(new MongoAuthenticator());
+
+                break;
+
+            case Constants.CUSTOM_AUTHENTICATOR:
+
+                String customAuthenticatorClass = configuration.getCustomAuthenticatorClass();
+
+                try {
+                    Class clazz = Class.forName(customAuthenticatorClass);
+
+                    Constructor constructor = clazz.getConstructor();
+
+                    Authenticator authenticator = (Authenticator)constructor.newInstance();
+
+                    userController.setAuthenticator(authenticator);
+
+                }
+                catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+
+                    LOGGER.warn(ExceptionUtils.getFullStackTrace(e));
+
+                    LOGGER.warn("Unable to instantiate class " + customAuthenticatorClass + ", set to default authenticator");
+
+                    userController.setAuthenticator(new MongoAuthenticator());
+                }
+                break;
+        }
 		
 		for (Channel channel : configuration.getChannels()) {
 			
@@ -138,9 +196,9 @@ public class ConfigurationListener implements ServletContextListener {
 				// instantiate it
 				try {
 					Class clazz = Class.forName(selectorClass);
-					
+
 					Constructor constructor = clazz.getConstructor(Topic.class, Map.class);
-					
+
 					selector = (ISelector)constructor.newInstance(topic, channel.getOptions());
 
                     selectorName = selectorClass;
@@ -157,13 +215,13 @@ public class ConfigurationListener implements ServletContextListener {
 				catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 
 					LOGGER.warn(ExceptionUtils.getFullStackTrace(e));
-					
+
 					LOGGER.warn("Unable to instantiate class " + selectorClass + ", channel will be ignored");
-					
+
 					continue;
 				}
-				
-				break;	
+
+				break;
 			}
 			
 			Long selectorTaskPeriod = Constants.SELECTOR_TASK_PERIOD;
