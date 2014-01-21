@@ -33,6 +33,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
+        this.tokenService.updateTokenLife(token);
+
         return true;
     }
 

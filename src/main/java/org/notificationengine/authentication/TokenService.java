@@ -13,4 +13,6 @@ public interface TokenService {
     public Collection<Token> getTokens();
 
     public void deleteToken(String token);
+
+    public void updateTokenLife(String token);
 }

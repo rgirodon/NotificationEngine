@@ -6,6 +6,7 @@ import com.mongodb.ServerAddress;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.json.simple.JSONObject;
@@ -19,6 +20,7 @@ import org.notificationengine.spring.SpringUtils;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class MongoTokenService implements TokenService{
@@ -160,5 +162,23 @@ public class MongoTokenService implements TokenService{
 
         this.tokensCollection.remove(query);
 
+    }
+
+    @Override
+    public void updateTokenLife(String token) {
+
+        //Look for the token in the database
+        JSONObject tokenQuery = new JSONObject();
+        tokenQuery.put(Constants.TOKEN, token);
+
+        String query = tokenQuery.toString();
+
+        Token tokenToUpdate = this.tokensCollection.findOne(query).as(Token.class);
+
+        Date newEndOfLife = new DateTime().plusMinutes(30).toDate();
+
+        tokenToUpdate.setEndOfLife(newEndOfLife);
+
+        this.tokensCollection.update(query).with(tokenToUpdate);
     }
 }
