@@ -27,17 +27,20 @@ public class TestMailer {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 		mailSender.setUsername("mduclos@sqli.com");
-		mailSender.setPassword("xxxxxxxxxxx");
+		mailSender.setPassword("********");
 		
 		Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
         properties.setProperty("mail.smtp.timeout", "8500");
+        properties.setProperty("mail.from", "mduclos@sqli.com");
         mailSender.setJavaMailProperties(properties);
 		
 		this.mailer = new Mailer();
 		
 		this.mailer.setMailSender(mailSender);
+
+        this.mailer.setLocalSettingsProperties(properties);
 		
 		this.mailer.setTemplateMessage(templateMessage);
 	}
