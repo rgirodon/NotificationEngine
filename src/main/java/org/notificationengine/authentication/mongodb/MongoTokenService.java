@@ -175,10 +175,17 @@ public class MongoTokenService implements TokenService{
 
         Token tokenToUpdate = this.tokensCollection.findOne(query).as(Token.class);
 
-        Date newEndOfLife = new DateTime().plusMinutes(30).toDate();
+        DateTime endOfLifeTime = new DateTime(tokenToUpdate.getEndOfLife().getTime());
 
-        tokenToUpdate.setEndOfLife(newEndOfLife);
+        DateTime newEndOfLife = new DateTime().plusMinutes(30);
 
-        this.tokensCollection.update(query).with(tokenToUpdate);
+        //If the previous end of life is later than in 30 minutes, we do nothing
+        //Otherwise, do the update.
+        if (endOfLifeTime.isBefore(newEndOfLife)) {
+
+            tokenToUpdate.setEndOfLife(newEndOfLife.toDate());
+
+            this.tokensCollection.update(query).with(tokenToUpdate);
+        }
     }
 }
