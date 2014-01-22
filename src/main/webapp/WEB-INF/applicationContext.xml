@@ -62,7 +62,6 @@
             <mvc:mapping path="/*.do*"/>
             <mvc:exclude-mapping path="/login.do"/>
             <mvc:exclude-mapping path="/resources/**"/>
-            <mvc:exclude-mapping path="/admin-console/**"/>
             <bean class="org.notificationengine.web.interceptor.TokenInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
