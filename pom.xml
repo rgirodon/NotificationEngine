@@ -91,14 +91,23 @@
     <dependency>
 	    <groupId>org.jongo</groupId>
 	    <artifactId>jongo</artifactId>
-	    <version>0.4</version>
+	    <version>1.0</version>
 	</dependency>
 	<dependency>
         <groupId>com.github.spullara.mustache.java</groupId>
         <artifactId>compiler</artifactId>
         <version>0.8.12</version>
 	</dependency>
-
+    <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>2.3</version>
+    </dependency>
+    <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.9</version>
+    </dependency>
   </dependencies>
   
   <build>

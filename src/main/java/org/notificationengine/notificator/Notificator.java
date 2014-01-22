@@ -2,8 +2,11 @@ package org.notificationengine.notificator;
 
 import java.util.*;
 
+import org.bson.types.ObjectId;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
+import org.notificationengine.domain.PhysicalNotification;
+import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.persistance.Persister;
 import org.notificationengine.spring.SpringUtils;
@@ -13,10 +16,14 @@ public abstract class Notificator implements INotificator {
 	private Topic topic;
 	
 	private Map<String, String> options;
+
+    private Boolean urgentEnabled;
 	
 	public Notificator(Topic topic) {
 		
 		this.topic = topic;
+
+        this.urgentEnabled = Boolean.FALSE;
 		
 		this.options = new HashMap<>();
 	}
@@ -24,6 +31,8 @@ public abstract class Notificator implements INotificator {
 	public Notificator(Topic topic, Map<String, String> options) {
 		
 		this.topic = topic;
+
+        this.urgentEnabled = Boolean.FALSE;
 		
 		this.options = options;
 	}
@@ -63,6 +72,15 @@ public abstract class Notificator implements INotificator {
         this.markDecoratedNotificationsAsSent(decoratedNotificationToMarkAsSent);
 	}
 
+    @Override
+    public void setUrgentEnabled(Boolean urgentEnabled) {
+        this.urgentEnabled = urgentEnabled;
+    }
+
+    public Boolean getUrgentEnabled() {
+        return this.urgentEnabled;
+    }
+
     protected void moveFailedDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
 
         Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
@@ -93,9 +111,28 @@ public abstract class Notificator implements INotificator {
 	private Collection<DecoratedNotification> retrieveNotSentDecoratedNotifications() {
 		
 		Persister persister = (Persister)SpringUtils.getBean(Constants.PERSISTER);
-		
-		return persister.retrieveNotSentDecoratedNotificationsForTopic(this.topic);
+
+        if(this.urgentEnabled) {
+            return persister.retrieveUrgentAndNotSentDecoratedNotificationsForTopic(this.topic);
+        }
+        else {
+
+            return persister.retrieveNotSentDecoratedNotificationsForTopic(this.topic);
+        }
+
 	}
+
+    public void savePhysicalNotification(
+            Recipient recipient, String subject, String notificationContent, Collection<ObjectId> filesAttachedIds) {
+
+        PhysicalNotification physicalNotification =
+                new PhysicalNotification(recipient, subject, notificationContent, filesAttachedIds);
+
+        Persister persister = (Persister) SpringUtils.getBean(Constants.PERSISTER);
+
+        persister.savePhysicalNotification(physicalNotification);
+
+    }
 
 	protected abstract Map<DecoratedNotification, Boolean> processNotSentDecoratedNotifications(
 			Collection<DecoratedNotification> notSentDecoratedNotifications);

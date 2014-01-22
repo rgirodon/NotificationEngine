@@ -3,17 +3,13 @@ package org.notificationengine.persistance;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
@@ -22,15 +18,14 @@ import org.jongo.MongoCollection;
 import org.json.simple.JSONObject;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
+import org.notificationengine.domain.PhysicalNotification;
 import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Topic;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.DB;
-import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +48,8 @@ public class Persister implements InitializingBean {
 	private MongoCollection decoratedNotifications;
 
 	private MongoCollection deletedDecoratedNotifications;
+
+	private MongoCollection physicalNotifications;
 
     private DB db;
 
@@ -127,7 +124,9 @@ public class Persister implements InitializingBean {
 			this.decoratedNotifications = jongo.getCollection(Constants.DECORATED_NOTIFICATIONS_COLLECTION);
 
             this.deletedDecoratedNotifications = jongo.getCollection(Constants.DELETED_DECORATED_NOTIFICATIONS_COLLECTION);
-		} 
+
+            this.physicalNotifications = jongo.getCollection(Constants.PHYSICAL_NOTIFICATIONS_COLLECTION);
+		}
 		catch (UnknownHostException e) {
 
 			LOGGER.error(ExceptionUtils.getFullStackTrace(e));
@@ -151,6 +150,13 @@ public class Persister implements InitializingBean {
 		
 		LOGGER.debug("Inserted RawNotification : " + rawNotification);
 	}
+
+    public void createPhysicalNotification(PhysicalNotification physicalNotification) {
+
+        this.physicalNotifications.save(physicalNotification);
+
+        LOGGER.debug("Inserted physicalNotification: " + physicalNotification);
+    }
 
     public Collection<ObjectId> saveFiles(List<MultipartFile> files) {
 
@@ -228,6 +234,48 @@ public class Persister implements InitializingBean {
         return file;
 
     }
+
+    public File retrieveFileFromIdAndFileName(ObjectId objectId, String fileName) {
+
+        LOGGER.debug("Retrieve file from filename " + fileName);
+
+        GridFS gfsResources = new GridFS(this.db, "resources");
+
+        GridFSDBFile gfsDbFile = gfsResources.findOne(objectId);
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(this.localSettingsProperties.getProperty(Constants.WORKING_DIRECTORY));
+
+        sb.append("/");
+
+        long now = new Date().getTime();
+
+        sb.append(now);
+
+        sb.append("/");
+
+        String path = sb.toString();
+
+        File file = new File(path + fileName);
+
+        try {
+
+            InputStream is = gfsDbFile.getInputStream();
+
+            FileUtils.copyInputStreamToFile(is, file);
+
+            is.close();
+
+        }
+        catch (IOException ex) {
+
+            LOGGER.error(ExceptionUtils.getFullStackTrace(ex));
+        }
+
+        return file;
+
+    }
 	
 	public Collection<RawNotification> retrieveAllRawNotifications() {
 		
@@ -235,7 +283,8 @@ public class Persister implements InitializingBean {
 		
 		Collection<RawNotification> result = new ArrayList<>();
 		
-		Iterable<RawNotification> rawNotificationsForGetAll = this.rawNotifications.find("{}").as(RawNotification.class);
+		Iterable<RawNotification> rawNotificationsForGetAll =
+                this.rawNotifications.find().sort("{createdAt: -1}").as(RawNotification.class);
 		
 		for(RawNotification rawNotification : rawNotificationsForGetAll) {
 			
@@ -262,7 +311,8 @@ public class Persister implements InitializingBean {
 
         String exactQuery = exactQueryJsonObject.toString();
 
-        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+        Iterable<RawNotification> rawNotificationsForExactQuery =
+                this.rawNotifications.find(exactQuery).sort("{createdAt: -1}").as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForExactQuery) {
 
@@ -294,6 +344,52 @@ public class Persister implements InitializingBean {
 
     }
 
+    public Collection<RawNotification> retrieveUrgentAndNotProcessedRawNotificationsForTopic(Topic topic) {
+
+        LOGGER.debug("Retrieve urgent and not processed RawNotifications for Topic : " + topic);
+
+        Collection<RawNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.PROCESSED, Boolean.FALSE);
+        exactQueryJsonObject.put(Constants.TOPIC_NAME, topic.getName());
+        exactQueryJsonObject.put(Constants.CONTEXT_URGENT, Boolean.TRUE);
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForExactQuery) {
+
+            LOGGER.debug("Found RawNotification (exact query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+        JSONObject likeQueryJsonObject = new JSONObject();
+
+        JSONObject regularExpressionJsonObject = new JSONObject();
+        regularExpressionJsonObject.put(Constants.REGEX, topic.getName() + "\\..*");
+
+        likeQueryJsonObject.put(Constants.TOPIC_NAME, regularExpressionJsonObject);
+        likeQueryJsonObject.put(Constants.CONTEXT_URGENT, Boolean.TRUE);
+        likeQueryJsonObject.put(Constants.PROCESSED, Boolean.FALSE);
+
+        String likeQuery = likeQueryJsonObject.toString();
+
+        Iterable<RawNotification> rawNotificationsForLikeQuery = this.rawNotifications.find(likeQuery).as(RawNotification.class);
+
+        for(RawNotification rawNotification : rawNotificationsForLikeQuery) {
+
+            LOGGER.debug("Found RawNotification (like query) : " + rawNotification);
+
+            result.add(rawNotification);
+        }
+
+        return result;
+
+    }
+
     public Collection<RawNotification> retrieveNotProcessedRawNotifications() {
 
         LOGGER.debug("Retrieve not processed RawNotifications");
@@ -305,7 +401,8 @@ public class Persister implements InitializingBean {
 
         String exactQuery = exactQueryJsonObject.toString();
 
-        Iterable<RawNotification> rawNotificationsForExactQuery = this.rawNotifications.find(exactQuery).as(RawNotification.class);
+        Iterable<RawNotification> rawNotificationsForExactQuery =
+                this.rawNotifications.find(exactQuery).sort("{createdAt: -1}").as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForExactQuery) {
 
@@ -432,13 +529,86 @@ public class Persister implements InitializingBean {
 		return result;
 	}
 
+    public Collection<DecoratedNotification> retrieveUrgentAndNotSentDecoratedNotificationsForTopic(
+            Topic topic) {
+
+        LOGGER.debug("Retrieve urgent and not sent DecoratedNotifications for Topic : " + topic);
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJsonObject = new JSONObject();
+        exactQueryJsonObject.put(Constants.SENT, Boolean.FALSE);
+        exactQueryJsonObject.put(Constants.RAW_NOTIFICATION_TOPIC_NAME, topic.getName());
+        exactQueryJsonObject.put(Constants.RAW_NOTIFICATION_CONTEXT_URGENT, Boolean.TRUE);
+
+        String exactQuery = exactQueryJsonObject.toString();
+
+        Iterable<DecoratedNotification> decoratedNotificationsForExactQuery = this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForExactQuery) {
+
+            LOGGER.debug("Found DecoratedNotification (exact query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        JSONObject likeQueryJsonObject = new JSONObject();
+        likeQueryJsonObject.put(Constants.SENT, Boolean.FALSE);
+
+        JSONObject regularExpressionJsonObject = new JSONObject();
+        regularExpressionJsonObject.put(Constants.REGEX, topic.getName() + "\\..*");
+
+        likeQueryJsonObject.put(Constants.RAW_NOTIFICATION_TOPIC_NAME, regularExpressionJsonObject);
+        likeQueryJsonObject.put(Constants.RAW_NOTIFICATION_CONTEXT_URGENT, Boolean.TRUE);
+
+        String likeQuery = likeQueryJsonObject.toString();
+
+        Iterable<DecoratedNotification> decoratedNotificationsForLikeQuery = this.decoratedNotifications.find(likeQuery).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForLikeQuery) {
+
+            LOGGER.debug("Found DecoratedNotification (like query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+    }
+
     public Collection<DecoratedNotification> retrieveAllDecoratedNotifications() {
 
         LOGGER.debug("Retrieve all DecoratedNotifications");
 
         Collection<DecoratedNotification> result = new ArrayList<>();
 
-        Iterable<DecoratedNotification> decoratedNotifications = this.decoratedNotifications.find("{}").as(DecoratedNotification.class);
+        Iterable<DecoratedNotification> decoratedNotifications =
+                this.decoratedNotifications.find().sort("{sentAt: -1}").as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotifications) {
+
+            LOGGER.debug("Found DecoratedNotification (exact query) : " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+
+    }
+
+    public Collection<DecoratedNotification> retrieveDecoratedNotificationsForEmail(String email) {
+
+        LOGGER.debug("Retrieve DecoratedNotifications for email");
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        JSONObject jsonQuery = new JSONObject();
+
+        jsonQuery.put(Constants.RECIPIENT_ADDRESS, email);
+
+        String query = jsonQuery.toString();
+
+        Iterable<DecoratedNotification> decoratedNotifications =
+                this.decoratedNotifications.find(query).sort("{sentAt: -1}").as(DecoratedNotification.class);
 
         for(DecoratedNotification decoratedNotification : decoratedNotifications) {
 
@@ -507,7 +677,8 @@ public class Persister implements InitializingBean {
 
         String exactQuery = exactQueryJsonObject.toString();
 
-        Iterable<DecoratedNotification> decoratedNotificationsForExactQuery = this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
+        Iterable<DecoratedNotification> decoratedNotificationsForExactQuery =
+                this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
 
         for(DecoratedNotification decoratedNotification : decoratedNotificationsForExactQuery) {
 
@@ -579,7 +750,8 @@ public class Persister implements InitializingBean {
         // query created manually
         String exactQuery = "{createdAt: {$gt: #, $lt: #}, \"topic.name\": #}";
 
-        Iterable<RawNotification> rawNotificationsForDateAndTopic = this.rawNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(RawNotification.class);
+        Iterable<RawNotification> rawNotificationsForDateAndTopic =
+                this.rawNotifications.find(exactQuery, beginDate, endDate, topic.getName()).as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForDateAndTopic) {
 
@@ -589,7 +761,8 @@ public class Persister implements InitializingBean {
 
         String likeQuery = "{createdAt: {$gt: #, $lt: #}, \"topic.name\": {$regex: #}}";
 
-        Iterable<RawNotification> rawNotificationsForDateAndTopicLike = this.rawNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(RawNotification.class);
+        Iterable<RawNotification> rawNotificationsForDateAndTopicLike =
+                this.rawNotifications.find(likeQuery, beginDate, endDate, topic.getName() + "\\..*").as(RawNotification.class);
 
         for(RawNotification rawNotification : rawNotificationsForDateAndTopicLike) {
 
@@ -960,6 +1133,21 @@ public class Persister implements InitializingBean {
 		this.decoratedNotifications = decoratedNotifications;
 	}
 
+    public MongoCollection getDeletedDecoratedNotifications() {
+        return deletedDecoratedNotifications;
+    }
+
+    public void setDeletedDecoratedNotifications(MongoCollection deletedDecoratedNotifications) {
+        this.deletedDecoratedNotifications = deletedDecoratedNotifications;
+    }
+
+    public MongoCollection getPhysicalNotifications() {
+        return physicalNotifications;
+    }
+
+    public void setPhysicalNotifications(MongoCollection physicalNotifications) {
+        this.physicalNotifications = physicalNotifications;
+    }
 
     public void moveFailedDecoratedNotification(DecoratedNotification decoratedNotificationToDelete) {
 
@@ -985,13 +1173,18 @@ public class Persister implements InitializingBean {
 		this.decoratedNotifications.save(decoratedNotificationToSave);
 	}
 
+    public void savePhysicalNotification(PhysicalNotification physicalNotification) {
+
+        this.physicalNotifications.save(physicalNotification);
+    }
+
     public Collection<DecoratedNotification> retrieveAllDeletedDecoratedNotifications() {
 
         LOGGER.debug("Retrieve all DecoratedNotifications");
 
         Collection<DecoratedNotification> result = new ArrayList<>();
 
-        Iterable<DecoratedNotification> decoratedNotifications = this.deletedDecoratedNotifications.find("{}").as(DecoratedNotification.class);
+        Iterable<DecoratedNotification> decoratedNotifications = this.deletedDecoratedNotifications.find().as(DecoratedNotification.class);
 
         for(DecoratedNotification decoratedNotification : decoratedNotifications) {
 
@@ -1036,6 +1229,53 @@ public class Persister implements InitializingBean {
             LOGGER.debug("Decorated notification found: " + decoratedNotification);
 
             result.add(decoratedNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<PhysicalNotification> retrieveAllPhysicalNotifications() {
+
+        LOGGER.debug("Retrieve all physical notifications");
+
+        Collection<PhysicalNotification> result = new ArrayList<>();
+
+        Iterable<PhysicalNotification> physicalNotifications =
+                this.physicalNotifications.find().sort("{sentAt: -1}").as(PhysicalNotification.class);
+
+        for(PhysicalNotification physicalNotification : physicalNotifications) {
+
+            LOGGER.debug("PhysicalNotification found: " + physicalNotification);
+
+            result.add(physicalNotification);
+
+        }
+
+        return result;
+
+    }
+
+    public Collection<PhysicalNotification> retrievePhysicalNotificationForEmail(String email) {
+
+        LOGGER.debug("Retrieve physical notifications sent to " + email);
+
+        Collection<PhysicalNotification> result = new ArrayList<>();
+
+        JSONObject exactQueryJson = new JSONObject();
+
+        exactQueryJson.put(Constants.RECIPIENT_ADDRESS, email);
+
+        String query = exactQueryJson.toString();
+
+        Iterable<PhysicalNotification> physicalNotifications = this.physicalNotifications.find(query).as(PhysicalNotification.class);
+
+        for(PhysicalNotification physicalNotification : physicalNotifications) {
+
+            LOGGER.debug("Physical notification found:" + physicalNotification);
+
+            result.add(physicalNotification);
 
         }
 

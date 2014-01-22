@@ -12,6 +12,12 @@ public class Constants {
 
 	final public static String EMAIL = "email";
 
+    final public static String FILE_NAME = "fileName";
+
+    final public static String FILES_ATTACHED = "filesAttached";
+
+	final public static String NOTIFICATION_CONTENT = "notificationContent";
+
 	final public static String TOPIC_NAME = "topic.name";
 
 	final public static String RECIPIENT_ADDRESS = "recipient.address";
@@ -42,10 +48,18 @@ public class Constants {
 
 	final public static String DELETED_DECORATED_NOTIFICATIONS_COLLECTION = "deleteddecoratednotifications";
 
+	final public static String PHYSICAL_NOTIFICATIONS_COLLECTION = "physicalnotifications";
+
 	final public static String SUBSCRIPTIONS_COLLECTION = "subscriptions";
-	
+
+	final public static String USERS_COLLECTION = "users";
+
+	final public static String TOKENS_COLLECTION = "tokens";
+
 	final public static String PERSISTER = "persister";
-	
+
+	final public static String CLEANER_TOOL = "cleanerTool";
+
 	final public static String TEMPLATE_ENGINE = "templateEngine";
 	
 	final public static String MAILER = "mailer";
@@ -64,9 +78,15 @@ public class Constants {
 
 	public static final long SELECTOR_TASK_PERIOD = 60000;
 
+	public static final long CLEAN_TASK_PERDIOD = 60000;
+
+	public static final long CLEAN_TASK_DELAY = 60000;
+
 	public static final String DOT = ".";
 
 	public static final String SENT = "sent";
+
+	public static final String SENT_AT = "sentAt";
 
 	public static final String NOTIFICATOR_TYPE_MULTIPLE_MAIL_BY_RECIPIENT = "multipleMailByRecipient";
 	
@@ -140,4 +160,45 @@ public class Constants {
 
     public static final String MAIL_TEXT_OTHER_ATTACHMENTS = "Please find attachments for previous email";
 
+    public static final String RECIPIENTS = "recipients";
+
+    public static final String SELECTOR_TYPE_HOLD_IN_NOTIFICATION = "holdInNotificationSelector";
+
+    public static final String CONTEXT_URGENT = "context.urgent";
+
+    public static final String RAW_NOTIFICATION_CONTEXT_URGENT = "rawNotification.context.urgent";
+
+    public static final String URGENT_ENABLED = "urgentEnabled";
+
+    public static final long URGENT_SELECTOR_TASK_DELAY = 5000;
+
+    public static final long URGENT_NOTIFICATOR_TASK_DELAY = 5000;
+
+    public static final long URGENT_SELECTOR_TASK_PERIOD = 5000;
+
+    public static final long URGENT_NOTIFICATOR_TASK_PERIOD = 5000;
+
+    public static final String URGENT_MAIL_TEMPLATE = "urgentMailTemplate";
+
+    public static final String IS_URGENT_MAIL_TEMPLATE = "isUrgentHtmlTemplate";
+
+    public static final String USERNAME = "username";
+
+    public static final String PASSWORD = "password";
+
+    public static final String USER_CONTROLLER = "userController";
+
+    public static final String MONGO_AUTHENTICATOR = "mongoAuthenticator";
+
+    public static final String CUSTOM_AUTHENTICATOR = "customAuthenticator";
+
+    public static final String AUTHENTICATION_TYPE = "authenticationType";
+
+    public static final String CUSTOM_AUTHENTICATOR_CLASS = "customAuthenticatorClass";
+
+    public static final String TOKEN = "token";
+
+    public static final String TOKEN_INTERCEPTOR = "tokenInterceptor";
+
+    public static final String TOKEN_CONTROLLER = "tokenController";
 }

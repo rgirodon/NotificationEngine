@@ -1,6 +1,8 @@
 package org.notificationengine.web.controller;
 
+import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -81,6 +83,45 @@ public class DecoratedNotificationController {
         response.put(Constants.COUNT, countDecoratedNotifications);
 
         return response.toString();
+
+    }
+
+    @RequestMapping(value = "/getDecoratedNotifications.do", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public String getDecoratedNotifications(
+            @RequestParam(value = "number", required = false) Integer number, @RequestParam(value = "email", required = false) String email) {
+
+        LOGGER.debug("getCountNotSentDecoratedNotifications in DecoratedNotificationController");
+
+        Collection<DecoratedNotification> decoratedNotifications;
+
+        if(StringUtils.isEmpty(email)) {
+
+             decoratedNotifications = this.persister.retrieveAllDecoratedNotifications();
+        }
+        else {
+
+            decoratedNotifications = this.persister.retrieveDecoratedNotificationsForEmail(email);
+        }
+
+        Collection<DecoratedNotification> wantedDecoratedNotifications = new HashSet<>();
+
+        if(number != null && number < decoratedNotifications.size()) {
+            for(int i = 0; i < number; i++) {
+
+                wantedDecoratedNotifications.add(Iterables.get(decoratedNotifications, i));
+            }
+        }
+        else {
+
+            wantedDecoratedNotifications = decoratedNotifications;
+        }
+
+        Gson gson = new Gson();
+
+        String result = gson.toJson(wantedDecoratedNotifications);
+
+        return result;
 
     }
 

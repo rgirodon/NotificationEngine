@@ -24,6 +24,9 @@
     <listener>
         <listener-class>org.notificationengine.web.listener.ConfigurationListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>org.notificationengine.web.listener.WorkingDirectoryListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>cors</filter-name>

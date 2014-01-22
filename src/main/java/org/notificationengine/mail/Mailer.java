@@ -35,7 +35,7 @@ public class Mailer {
 	private SimpleMailMessage templateMessage;
 	
 	@Autowired
-	private Properties localSettingsProperties; 
+	private Properties localSettingsProperties;
 
 	public Boolean sendMail(
             String recipientAddress,
@@ -57,22 +57,11 @@ public class Mailer {
 
             if (options != null) {
 
-                String subject = options.get(Constants.SUBJECT);
-
-                if (StringUtils.isEmpty(subject)) {
-
-					subject = this.localSettingsProperties.getProperty(Constants.DEFAULT_SUBJECT);
-                }
+                String subject = this.getSubject(options);
                 
                 helper.setSubject(subject);
 
-
-                String from = options.get(Constants.FROM);
-
-                if (StringUtils.isEmpty(from)) {
-
-                	from = this.localSettingsProperties.getProperty(Constants.DEFAULT_FROM);
-                }
+                String from = this.getFrom(options);
                 
                 helper.setFrom(from);
             }
@@ -144,22 +133,12 @@ public class Mailer {
 
             if (options != null) {
 
-                String subject = options.get(Constants.SUBJECT);
-
-                if (StringUtils.isEmpty(subject)) {
-
-                    subject = this.localSettingsProperties.getProperty(Constants.DEFAULT_SUBJECT);
-                }
+                String subject = this.getSubject(options);
 
                 helper.setSubject(subject);
 
 
-                String from = options.get(Constants.FROM);
-
-                if (StringUtils.isEmpty(from)) {
-
-                    from = this.localSettingsProperties.getProperty(Constants.DEFAULT_FROM);
-                }
+                String from = this.getFrom(options);
 
                 helper.setFrom(from);
             }
@@ -214,6 +193,38 @@ public class Mailer {
 	public void setTemplateMessage(SimpleMailMessage templateMessage) {
 		this.templateMessage = templateMessage;
 	}
+
+    public Properties getLocalSettingsProperties() {
+        return localSettingsProperties;
+    }
+
+    public void setLocalSettingsProperties(Properties localSettingsProperties) {
+        this.localSettingsProperties = localSettingsProperties;
+    }
+
+    public String getSubject(Map<String, String> options) {
+
+        String subject = options.get(Constants.SUBJECT);
+
+        if (StringUtils.isEmpty(subject)) {
+
+            subject = this.localSettingsProperties.getProperty(Constants.DEFAULT_SUBJECT);
+        }
+
+        return subject;
+    }
+
+    public String getFrom(Map<String, String> options) {
+
+        String from = options.get(Constants.FROM);
+
+        if (StringUtils.isEmpty(from)) {
+
+            from = this.localSettingsProperties.getProperty(Constants.DEFAULT_FROM);
+        }
+
+        return from;
+    }
 	
 	
 }

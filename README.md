@@ -96,6 +96,11 @@ Let's imagine that there are a total of 1000 subscriptions for
 
 Then, the Raw Notification about the arrival of Tevez in the Juventus will trigger the creation of 1000 Decorated Notifications, one for each recipient that has subscribed to one of these Topics.
 
+### 1.2.5. Physical Notifications
+
+Once the decorated notification has been sent, the notification created is stored as a physical notification. This is the notification in the format it will be read by the end-user. 
+For instance, if the notification is a mail, the physical notification will be storing the subject and the content of the mail. It also has the attributes of the decorated notification (topic, recipient, send date).
+
 ## 1.3. Notification Engine Components
 
 ### 1.3.1. Selectors
@@ -316,6 +321,39 @@ Each Channel has :
   - the Notificator can have a specific execution period, expressed in ms with property notificatorTaskPeriod (if it has not, if will be a 20s default period)
 - any other needed options (just like mailTemplate in our examples) that will be accessible through a map at runtime
 
+As an option, you can indicate if the channel is urgentEnabled. That means that you can configure a channel to have some urgent notifications that have to be sent right away and others that can wait a little time before being sent. 
+This option, at the moment, is only working with email notificators and you have to provide a urgentMailTemplate option in the configuration. 
+
+Example of a channel with the urgent option : 
+
+```JSON
+{
+    "id" : "facturationChannel",
+    "topic" : "facturation",
+    "selectorType" : "mongoDbSelector",
+    "notificatorType" : "singleMultiTopicMailByRecipient",
+    "mailTemplate" : "commonMailTemplate",
+    "isHtmlTemplate": "true",
+    "notificatorTaskPeriod" : "600000",
+    "urgentEnabled": "true",
+    "urgentMailTemplate": "facturationMailTemplate",
+    "isUrgentHtmlTemplate": "true"
+}
+```
+
+To indicate that a raw notification is urgent, all you have to do is to add a field urgent set to true in the context of the notification like this one : 
+```JSON
+{
+	"topic": "football",
+	"context": {
+	    "subject" : "Tevez is the new Juve striker", 
+	    "content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
+	    "date"    : "01/06/2013",
+	    "urgent"  : true
+	}
+}
+```
+
 ### 3.2.1. Built-in Selectors
 
 All selectors implement the ISelector interface, that just declares a process method.
@@ -420,6 +458,34 @@ To register this selector in a Channel, here is an example :
 }
 ```
 
+#### 3.2.1.3. HoldInNotification Selector
+
+This selector guess who are the subscribers from the context of the raw notification. 
+In order to do that, you have to add a field called ```recipients``` in the context. The value associated to this key has to be an array of objects representing recipients. According to that, the raw notification should have this format: 
+
+```JSON
+{
+	"topic": "football",
+	"context": {
+	    "subject" : "Tevez is the new Juve striker", 
+	    "content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
+	    "date"    : "01/06/2013",
+	    "recipients" : [
+	    	{
+	    		"email"			: "john@doe.com",
+	    		"displayName"	: "John Doe"
+	    	},
+	    	{
+	    		"email"			: "super@guy.com",
+	    		"displayName"	: "Super Guy"
+	    	}
+	    ]
+	}
+}
+```
+
+To enable this kind of selector, the selector type in the ```configuration.json``` has to be ```holdInNotificationSelector```.
+
 ### 3.2.2. Built-in Notificators
 
 All notificators implement the INotificator interface, that just declares a process method.
@@ -428,6 +494,7 @@ All notificators implement the INotificator interface, that just declares a proc
 public interface INotificator {
 
 	public void process();
+	public void setUrgentEnabled(Boolean urgentEnabled);
 }
 ```
 
@@ -956,7 +1023,7 @@ where dates are at the format ```yyyy-MM-dd```
 ```
 where dates are at the format ```yyyy-MM-dd```
 
-### 3.4.4. Deleted Decorated Notifications
+### 3.4.4. Deleted Decorated Notifications metrics
 
 When a decorated notification cannot be sent 5 times, we suppose that there is an issue with the recipient's address and the code is made that the email will not be sent anymore. Instead of simply delete this email from the decorated notifications table in the database, we put it in another table named deleted decorated notifications. In that way, it is possible to know how many notifications were not sent. 
 
@@ -966,7 +1033,67 @@ To get metrics about this, you can call 2 different URLs :
 
 The JSON sent in response are the same as described in previous parts. 
 
-### 3.4.5. Topics
+### 3.4.5. Decorated notifications
+
+It is also possible to retrieve decorated notifications through the REST API, and not only metrics about it. 
+You can add optional parameters to the url to call : 
+- email of the recipient to retrieve only decorated notifications sent to a specific email address
+- number of last decorated notifications sent
+
+For instance, if you want to retrieve the last 10 decorated notifications sent to john@doe.com, you will have to call ```/getDecoratedNotifications.do?email=john@doe.com&number=10``` 
+
+As a response, you will receive a JSON with the following format : 
+
+```JSON
+[
+    {
+        "_id": {
+            "_time": 1379577313,
+            "_machine": -426248641,
+            "_inc": -1870395218,
+            "_new": false
+        },
+        "recipient": {
+            "address": "john@doe.com",
+            "displayName": "John Doe"
+        },
+        "rawNotification": {
+            "_id": {
+                "_time": 1379577261,
+                "_machine": -426248641,
+                "_inc": -1870395223,
+                "_new": false
+            },
+            "processed": false,
+            "topic": {
+                "name": "helpdesk"
+            },
+            "createdAt": "Sep 19, 2013 9:54:21 AM",
+            "context": {
+                "subject": "Test with file",
+                "content": "I hope I would be able to download the file associated to this notification",
+                "date": "19/9/2013",
+                "urgent": false,
+                "fileIds": [
+                    {
+                        "_time": 1379577261,
+                        "_machine": -426248641,
+                        "_inc": -1870395222,
+                        "_new": false
+                    }
+                ]
+            }
+        },
+        "sent": true,
+        "createdAt": "Sep 19, 2013 9:55:13 AM",
+        "sentAt": "Sep 19, 2013 9:55:49 AM",
+        "sendingAttempts": 0
+    },
+    ...
+]
+```
+
+### 3.4.6. Topics
 
 Thanks to the REST API, it is possible to get a list of topics and sub topics. 
 
@@ -1008,7 +1135,7 @@ You will receive this response :
 ]
 ```
 
-### 3.4.6. Subscriptions
+### 3.4.7. Subscriptions
 
 The REST API also provides a way to get informations about subscriptions. 
 
@@ -1035,6 +1162,52 @@ The JSON to provide should be like this :
 ```
 
 If you want to remove a subscription, the URL is still the same but the HTTP method is DELETE. You also have to provide two parameters : the recipient email and the topic. If the deletion is successful, you will receive an HTTP Status of OK (200) 
+
+### 3.4.8. Physical Notifications
+
+The notification engines's REST API has a URL to retrieve physical notifications. This URL is ```/physicalNotifications.do```. you can add the recipient's email address as a paramerter to filter physical notifications. the response format is JSON. 
+
+```JSON
+[
+    {
+        "sentAt": 1379506537482,
+        "id": 1180840879,
+        "subject": "Helpdesk notif",
+        "filesAttached": [],
+        "recipient": {
+            "email": "john@doe.com",
+            "displayName": "John Doe"
+        },
+        "notificationContent": "<p>Dear John Doe</p>\n\n<p>This mail has been sent by Helpdesk application.<p>\n\n<p>Please take into account these actions from Helpdesk :<br/>\n\n> This notification should generate a physical notification after you received it. \n</p>\n\n<p>Best regards,</p>\n\n<p>Helpdesk Team</p>"
+    },
+    {
+        "sentAt": 1379506877240,
+        "id": 1496271426,
+        "subject": "File attached",
+        "filesAttached": [
+            {
+                "id": "52399a77e69724ea1138fa97",
+                "fileName": "images_off.bmp"
+            }
+        ],
+        "recipient": {
+            "email": "john@doe.com",
+            "displayName": "John Doe"
+        },
+        "notificationContent": "<p>Dear John Doe</p>\n\n<p>This mail has been sent by Facturation application.</p>\n\n> You have a file attached to this notification\n\n<p>Best regards,</p>\n\n<p>Facturation Team</p>"
+    },
+    ...
+]
+```
+
+### 3.4.9. Files
+
+Since it is possible to send files with notifications, we also added a URL to retrieve those files. The URL to call is ```/files/{objectId}/{filename}.{extension}``` where : 
+- objectId is the id of the file (given in physical notification)
+- filename is the name of the file without the extension
+- extension is the extension of the file (pdf, jgp, png etc.)
+
+The response will be the file itself. 
 
 # 4. Extending the Notification Engine
 
