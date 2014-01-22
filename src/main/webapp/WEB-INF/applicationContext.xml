@@ -55,7 +55,7 @@
     </bean>
 
     <mvc:resources mapping="/resources/**" location="file:${resources.folder}"/>
-    <mvc:resources mapping="/admin-console/**" location="file:${adminconsole.folder}"/>
+    <mvc:resources mapping="/admin/**" location="/WEB-INF/console-admin/" />
 
     <mvc:interceptors>
         <mvc:interceptor>
