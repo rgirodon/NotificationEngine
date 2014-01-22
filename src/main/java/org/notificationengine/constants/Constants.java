@@ -98,7 +98,7 @@ public class Constants {
 
 	public static final int NOTIFICATOR_TASK_DELAY = 20000;
 	
-	public static final long NOTIFICATOR_TASK_PERIOD = 60000;	
+	public static final long NOTIFICATOR_TASK_PERIOD = 60000;
 
 	public static final String TEMPLATE_EXTENSION = ".template";
 	
@@ -201,4 +201,8 @@ public class Constants {
     public static final String TOKEN_INTERCEPTOR = "tokenInterceptor";
 
     public static final String TOKEN_CONTROLLER = "tokenController";
+
+    public static final long TOKEN_CLEANER_TASK_DELAY = 86400000;
+
+    public static final long TOKEN_CLEANER_TASK_PERIOD = 86400000;
 }

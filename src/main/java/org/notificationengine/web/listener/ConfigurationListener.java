@@ -14,6 +14,7 @@ import org.notificationengine.authentication.Authenticator;
 import org.notificationengine.authentication.TokenService;
 import org.notificationengine.authentication.mongodb.MongoAuthenticator;
 import org.notificationengine.authentication.mongodb.MongoTokenService;
+import org.notificationengine.cleaner.TokenCleaner;
 import org.notificationengine.configuration.Configuration;
 import org.notificationengine.configuration.ConfigurationReader;
 import org.notificationengine.constants.Constants;
@@ -30,6 +31,7 @@ import org.notificationengine.selector.mongodb.MongoDbSelector;
 import org.notificationengine.spring.SpringUtils;
 import org.notificationengine.task.NotificatorTask;
 import org.notificationengine.task.SelectorTask;
+import org.notificationengine.task.TokenCleanerTask;
 import org.notificationengine.web.controller.ConfigurationController;
 import org.notificationengine.web.controller.SubscriptionController;
 import org.notificationengine.web.controller.TokenController;
@@ -87,8 +89,12 @@ public class ConfigurationListener implements ServletContextListener {
 
         tokenController.setTokenService(tokenService);
 
+        TokenCleaner tokenCleaner = new TokenCleaner(tokenService);
+
 		timer.schedule(new NotificatorTask(singleMultiTopicMailByRecipientNotificator), Constants.NOTIFICATOR_TASK_DELAY, Constants.NOTIFICATOR_TASK_PERIOD);
-		
+
+		timer.schedule(new TokenCleanerTask(tokenCleaner), Constants.TOKEN_CLEANER_TASK_DELAY, Constants.TOKEN_CLEANER_TASK_PERIOD);
+
 		int cptChannel = 2;
 
         String authenticationType = configuration.getAuthenticationType();
