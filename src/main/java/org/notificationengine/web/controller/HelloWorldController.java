@@ -12,4 +12,9 @@ public class HelloWorldController {
         model.addAttribute("message", "Notification Engine says Hello World !");
         return "HelloWorld";
     }
+
+    @RequestMapping("/")
+    public String adminConsole() {
+        return "redirect:/admin/index.html";
+    }
 }
