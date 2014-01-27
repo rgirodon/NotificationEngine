@@ -5,6 +5,7 @@
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:mvc="http://www.springframework.org/schema/mvc"
     xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:security="http://www.springframework.org/schema/security"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -14,6 +15,8 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-3.1.xsd
         ">
 
 	<context:component-scan base-package="org.notificationengine"/>
@@ -65,5 +68,28 @@
             <bean class="org.notificationengine.web.interceptor.TokenInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider ref="adAuthenticationProvider" />
+    </security:authentication-manager>
+
+    <bean id="adAuthenticationProvider"
+          class="org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider">
+        <constructor-arg value="mydomain.com" />
+        <constructor-arg value="ldap://adserver.mydomain.com/" />
+    </bean>
+
+    <bean id="contextSource"
+          class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <constructor-arg value="ldap://adserver.mydomain.com//dc=springframework,dc=org"/>
+        <property name="userDn" value="cn=manager,dc=springframework,dc=org"/>
+        <property name="password" value="password"/>
+    </bean>
+
+    <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+        <constructor-arg ref="contextSource" />
+        <property name="ignorePartialResultException" value="true" />
+    </bean>
+
 
 </beans>
