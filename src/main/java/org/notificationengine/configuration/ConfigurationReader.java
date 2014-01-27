@@ -40,6 +40,7 @@ public class ConfigurationReader {
 												  Constants.SELECTOR_TYPE};
 
     private static String[] KNOWN_AUTHENTICATION_TYPES = {Constants.MONGO_AUTHENTICATOR,
+                                                          Constants.ACTIVE_DIRECTORY_AUTHENTICATOR,
                                                           Constants.CUSTOM_AUTHENTICATOR};
 		
 	@Value("${config.directory}")

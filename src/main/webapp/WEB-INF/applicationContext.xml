@@ -16,7 +16,7 @@
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util.xsd
         http://www.springframework.org/schema/security
-        http://www.springframework.org/schema/security/spring-security-3.1.xsd
+        http://www.springframework.org/schema/security/spring-security.xsd
         ">
 
 	<context:component-scan base-package="org.notificationengine"/>
@@ -75,15 +75,15 @@
 
     <bean id="adAuthenticationProvider"
           class="org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider">
-        <constructor-arg value="mydomain.com" />
-        <constructor-arg value="ldap://adserver.mydomain.com/" />
+        <constructor-arg value="${activedirectory.domain}" />
+        <constructor-arg value="${activedirectory.ldap.url}" />
     </bean>
 
     <bean id="contextSource"
           class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
-        <constructor-arg value="ldap://adserver.mydomain.com//dc=springframework,dc=org"/>
-        <property name="userDn" value="cn=manager,dc=springframework,dc=org"/>
-        <property name="password" value="password"/>
+        <constructor-arg value="${context.source.url}"/>
+        <property name="userDn" value="${context.source.userdn}"/>
+        <property name="password" value="${context.source.password}"/>
     </bean>
 
     <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">

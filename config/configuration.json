@@ -16,6 +16,6 @@
         }
     ],
 
-    "authenticationType": "mongoAuthenticator",
+    "authenticationType": "activeDirectoryAuthenticator",
     "customAuthenticatorClass" : "customAuthenticator"
 }

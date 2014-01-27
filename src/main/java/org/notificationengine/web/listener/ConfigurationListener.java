@@ -12,6 +12,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.notificationengine.authentication.Authenticator;
 import org.notificationengine.authentication.TokenService;
+import org.notificationengine.authentication.activedirectory.ActiveDirectoryAuthenticator;
 import org.notificationengine.authentication.mongodb.MongoAuthenticator;
 import org.notificationengine.authentication.mongodb.MongoTokenService;
 import org.notificationengine.cleaner.TokenCleaner;
@@ -37,6 +38,8 @@ import org.notificationengine.web.controller.SubscriptionController;
 import org.notificationengine.web.controller.TokenController;
 import org.notificationengine.web.controller.UserController;
 import org.notificationengine.web.interceptor.TokenInterceptor;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -106,6 +109,18 @@ public class ConfigurationListener implements ServletContextListener {
                 LOGGER.debug("Detected authenticator of type " + Constants.MONGO_AUTHENTICATOR);
 
                 userController.setAuthenticator(new MongoAuthenticator());
+
+                break;
+
+            case Constants.ACTIVE_DIRECTORY_AUTHENTICATOR:
+
+                LOGGER.debug("Detected authenticator of type " + Constants.ACTIVE_DIRECTORY_AUTHENTICATOR);
+
+                ContextSource contextSource = (ContextSource)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.CONTEXT_SOURCE);
+
+                LdapTemplate ldapTemplate = (LdapTemplate)WebApplicationContextUtils.getWebApplicationContext(context.getServletContext()).getBean(Constants.LDAP_TEMPLATE);
+
+                userController.setAuthenticator(new ActiveDirectoryAuthenticator(contextSource, ldapTemplate));
 
                 break;
 

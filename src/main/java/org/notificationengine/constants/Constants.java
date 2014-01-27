@@ -190,6 +190,12 @@ public class Constants {
 
     public static final String MONGO_AUTHENTICATOR = "mongoAuthenticator";
 
+    public static final String ACTIVE_DIRECTORY_AUTHENTICATOR = "activeDirectoryAuthenticator";
+
+    public static final String CONTEXT_SOURCE = "contextSource";
+
+    public static final String LDAP_TEMPLATE = "ldapTemplate";
+
     public static final String CUSTOM_AUTHENTICATOR = "customAuthenticator";
 
     public static final String AUTHENTICATION_TYPE = "authenticationType";
@@ -205,4 +211,6 @@ public class Constants {
     public static final long TOKEN_CLEANER_TASK_DELAY = 86400000;
 
     public static final long TOKEN_CLEANER_TASK_PERIOD = 86400000;
+
+
 }

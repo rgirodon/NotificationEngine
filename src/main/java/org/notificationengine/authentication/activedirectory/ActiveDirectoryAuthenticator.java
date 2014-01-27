@@ -26,7 +26,10 @@ public class ActiveDirectoryAuthenticator implements Authenticator{
 
     private LdapTemplate ldapTemplate;
 
-
+    public ActiveDirectoryAuthenticator(ContextSource contextSource, LdapTemplate ldapTemplate) {
+        this.contextSource = contextSource;
+        this.ldapTemplate = ldapTemplate;
+    }
 
     @Override
     public Boolean isAdmin(User user) {
