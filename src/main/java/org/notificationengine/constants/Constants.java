@@ -214,5 +214,9 @@ public class Constants {
 
     public static final long TOKEN_CLEANER_TASK_PERIOD = 86400000;
 
+    public static final int DAYS_BETWEEN_NOTIFICATION = 7;
 
+    public static final String BEGIN_DATE = "beginDate";
+
+    public static final String END_DATE = "endDate";
 }

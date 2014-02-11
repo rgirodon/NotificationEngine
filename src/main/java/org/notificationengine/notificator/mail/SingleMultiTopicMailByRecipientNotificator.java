@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
 import org.notificationengine.constants.Constants;
 import org.notificationengine.domain.DecoratedNotification;
 import org.notificationengine.domain.PhysicalNotification;
@@ -71,6 +72,14 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 		TemplateEngine templateEngine = (TemplateEngine)SpringUtils.getBean(Constants.TEMPLATE_ENGINE);
 		
 		Mailer mailer = (Mailer)SpringUtils.getBean(Constants.MAILER);
+
+        // Get the actual date and the date x days before to add it to the context
+        // This part is specific for our customer
+        DateTime now = new DateTime();
+        String today = now.toString("dd/MM/yyyy");
+
+        DateTime lastTime = now.minusDays(Constants.DAYS_BETWEEN_NOTIFICATION);
+        String lastTimeString = lastTime.toString("dd/MM/yyyy");
 		
 		// for each mailTemplate, get decoratedNotifications to process and send them in a single multi topic mail
 		for (String mailTemplate : this.mailTemplateAndTopics.keySet()) {
@@ -104,6 +113,8 @@ public class SingleMultiTopicMailByRecipientNotificator implements INotificator 
 				
 				globalContext.put(Constants.RECIPIENT, recipient.getAddress());
 				globalContext.put(Constants.DISPLAY_NAME, recipient.getDisplayName());
+				globalContext.put(Constants.BEGIN_DATE, lastTimeString);
+				globalContext.put(Constants.END_DATE, today);
 
 				Collection<Map<String, Object>> topicContexts = new HashSet<>();
 				

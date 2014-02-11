@@ -11,5 +11,7 @@ custom/jdbcselector/.settings
 custom/jdbcselector/.classpath
 custom/jdbcselector/.project
 custom/jdbcselector/db/data
-admin-console/
+src/main/webapp/WEB-INF/console-admin/
 work/
+custom/jdbcselector/overlays/
+*.iml
