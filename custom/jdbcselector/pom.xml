@@ -1,83 +1,95 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.notificationengine.custom</groupId>
-  <artifactId>jdbcselector_notificationengine</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
+    <groupId>org.notificationengine.custom</groupId>
+    <artifactId>jdbcselector_notificationengine</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
 
-  <name>jdbcselector_notificationengine</name>
-  <url>http://maven.apache.org</url>
+    <name>jdbcselector_notificationengine</name>
+    <url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-  <dependencies>
-    
-	<dependency>
-	  <groupId>org.notificationengine</groupId>
-	  <artifactId>notificationengine</artifactId>
-	  <version>0.0.1-SNAPSHOT</version>
-	  <type>war</type>
-	</dependency> 
-	
-	<dependency>
-	  <groupId>org.notificationengine</groupId>
-	  <artifactId>notificationengine</artifactId>
-	  <version>0.0.1-SNAPSHOT</version>
-	  <classifier>classes</classifier>
-	</dependency>
-	
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-jdbc</artifactId>
-		<version>3.2.3.RELEASE</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>commons-dbcp</groupId>
-		<artifactId>commons-dbcp</artifactId>
-		<version>1.4</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>org.hsqldb</groupId>
-		<artifactId>hsqldb</artifactId>
-		<version>2.3.0</version>
-	</dependency>
-	            
-                               	          
-  </dependencies>
-  
-  <build>
-  
-    <plugins>
-  
-     	<plugin>
-     		<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<version>3.1</version>	
-			<configuration>
-				<source>1.7</source>
-				<target>1.7</target>
-				<encoding>UTF-8</encoding>
-			</configuration>
-		</plugin>	
-		
-		<plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-war-plugin</artifactId>
-	      <version>2.4</version>
-	      <configuration>
-		    <archiveClasses>true</archiveClasses>
-		    <attachClasses>true</attachClasses>
-		  </configuration>
-	    </plugin>    
-  
-    </plugins>
-    
-  </build>
-  
+    <dependencies>
+
+        <dependency>
+            <groupId>org.notificationengine</groupId>
+            <artifactId>notificationengine</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.notificationengine</groupId>
+            <artifactId>notificationengine</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <classifier>classes</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>3.2.3.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>4.0</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archiveClasses>true</archiveClasses>
+                    <attachClasses>true</attachClasses>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+    <repositories>
+        <repository>
+            <id>thirdparty</id>
+            <url>http://10.33.169.171/nexus/content/repositories/thirdparty</url>
+        </repository>
+    </repositories>
+
 </project>
