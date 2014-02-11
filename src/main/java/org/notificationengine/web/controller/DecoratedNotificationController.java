@@ -187,17 +187,17 @@ public class DecoratedNotificationController {
 
         }
 
+        //Sort the list of decorated notifications by decreasing date
+        Collections.sort(decoratedNotifications, new Comparator<DecoratedNotification>() {
+            @Override
+            public int compare(DecoratedNotification dn1, DecoratedNotification dn2) {
+                return dn2.getCreatedAt().compareTo(dn1.getCreatedAt());
+            }
+        });
+
         Collection<DecoratedNotification> wantedDecoratedNotifications = new HashSet<>();
 
         if(number != null && number > 0 && number < decoratedNotifications.size()) {
-
-            //Sort the list of decorated notifications by decreasing date
-            Collections.sort(decoratedNotifications, new Comparator<DecoratedNotification>() {
-                @Override
-                public int compare(DecoratedNotification dn1, DecoratedNotification dn2) {
-                    return dn2.getCreatedAt().compareTo(dn1.getCreatedAt());
-                }
-            });
 
             for(int i = 0; i < number; i++) {
 

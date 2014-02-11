@@ -12,6 +12,8 @@ public class Constants {
 
 	final public static String EMAIL = "email";
 
+	final public static String ADDRESS = "address";
+
     final public static String FILE_NAME = "fileName";
 
     final public static String FILES_ATTACHED = "filesAttached";

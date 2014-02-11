@@ -1127,6 +1127,10 @@ public class Persister implements InitializingBean {
 
         Date endDate = cal.getTime();
 
+        if (criteriaName.equals(Constants.EMAIL)) {
+            criteriaName = Constants.ADDRESS;
+        }
+
         String recipientProperty = Constants.RECIPIENT + "." + criteriaName;
 
         JSONObject query = new JSONObject();
