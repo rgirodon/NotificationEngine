@@ -14,5 +14,8 @@
             "notificatorType" : "singleMailByRecipient",
             "mailTemplate" : "helpdeskMailTemplate"
         }
-    ]
+    ],
+
+    "authenticationType": "mongoAuthenticator",
+    "customAuthenticatorClass" : "customAuthenticator"
 }

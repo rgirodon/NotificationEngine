@@ -5,9 +5,9 @@ INSERT INTO TOPIC(ID, LABEL) VALUES(20, 'helpdesk');
 INSERT INTO TOPIC(ID, LABEL) VALUES(21, 'helpdesk.societe1');
 INSERT INTO TOPIC(ID, LABEL) VALUES(22, 'helpdesk.societe2');
 
-INSERT INTO USER(ID, USERNAME, EMAIL) VALUES(1, 'Remy Girodon', 'rgirodon@sqli.com');
-INSERT INTO USER(ID, USERNAME, EMAIL) VALUES(2, 'Nicolas Moret', 'nmoret@sqli.com');
-INSERT INTO USER(ID, USERNAME, EMAIL) VALUES(3, 'Matthis Duclos', 'mduclos@sqli.com');
+INSERT INTO USERS(ID, USERNAME, EMAIL) VALUES(1, 'Remy Girodon', 'rgirodon@sqli.com');
+INSERT INTO USERS(ID, USERNAME, EMAIL) VALUES(2, 'Nicolas Moret', 'nmoret@sqli.com');
+INSERT INTO USERS(ID, USERNAME, EMAIL) VALUES(3, 'Matthis Duclos', 'mduclos@sqli.com');
 
 INSERT INTO SUBSCRIPTION(TOPIC_ID, USER_ID) VALUES(10, 1);
 INSERT INTO SUBSCRIPTION(TOPIC_ID, USER_ID) VALUES(20, 1);

@@ -35,7 +35,7 @@ public class Mailer {
 	private SimpleMailMessage templateMessage;
 	
 	@Autowired
-	private Properties localSettingsProperties; 
+	private Properties localSettingsProperties;
 
 	public Boolean sendMail(
             String recipientAddress,
@@ -60,7 +60,6 @@ public class Mailer {
                 String subject = this.getSubject(options);
                 
                 helper.setSubject(subject);
-
 
                 String from = this.getFrom(options);
                 
@@ -194,6 +193,14 @@ public class Mailer {
 	public void setTemplateMessage(SimpleMailMessage templateMessage) {
 		this.templateMessage = templateMessage;
 	}
+
+    public Properties getLocalSettingsProperties() {
+        return localSettingsProperties;
+    }
+
+    public void setLocalSettingsProperties(Properties localSettingsProperties) {
+        this.localSettingsProperties = localSettingsProperties;
+    }
 
     public String getSubject(Map<String, String> options) {
 

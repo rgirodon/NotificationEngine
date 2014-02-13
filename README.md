@@ -61,15 +61,15 @@ The Context of a Raw Notification is just a Map, i.e. a list of pairs Key - Valu
 For example :
 ```JSON
 {
-    "Subject" : "Tevez is the new Juve striker", 
-    "Content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
-    "Date"    : "01/06/2013"
+"Subject" : "Tevez is the new Juve striker", 
+"Content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
+"Date" : "01/06/2013"
 }
 ```
 could be the context of a Raw Notification with Topic Sports.Football.Italy.Juventus
 
 The Context will be used for building the notification messages. 
-A common usage can be to build a mail content by populating a template from this context.  
+A common usage can be to build a mail content by populating a template from this context. 
 
 ### 1.2.3. Subscriptions
 
@@ -107,21 +107,21 @@ For instance, if the notification is a mail, the physical notification will be s
 
 In the Notification Engine, Selector components are responsible of :
 - for a given Topic : 
-	- retrieving not processed Raw Notifications
-	- for each of retrieved Raw Notifications : 
-		- retrieving concerned Subscriptions 
-		- for each of retrieved Subscriptions :
-			- creating a Decorated Notification linked to the Raw Notification and the Subscription recipient
-		- marking it as processed
+- retrieving not processed Raw Notifications
+- for each of retrieved Raw Notifications : 
+- retrieving concerned Subscriptions 
+- for each of retrieved Subscriptions :
+- creating a Decorated Notification linked to the Raw Notification and the Subscription recipient
+- marking it as processed
 
 ### 1.3.2. Notificators
 
 In the Notification Engine, Notificator components are responsible of :
 - for a given Topic : 
-	- retrieving not sent Decorated Notifications
-	- for each of retrieved Decorated Notifications : 
-		- sending it
-		- marking it as sent
+- retrieving not sent Decorated Notifications
+- for each of retrieved Decorated Notifications : 
+- sending it
+- marking it as sent
 
 ### 1.3.3. Channels
 
@@ -240,25 +240,25 @@ Example 1
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "customSelector",
-				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
-				  "notificatorType" : "customNotificator",
-				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
-				},
-				{
-				  "id" : "helpdeskChannel",
-				  "topic" : "helpdesk",
-				  "selectorType" : "customSelector",
-				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
-				  "notificatorTaskPeriod" : "5000",
-				  "selectorTaskPeriod" : "5000",
-				  "notificatorType" : "customNotificator",
-				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "customSelector",
+"selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+"notificatorType" : "customNotificator",
+"notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+},
+{
+"id" : "helpdeskChannel",
+"topic" : "helpdesk",
+"selectorType" : "customSelector",
+"selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+"notificatorTaskPeriod" : "5000",
+"selectorTaskPeriod" : "5000",
+"notificatorType" : "customNotificator",
+"notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+}
+]
 }
 ```
 
@@ -266,21 +266,21 @@ Example 2
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "mongoDbSelector",
-				  "notificatorType" : "multipleMailByRecipient",
-				  "mailTemplate" : "facturationMailTemplate"
-				},
-				{
-				  "id" : "helpdeskChannel",
-				  "topic" : "helpdesk",
-				  "selectorType" : "mongoDbSelector",
-				  "notificatorType" : "singleMailByRecipient",
-				  "mailTemplate" : "helpdeskMailTemplate"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "mongoDbSelector",
+"notificatorType" : "multipleMailByRecipient",
+"mailTemplate" : "facturationMailTemplate"
+},
+{
+"id" : "helpdeskChannel",
+"topic" : "helpdesk",
+"selectorType" : "mongoDbSelector",
+"notificatorType" : "singleMailByRecipient",
+"mailTemplate" : "helpdeskMailTemplate"
+}
+]
 }
 ```
 
@@ -288,23 +288,23 @@ Example 3
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "mongoDbSelector",
-				  "notificatorType" : "singleMultiTopicMailByRecipient",
-				  "mailTemplate" : "commonMailTemplate"
-				},
-				{
-				  "id" : "helpdeskChannel",
-				  "topic" : "helpdesk",
-				  "selectorType" : "mongoDbSelector",
-				  "selectorTaskPeriod" : "5000",
-				  "notificatorType" : "singleMultiTopicMailByRecipient",
-				  "notificatorTaskPeriod" : "5000",
-				  "mailTemplate" : "commonMailTemplate"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "mongoDbSelector",
+"notificatorType" : "singleMultiTopicMailByRecipient",
+"mailTemplate" : "commonMailTemplate"
+},
+{
+"id" : "helpdeskChannel",
+"topic" : "helpdesk",
+"selectorType" : "mongoDbSelector",
+"selectorTaskPeriod" : "5000",
+"notificatorType" : "singleMultiTopicMailByRecipient",
+"notificatorTaskPeriod" : "5000",
+"mailTemplate" : "commonMailTemplate"
+}
+]
 }
 ```
 
@@ -314,11 +314,11 @@ Each Channel has :
 - an identifier
 - a Topic
 - a Selector
-  - the Selector can be of a known type, or of a custom type - in this case the Configuration must specify its full name class
-  - the Selector can have a specific execution period, expressed in ms with property selectorTaskPeriod (if it has not, if will be a 20s default period)
+- the Selector can be of a known type, or of a custom type - in this case the Configuration must specify its full name class
+- the Selector can have a specific execution period, expressed in ms with property selectorTaskPeriod (if it has not, if will be a 20s default period)
 - a Notificator
-  - the Notificator can be of a known type, or of a custom type - in this case the Configuration must specify its full name class
-  - the Notificator can have a specific execution period, expressed in ms with property notificatorTaskPeriod (if it has not, if will be a 20s default period)
+- the Notificator can be of a known type, or of a custom type - in this case the Configuration must specify its full name class
+- the Notificator can have a specific execution period, expressed in ms with property notificatorTaskPeriod (if it has not, if will be a 20s default period)
 - any other needed options (just like mailTemplate in our examples) that will be accessible through a map at runtime
 
 As an option, you can indicate if the channel is urgentEnabled. That means that you can configure a channel to have some urgent notifications that have to be sent right away and others that can wait a little time before being sent. 
@@ -328,31 +328,42 @@ Example of a channel with the urgent option :
 
 ```JSON
 {
-    "id" : "facturationChannel",
-    "topic" : "facturation",
-    "selectorType" : "mongoDbSelector",
-    "notificatorType" : "singleMultiTopicMailByRecipient",
-    "mailTemplate" : "commonMailTemplate",
-    "isHtmlTemplate": "true",
-    "notificatorTaskPeriod" : "600000",
-    "urgentEnabled": "true",
-    "urgentMailTemplate": "facturationMailTemplate",
-    "isUrgentHtmlTemplate": "true"
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "mongoDbSelector",
+"notificatorType" : "singleMultiTopicMailByRecipient",
+"mailTemplate" : "commonMailTemplate",
+"isHtmlTemplate": "true",
+"notificatorTaskPeriod" : "600000",
+"urgentEnabled": "true",
+"urgentMailTemplate": "facturationMailTemplate",
+"isUrgentHtmlTemplate": "true"
 }
 ```
 
 To indicate that a raw notification is urgent, all you have to do is to add a field urgent set to true in the context of the notification like this one : 
 ```JSON
 {
-	"topic": "football",
-	"context": {
-	    "subject" : "Tevez is the new Juve striker", 
-	    "content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
-	    "date"    : "01/06/2013",
-	    "urgent"  : true
-	}
+"topic": "football",
+"context": {
+"subject" : "Tevez is the new Juve striker", 
+"content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
+"date" : "01/06/2013",
+"urgent" : true
+}
 }
 ```
+
+In order to secure the application, we also add configuration to set type of athenticator that will be in use.
+
+```JSON
+"authenticationType": "mongoAuthenticator",
+"customAuthenticatorClass" : "customAuthenticator"
+```
+
+The first line is the type of authenticator in use. For the moment, the Notification Engine has only the mongoAuthenticator built in. This authenticator stores users with a username and a password in a mongo collection. 
+
+But, as other configurations, you can implement your own authenticator based on the Authenticator interface. In order to extends the NotificationEngine with your own authenticator, you have to specify the class name of your implementation of the Authenticator interface.
 
 ### 3.2.1. Built-in Selectors
 
@@ -361,7 +372,7 @@ All selectors implement the ISelector interface, that just declares a process me
 ```JAVA
 public interface ISelector {
 
-	public void process();
+public void process();
 }
 ```
 
@@ -369,19 +380,19 @@ A base class implementation Selector has been provided that does all the boilerp
 
 Boilerplate code consists in :
 - for a given Topic : 
-	- retrieving not processed Raw Notifications
-	- for each of retrieved Raw Notifications : 
-		- retrieving concerned Subscriptions (left abstract)
-		- for each of retrieved Subscriptions :
-			- creating a Decorated Notification linked to the Raw Notification and the Subscription recipient
-		- marking it as processed
+- retrieving not processed Raw Notifications
+- for each of retrieved Raw Notifications : 
+- retrieving concerned Subscriptions (left abstract)
+- for each of retrieved Subscriptions :
+- creating a Decorated Notification linked to the Raw Notification and the Subscription recipient
+- marking it as processed
 
 ```JAVA
 public abstract class Selector implements ISelector {
 
-	// Not shown : boilerplate code
+// Not shown : boilerplate code
 
-	abstract protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
+abstract protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic);
 }
 ```
 
@@ -396,15 +407,15 @@ To register this selector in a Channel, here is an example :
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "customSelector",
-				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
-				  "notificatorType" : "customNotificator",
-				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "customSelector",
+"selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+"notificatorType" : "customNotificator",
+"notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+}
+]
 }
 ```
 
@@ -416,13 +427,13 @@ It looks for Subscriptions in a collection named subscriptions, and with this fo
 
 ```JSON
 {
-  "_id" : ObjectId("51f7c7e04531027fab736425"),
-  "topic" : {
-    "name" : "facturation.societe1"
-  },
-  "recipient" : {
-    "address" : "xxxx@zzzz.com"
-  }
+"_id" : ObjectId("51f7c7e04531027fab736425"),
+"topic" : {
+"name" : "facturation.societe1"
+},
+"recipient" : {
+"address" : "xxxx@zzzz.com"
+}
 }
 ```
 
@@ -447,14 +458,14 @@ To register this selector in a Channel, here is an example :
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "mongoDbSelector",
-				  "notificatorType" : "customNotificator",
-				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "mongoDbSelector",
+"notificatorType" : "customNotificator",
+"notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+}
+]
 }
 ```
 
@@ -465,22 +476,22 @@ In order to do that, you have to add a field called ```recipients``` in the cont
 
 ```JSON
 {
-	"topic": "football",
-	"context": {
-	    "subject" : "Tevez is the new Juve striker", 
-	    "content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
-	    "date"    : "01/06/2013",
-	    "recipients" : [
-	    	{
-	    		"email"			: "john@doe.com",
-	    		"displayName"	: "John Doe"
-	    	},
-	    	{
-	    		"email"			: "super@guy.com",
-	    		"displayName"	: "Super Guy"
-	    	}
-	    ]
-	}
+"topic": "football",
+"context": {
+"subject" : "Tevez is the new Juve striker", 
+"content" : "Argentine player has signed a 4-years contract with the Italy last-year champion.",
+"date" : "01/06/2013",
+"recipients" : [
+{
+"email"	 : "john@doe.com",
+"displayName"	: "John Doe"
+},
+{
+"email"	 : "super@guy.com",
+"displayName"	: "Super Guy"
+}
+]
+}
 }
 ```
 
@@ -493,8 +504,8 @@ All notificators implement the INotificator interface, that just declares a proc
 ```JAVA
 public interface INotificator {
 
-	public void process();
-	public void setUrgentEnabled(Boolean urgentEnabled);
+public void process();
+public void setUrgentEnabled(Boolean urgentEnabled);
 }
 ```
 
@@ -502,24 +513,24 @@ A base class implementation Notificator has been provided that does all the boil
 
 Boilerplate code consists in :
 - for a given Topic : 
-	- retrieving not sent Decorated Notifications
-	- for each of retrieved Decorated Notifications : 
-		- sending it (left abstract)
-		- marking it as sent
+- retrieving not sent Decorated Notifications
+- for each of retrieved Decorated Notifications : 
+- sending it (left abstract)
+- marking it as sent
 
 ```JAVA
 public abstract class Notificator implements INotificator {
 
-	// Not shown : boilerplate code
+// Not shown : boilerplate code
 
-	protected abstract void processNotSentDecoratedNotifications(
-			Collection<DecoratedNotification> notSentDecoratedNotifications);
+protected abstract void processNotSentDecoratedNotifications(
+Collection<DecoratedNotification> notSentDecoratedNotifications);
 }
 ```
 
 All concrete implementations of Notificator will provide a specific way for processing not sent Decorated Notifications.
 
-### 3.2.2.1 LoggerNotificator
+#### 3.2.2.1 LoggerNotificator
 
 This is the most simple Notificator : it just logs with a level INFO any Decorated Notification.
 
@@ -528,19 +539,19 @@ To register this notificator in a Channel, here is an example :
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "customSelector",
-				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
-				  "notificatorType" : "customNotificator",
-				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "customSelector",
+"selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+"notificatorType" : "customNotificator",
+"notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+}
+]
 }
 ```
 
-### 3.2.2.2 MultipleMailByRecipientNotificator
+#### 3.2.2.2 MultipleMailByRecipientNotificator
 
 This is quite a simple Notificator : it just send an email for any Decorated Notification.
 
@@ -549,16 +560,16 @@ To register this notificator in a Channel, here is an example :
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "customSelector",
-				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
-				  "notificatorType" : "multipleMailByRecipient",
-				  "mailTemplate" : "facturationMailTemplate",
-				  "isHtmlTemplate": "true"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "customSelector",
+"selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+"notificatorType" : "multipleMailByRecipient",
+"mailTemplate" : "facturationMailTemplate",
+"isHtmlTemplate": "true"
+}
+]
 }
 ```
 
@@ -606,7 +617,7 @@ And here is an example of an HTML template fort this notificator :
 
 Please note that if your ```content``` is written in HTML, you have to use the annotation with three curly braces in order to have the HTML unescaped (it comes from the Mustache documentation)
 
-### 3.2.2.3 SingleMailByRecipientNotificator
+#### 3.2.2.3 SingleMailByRecipientNotificator
 
 This is quite a more advanced Notificator : for a given topic, when it has found not sent Decorated Notifications, it will just send 1 mail by recipient, grouping the not sent Notifications.
 
@@ -615,15 +626,15 @@ To register this notificator in a Channel, here is an example :
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "helpdesk",
-				  "selectorType" : "customSelector",
-				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
-				  "notificatorType" : "singleMailByRecipient",
-				  "mailTemplate" : "helpdeskMailTemplate"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "helpdesk",
+"selectorType" : "customSelector",
+"selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+"notificatorType" : "singleMailByRecipient",
+"mailTemplate" : "helpdeskMailTemplate"
+}
+]
 }
 ```
 
@@ -655,7 +666,7 @@ Best regards,
 Helpdesk Team
 ```
 
-### 3.2.2.4 SingleMultiTopicMailByRecipientNotificator
+#### 3.2.2.4 SingleMultiTopicMailByRecipientNotificator
 
 This is the most advanced Notificator : when it has found not sent Decorated Notifications, it will just send 1 mail by recipient, grouping the not sent Notifications of multiple Topics.
 
@@ -664,23 +675,23 @@ To register this notificator in a Channel, here is an example :
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "mongoDbSelector",
-				  "notificatorType" : "singleMultiTopicMailByRecipient",
-				  "mailTemplate" : "commonMailTemplate"
-				},
-				{
-				  "id" : "helpdeskChannel",
-				  "topic" : "helpdesk",
-				  "selectorType" : "mongoDbSelector",				  
-				  "selectorTaskPeriod" : "5000",
-				  "notificatorType" : "singleMultiTopicMailByRecipient",
-				  "notificatorTaskPeriod" : "5000",
-				  "mailTemplate" : "commonMailTemplate"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "mongoDbSelector",
+"notificatorType" : "singleMultiTopicMailByRecipient",
+"mailTemplate" : "commonMailTemplate"
+},
+{
+"id" : "helpdeskChannel",
+"topic" : "helpdesk",
+"selectorType" : "mongoDbSelector",	
+"selectorTaskPeriod" : "5000",
+"notificatorType" : "singleMultiTopicMailByRecipient",
+"notificatorTaskPeriod" : "5000",
+"mailTemplate" : "commonMailTemplate"
+}
+]
 }
 ```
 
@@ -691,8 +702,8 @@ In order to send an HTML mail, you have to follow what is indicated in part 3.2.
 
 For building the mail content, this notificator will merge this template with a Context containing :
 - an entry named "topics" which is a list of Contexts containing :
-  - an entry "topic" with the name of the Topic
-  - an entry "notificationsForTopic" which is the list of the Contexts of the grouped RawNotifications of this Topic for this recipient
+- an entry "topic" with the name of the Topic
+- an entry "notificationsForTopic" which is the list of the Contexts of the grouped RawNotifications of this Topic for this recipient
 - an additionnal entry named "recipient" containing the recipient address.
 
 The template syntax is the one of Mustache framework.
@@ -774,6 +785,12 @@ Here is the way of getting the Template Engine :
 TemplateEngine templateEngine = (TemplateEngine)SpringUtils.getBean(Constants.TEMPLATE_ENGINE); 
 ```
 
+### 3.2.4. Built-in Authenticators
+
+At the moment, we only have one authenticator built in: the MongoAuthenticator.
+
+This authenticator stores in a MongoDB collection all users registered with a username and an encrypted password. This authenticator is based on the interface ```Authenticator```.
+
 ## 3.3. Raw Notifications Push API
 
 To enable creation of Raw Notifications, the Notification Engine proposes a REST API.
@@ -784,9 +801,9 @@ If content
 {
 "topic" : "facturation.societe1",
 "context" : {
-			  "salutation" : "Hola chicos",
-			  "message" : "Hay que pagar ahora"
-			}
+"salutation" : "Hola chicos",
+"message" : "Hay que pagar ahora"
+}
 }
 ```
 
@@ -796,15 +813,15 @@ It will be in the MongoDB database, in rawnotifications collection, with that fo
 
 ```JSON
 {
-  "_id" : ObjectId("51f7c7e04531027fab736421"),
-  "processed" : false,
-  "topic" : {
-    "name" : "facturation.societe1"
-  },
-  "context" : {
-    "salutation" : "Hola chicos",
-    "message" : "Hay que pagar ahora."
-  }
+"_id" : ObjectId("51f7c7e04531027fab736421"),
+"processed" : false,
+"topic" : {
+"name" : "facturation.societe1"
+},
+"context" : {
+"salutation" : "Hola chicos",
+"message" : "Hay que pagar ahora."
+}
 }
 ```
 
@@ -826,17 +843,17 @@ It is possible to get two different metrics for subscriptions :
 The response would look like this in the first case : 
 ```JSON
 {
-	"count": 6
+"count": 6
 }
 ```
 
 And like this in the second case : 
 ```JSON
 {
-	"count": 3,
-	"topic": {
-		"name": "topicName"
-	}
+"count": 3,
+"topic": {
+"name": "topicName"
+}
 }
 ```
 
@@ -846,60 +863,60 @@ The NotificationEngine allows to get 6 different metrics for raw notifications :
 - get count of all raw notifications created with the url ```countAllRawNotifications.do```. It responds the following JSON : 
 ```JSON
 {
-	"count": 42
+"count": 42
 }
 ```
 
 - get count of all raw notifications for a specific topic (```countRawNotificationsForTopic.do?topic=topicName```) that responds : 
 ```JSON
 {
-	"count": 3,
-	"topic": {
-		"name": "topicName"
-	}
+"count": 3,
+"topic": {
+"name": "topicName"
+}
 }
 ```
 
 - get count of all raw notifications not processed (```countNotProcessedRawNotifications.do```). It gives this JSON : 
 ```JSON
 {
-	"count": 42
+"count": 42
 }
 ```
 
 - get count of all not processed raw notifications for a topic (```countNotProcessedRawNotificationsForTopic.do?topic=topicName```). As a response, one gets : 
 ```JSON
 {
-	"count": 3,
-	"topic": {
-		"name": "topicName"
-	}
+"count": 3,
+"topic": {
+"name": "topicName"
+}
 }
 ```
 
 - get count of all raw notifications created for last x days (```countCreatedRawNotificationsForLastDays.do?days=5```). The response is like : 
 ```JSON
 [
-    {
-        "count": 4,
-        "date": "2013-08-09"
-    },
-    {
-        "count": 5,
-        "date": "2013-08-08"
-    },
-    {
-        "count": 2,
-        "date": "2013-08-10"
-    },
-    {
-        "count": 9,
-        "date": "2013-08-06"
-    },
-    {
-        "count": 3,
-        "date": "2013-08-07"
-    }
+{
+"count": 4,
+"date": "2013-08-09"
+},
+{
+"count": 5,
+"date": "2013-08-08"
+},
+{
+"count": 2,
+"date": "2013-08-10"
+},
+{
+"count": 9,
+"date": "2013-08-06"
+},
+{
+"count": 3,
+"date": "2013-08-07"
+}
 ]
 ```
 where dates are at the format ```yyyy-MM-dd```
@@ -907,26 +924,26 @@ where dates are at the format ```yyyy-MM-dd```
 - get count of all processed raw notifications created for last x days (```countProcessedRawNotificationsForLastDays.do?days=5```). The response is like : 
 ```JSON
 [
-    {
-        "count": 4,
-        "date": "2013-08-09"
-    },
-    {
-        "count": 3,
-        "date": "2013-08-08"
-    },
-    {
-        "count": 4,
-        "date": "2013-08-10"
-    },
-    {
-        "count": 7,
-        "date": "2013-08-06"
-    },
-    {
-        "count": 3,
-        "date": "2013-08-07"
-    }
+{
+"count": 4,
+"date": "2013-08-09"
+},
+{
+"count": 3,
+"date": "2013-08-08"
+},
+{
+"count": 4,
+"date": "2013-08-10"
+},
+{
+"count": 7,
+"date": "2013-08-06"
+},
+{
+"count": 3,
+"date": "2013-08-07"
+}
 ]
 ```
 where dates are at the format ```yyyy-MM-dd```
@@ -938,60 +955,60 @@ You can get 6 different metrics for Decorated notifications :
 - get count of all decorated notifications created with the url ```countAllDecoratedNotifications.do```. It responds the following JSON : 
 ```JSON
 {
-	"count": 42
+"count": 42
 }
 ```
 
 - get count of all decorated notifications for a specific topic (```countAllDecoratedNotificationsForTopic.do?topic=topicName```) that responds : 
 ```JSON
 {
-	"count": 3,
-	"topic": {
-		"name": "topicName"
-	}
+"count": 3,
+"topic": {
+"name": "topicName"
+}
 }
 ```
 
 - get count of not sent decorated notifications (```countNotSentDecoratedNotifications.do```). It gives this JSON : 
 ```JSON
 {
-	"count": 42
+"count": 42
 }
 ```
 
 - get count of all not sent decorated notifications for a topic (```countNotSentDecoratedNotificationsForTopic.do?topic=topicName```). As a response, one gets : 
 ```JSON
 {
-	"count": 3,
-	"topic": {
-		"name": "topicName"
-	}
+"count": 3,
+"topic": {
+"name": "topicName"
+}
 }
 ```
 
 - get count of all decorated notifications created for last x days (```countCreatedDecoratedNotificationsForLastDays.do?days=5```). The response is like : 
 ```JSON
 [
-    {
-        "count": 4,
-        "date": "2013-08-09"
-    },
-    {
-        "count": 3,
-        "date": "2013-08-08"
-    },
-    {
-        "count": 4,
-        "date": "2013-08-10"
-    },
-    {
-        "count": 7,
-        "date": "2013-08-06"
-    },
-    {
-        "count": 3,
-        "date": "2013-08-07"
-    }
+{
+"count": 4,
+"date": "2013-08-09"
+},
+{
+"count": 3,
+"date": "2013-08-08"
+},
+{
+"count": 4,
+"date": "2013-08-10"
+},
+{
+"count": 7,
+"date": "2013-08-06"
+},
+{
+"count": 3,
+"date": "2013-08-07"
+}
 ]
 ```
 where dates are at the format ```yyyy-MM-dd```
@@ -999,26 +1016,26 @@ where dates are at the format ```yyyy-MM-dd```
 - get count of all sent decorated notifications created for last x days (```countSentDecoratedNotificationsForLastDays.do?days=5```). The response is like : 
 ```JSON
 [
-    {
-        "count": 4,
-        "date": "2013-08-09"
-    },
-    {
-        "count": 3,
-        "date": "2013-08-08"
-    },
-    {
-        "count": 4,
-        "date": "2013-08-10"
-    },
-    {
-        "count": 7,
-        "date": "2013-08-06"
-    },
-    {
-        "count": 3,
-        "date": "2013-08-07"
-    }
+{
+"count": 4,
+"date": "2013-08-09"
+},
+{
+"count": 3,
+"date": "2013-08-08"
+},
+{
+"count": 4,
+"date": "2013-08-10"
+},
+{
+"count": 7,
+"date": "2013-08-06"
+},
+{
+"count": 3,
+"date": "2013-08-07"
+}
 ]
 ```
 where dates are at the format ```yyyy-MM-dd```
@@ -1046,50 +1063,50 @@ As a response, you will receive a JSON with the following format :
 
 ```JSON
 [
-    {
-        "_id": {
-            "_time": 1379577313,
-            "_machine": -426248641,
-            "_inc": -1870395218,
-            "_new": false
-        },
-        "recipient": {
-            "address": "john@doe.com",
-            "displayName": "John Doe"
-        },
-        "rawNotification": {
-            "_id": {
-                "_time": 1379577261,
-                "_machine": -426248641,
-                "_inc": -1870395223,
-                "_new": false
-            },
-            "processed": false,
-            "topic": {
-                "name": "helpdesk"
-            },
-            "createdAt": "Sep 19, 2013 9:54:21 AM",
-            "context": {
-                "subject": "Test with file",
-                "content": "I hope I would be able to download the file associated to this notification",
-                "date": "19/9/2013",
-                "urgent": false,
-                "fileIds": [
-                    {
-                        "_time": 1379577261,
-                        "_machine": -426248641,
-                        "_inc": -1870395222,
-                        "_new": false
-                    }
-                ]
-            }
-        },
-        "sent": true,
-        "createdAt": "Sep 19, 2013 9:55:13 AM",
-        "sentAt": "Sep 19, 2013 9:55:49 AM",
-        "sendingAttempts": 0
-    },
-    ...
+{
+"_id": {
+"_time": 1379577313,
+"_machine": -426248641,
+"_inc": -1870395218,
+"_new": false
+},
+"recipient": {
+"address": "john@doe.com",
+"displayName": "John Doe"
+},
+"rawNotification": {
+"_id": {
+"_time": 1379577261,
+"_machine": -426248641,
+"_inc": -1870395223,
+"_new": false
+},
+"processed": false,
+"topic": {
+"name": "helpdesk"
+},
+"createdAt": "Sep 19, 2013 9:54:21 AM",
+"context": {
+"subject": "Test with file",
+"content": "I hope I would be able to download the file associated to this notification",
+"date": "19/9/2013",
+"urgent": false,
+"fileIds": [
+{
+"_time": 1379577261,
+"_machine": -426248641,
+"_inc": -1870395222,
+"_new": false
+}
+]
+}
+},
+"sent": true,
+"createdAt": "Sep 19, 2013 9:55:13 AM",
+"sentAt": "Sep 19, 2013 9:55:49 AM",
+"sendingAttempts": 0
+},
+...
 ]
 ```
 
@@ -1101,21 +1118,21 @@ If you want to get a list of all topics, the URL to call is ```/topics.do```.
 The response looks like this JSON : 
 ```JSON
 [
-    {
-        "name": "facturation"
-    },
-    {
-        "name": "helpdesk.societe1"
-    },
-    {
-        "name": "facturation.societe2"
-    },
-    {
-        "name": "helpdesk.societe2"
-    },
-    {
-        "name": "facturation.societe1"
-    }
+{
+"name": "facturation"
+},
+{
+"name": "helpdesk.societe1"
+},
+{
+"name": "facturation.societe2"
+},
+{
+"name": "helpdesk.societe2"
+},
+{
+"name": "facturation.societe1"
+}
 ]
 ```
 
@@ -1123,15 +1140,15 @@ And if you want to get all sub-topics of a topic you have to call the following 
 You will receive this response : 
 ```JSON
 [
-    {
-        "name": "facturation.societe2"
-    },
-    {
-        "name": "facturation"
-    },
-    {
-        "name": "facturation.societe1"
-    }
+{
+"name": "facturation.societe2"
+},
+{
+"name": "facturation"
+},
+{
+"name": "facturation.societe1"
+}
 ]
 ```
 
@@ -1155,9 +1172,9 @@ If you want to create a subscription, you have to do an HTTP PUT on this URL and
 The JSON to provide should be like this : 
 ```JSON
 {
-    "topic": "facturation",
-    "recipient": "superguy@email.com",
-    "displayName": "Super Guy"
+"topic": "facturation",
+"recipient": "superguy@email.com",
+"displayName": "Super Guy"
 }
 ```
 
@@ -1169,34 +1186,34 @@ The notification engines's REST API has a URL to retrieve physical notifications
 
 ```JSON
 [
-    {
-        "sentAt": 1379506537482,
-        "id": 1180840879,
-        "subject": "Helpdesk notif",
-        "filesAttached": [],
-        "recipient": {
-            "email": "john@doe.com",
-            "displayName": "John Doe"
-        },
-        "notificationContent": "<p>Dear John Doe</p>\n\n<p>This mail has been sent by Helpdesk application.<p>\n\n<p>Please take into account these actions from Helpdesk :<br/>\n\n> This notification should generate a physical notification after you received it. \n</p>\n\n<p>Best regards,</p>\n\n<p>Helpdesk Team</p>"
-    },
-    {
-        "sentAt": 1379506877240,
-        "id": 1496271426,
-        "subject": "File attached",
-        "filesAttached": [
-            {
-                "id": "52399a77e69724ea1138fa97",
-                "fileName": "images_off.bmp"
-            }
-        ],
-        "recipient": {
-            "email": "john@doe.com",
-            "displayName": "John Doe"
-        },
-        "notificationContent": "<p>Dear John Doe</p>\n\n<p>This mail has been sent by Facturation application.</p>\n\n> You have a file attached to this notification\n\n<p>Best regards,</p>\n\n<p>Facturation Team</p>"
-    },
-    ...
+{
+"sentAt": 1379506537482,
+"id": 1180840879,
+"subject": "Helpdesk notif",
+"filesAttached": [],
+"recipient": {
+"email": "john@doe.com",
+"displayName": "John Doe"
+},
+"notificationContent": "<p>Dear John Doe</p>\n\n<p>This mail has been sent by Helpdesk application.<p>\n\n<p>Please take into account these actions from Helpdesk :<br/>\n\n> This notification should generate a physical notification after you received it. \n</p>\n\n<p>Best regards,</p>\n\n<p>Helpdesk Team</p>"
+},
+{
+"sentAt": 1379506877240,
+"id": 1496271426,
+"subject": "File attached",
+"filesAttached": [
+{
+"id": "52399a77e69724ea1138fa97",
+"fileName": "images_off.bmp"
+}
+],
+"recipient": {
+"email": "john@doe.com",
+"displayName": "John Doe"
+},
+"notificationContent": "<p>Dear John Doe</p>\n\n<p>This mail has been sent by Facturation application.</p>\n\n> You have a file attached to this notification\n\n<p>Best regards,</p>\n\n<p>Facturation Team</p>"
+},
+...
 ]
 ```
 
@@ -1209,45 +1226,71 @@ Since it is possible to send files with notifications, we also added a URL to re
 
 The response will be the file itself. 
 
-# 4. Extending the Notification Engine
+# 4. Security
+
+In order not to allow everybody to use the Notification Engine, we added some security in the application. 
+
+## 4.1. Cors Filter
+
+By default, a web application prevents JavaScript from making XMLHttpRequest to other domains. We created a filter that allows to do it in order to be able to build other applications that use the API of the NotificationEngine. 
+
+But you can limit this permission to particular domain. This configuration can be done in the class ```CorsFilter``` under the package ```org.notificationengine.web.filter```. In order to do that, you have to change the following line: 
+
+```java
+response.addHeader("Access-Control-Allow-Origin", "*");
+```
+
+Instead of the star, you can list all domains that will be allowed to do requests to the NotificationEngine, separated by commas. 
+
+This filter is only made for web application that do requests to the NotificationEngine. It is still possible to do CURL to the NotificationEngine. That's why we also added a token based security.
+
+## 4.2. Tokens
+
+To secure the NotificationEngine, we added a token based security. It means that each request has to have a valid token in the header. The header property that contains the token is simply called ```token```.
+
+There are two ways to get a token: either you login with a username/password through the ```login.do``` URL and you will receive a token valid for 30 minutes (the time is reinitialized each time an action is done with the token), or you create a token valid for a very long period through the ```requestToken.do``` URL. In order to be able to request a token for a long time, you have to be already logged in. This can be simply done with the admin console.
+
+All tokens are stored in a MongoDB collection. This can't be changed for now.
+
+# 5. Extending the Notification Engine
 
 The Notification Engine provides some built-in Selectors and Notificators, but there are chances that you need to create new Selectors or Notificators to fit your needs.
 
 There are 2 ways for doing this :
 
-- First option
-	- get the code base
-	- add your own components
-	- build the war
-	- deploy it
+#### First option
+- get the code base
+- add your own components
+- build the war
+- deploy it
 
-- Second option
-	- get the code base 
-	- install it in your maven repo
-	- create a custom project where you add your own components
-	- build the war of your custom project
-	- deploy the war of your custom project
+#### Second option
+- get the code base 
+- install it in your maven repo
+- create a custom project where you add your own components
+- build the war of your custom project
+- deploy the war of your custom project
 
 In both cases, you need to add your components to the configuration file.
 
-## 4.1. Configuring custom components
+## 5.1. Configuring custom components
 
-### 4.1.1. Configuring custom selectors
+### 5.1.1. Configuring custom selectors
 
 If you look at the configuration of the AdministratorSelector, you can already see how to configure a custom Selector :
 
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "customSelector",
-				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
-				  "notificatorType" : "customNotificator",
-				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "customSelector",
+"selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+"notificatorType" : "customNotificator",
+"notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+}
+]
 }
 ```
 
@@ -1262,35 +1305,35 @@ Here is the example with the code of the AdministratorSelector :
 ```JAVA
 public class AdministratorSelector extends Selector {
 
-	public AdministratorSelector(Topic topic, Map<String, String> options) {
-		super(topic, options);
-	}
-	
-	@Override
-	protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
-		// not shown...
-	}
+public AdministratorSelector(Topic topic, Map<String, String> options) {
+super(topic, options);
+}
+
+@Override
+protected Collection<Subscription> retrieveSubscriptionsForTopic(Topic topic) {
+// not shown...
+}
 }
 ```
 
 Just do the same with your own custom selectors.
 
-### 4.1.2. Configuring custom notificators
+### 5.1.2. Configuring custom notificators
 
 If you look at the configuration of the LoggerNotificator, you can already see how to configure a custom Notificator :
 
 ```JSON
 {
 "channels" : [
-				{
-				  "id" : "facturationChannel",
-				  "topic" : "facturation",
-				  "selectorType" : "customSelector",
-				  "selectorClass" : "org.notificationengine.selector.AdministratorSelector",
-				  "notificatorType" : "customNotificator",
-				  "notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
-				}
-			 ]
+{
+"id" : "facturationChannel",
+"topic" : "facturation",
+"selectorType" : "customSelector",
+"selectorClass" : "org.notificationengine.selector.AdministratorSelector",
+"notificatorType" : "customNotificator",
+"notificatorClass" : "org.notificationengine.notificator.LoggerNotificator"
+}
+]
 }
 ```
 
@@ -1305,24 +1348,24 @@ Here is the example with the code of the LoggerNotificator :
 ```JAVA
 public class LoggerNotificator extends Notificator {
 
-	public LoggerNotificator(Topic topic, Map<String, String> options) {
-		super(topic, options);
-	}
+public LoggerNotificator(Topic topic, Map<String, String> options) {
+super(topic, options);
+}
 
-	@Override
-	protected void processNotSentDecoratedNotifications(
-			Collection<DecoratedNotification> notSentDecoratedNotifications) {
-		// not shown...
-	}
+@Override
+protected void processNotSentDecoratedNotifications(
+Collection<DecoratedNotification> notSentDecoratedNotifications) {
+// not shown...
+}
 
 }
 ```
 
 Just do the same with your own custom notificators.
 
-## 4.2. Creating a custom project
+## 5.2. Creating a custom project
 
-### 4.2.1. Purpose and principles
+### 5.2.1. Purpose and principles
 
 It is possible to extend the Notification Engine without altering the code base.
 
@@ -1333,23 +1376,23 @@ All you need is creating a new Maven project declaring in its pom.xml :
 - the Notification Engine "core" as a classic dependency (with "classes" classifier for the code to compile)
 
 This is illustrated by this extract of the pom.xml of the custom project JDBC selector provided under custom/jdbcselector directory :
-```
+```XML
 <dependency>
-  <groupId>org.notificationengine</groupId>
-  <artifactId>notificationengine</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <type>war</type>
+<groupId>org.notificationengine</groupId>
+<artifactId>notificationengine</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+<type>war</type>
 </dependency> 
 
 <dependency>
-  <groupId>org.notificationengine</groupId>
-  <artifactId>notificationengine</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <classifier>classes</classifier>
+<groupId>org.notificationengine</groupId>
+<artifactId>notificationengine</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+<classifier>classes</classifier>
 </dependency>
 ```
 
-### 4.2.2. Example of the JDBC Selector
+### 5.2.2. Example of the JDBC Selector
 
 We applied this option for creating a custom project that extends the Notification Engine by providing a JDBC based Selector.
 
@@ -1377,14 +1420,20 @@ Property "jdbc.sql.topic.param=topic" is the name of the parameter used for subs
 
 Note that if you use a database different than hsqldb, you will have to add the dependency in the pom.xml. 
 
-## 4.3. Unit tests
+# 6. Admin console
+
+An admin console has been created to use the REST API of the NotificationEngine. The source code is hosted on a [GitHub repo](https://github.com/matthis-d/NotificationEngine-front). 
+
+The built of this admin console is placed in the folder ```src/main/webapp/WEB-INF/console-admin``` of the NotificationEngine. In that way, when you start the NotificationEngine, by default, it shows the admin console.
+
+# 7. Unit tests
 
 We tried to add some unit tests to our Notification Engine.
 Some of them need a MongoDB instance running on localhost, on port 27017.
 This instance should contain a database named notificationengine_test, with collections rawnotifications, decoratednotifications and subscriptions.
 This is not very "state of the art", please be indulgent :)
 
-# 5. Roadmap
+# 8. Roadmap
 
 We use the issues of GitHub to define the new features we plan to implement.
 

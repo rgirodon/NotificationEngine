@@ -1233,7 +1233,6 @@ public class Persister implements InitializingBean {
         }
 
         return result;
-
     }
 
     public Collection<PhysicalNotification> retrieveAllPhysicalNotifications() {

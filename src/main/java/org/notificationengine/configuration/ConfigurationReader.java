@@ -38,6 +38,9 @@ public class ConfigurationReader {
 												  Constants.TOPIC,
 												  Constants.NOTIFICATOR_TYPE,
 												  Constants.SELECTOR_TYPE};
+
+    private static String[] KNOWN_AUTHENTICATION_TYPES = {Constants.MONGO_AUTHENTICATOR,
+                                                          Constants.CUSTOM_AUTHENTICATOR};
 		
 	@Value("${config.directory}")
 	private String configDirectory;
@@ -61,6 +64,31 @@ public class ConfigurationReader {
 			Object configurationObj = JSONValue.parse(configurationString);
 			
 			JSONObject configurationJsonObj = (JSONObject)configurationObj;
+
+            String authenticationType = (String) configurationJsonObj.get(Constants.AUTHENTICATION_TYPE);
+
+            if (!this.isKnownAuthenticationType(authenticationType)) {
+
+                LOGGER.warn("Authentication type is not defined or isn't know, set to default (MongoAuthenticator)");
+
+                authenticationType = Constants.MONGO_AUTHENTICATOR;
+            }
+
+            if (authenticationType.equalsIgnoreCase(Constants.CUSTOM_AUTHENTICATOR)) {
+
+                String customAuthenticatorClass = (String) configurationJsonObj.get(Constants.CUSTOM_AUTHENTICATOR_CLASS);
+
+                result.setCustomAuthenticatorClass(customAuthenticatorClass);
+
+                if (StringUtils.isEmpty(customAuthenticatorClass)) {
+
+                    LOGGER.warn("No class was defined for the custom authenticator, set to default (MongoAuthenticator)");
+
+                    authenticationType = Constants.MONGO_AUTHENTICATOR;
+                }
+            }
+
+            result.setAuthenticationType(authenticationType);
 			
 			JSONArray channelsArray = (JSONArray)configurationJsonObj.get(Constants.CHANNELS);
 			
@@ -178,6 +206,15 @@ public class ConfigurationReader {
 		
 		return ArrayUtils.contains(KNOWN_NOTIFICATOR_TYPES, notificatorType);
 	}
+
+    private boolean isKnownAuthenticationType(String authenticationType) {
+
+        if (!StringUtils.isEmpty(authenticationType)) {
+            return ArrayUtils.contains(KNOWN_AUTHENTICATION_TYPES, authenticationType);
+        }
+
+        return false;
+    }
 
 	public String getConfigDirectory() {
 		return configDirectory;
