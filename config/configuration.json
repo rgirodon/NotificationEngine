@@ -16,6 +16,5 @@
         }
     ],
 
-    "authenticationType": "mongoAuthenticator",
-    "customAuthenticatorClass" : "customAuthenticator"
+    "authenticationType": "mongoAuthenticator"
 }

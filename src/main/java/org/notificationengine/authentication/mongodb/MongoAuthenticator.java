@@ -122,7 +122,6 @@ public class MongoAuthenticator implements Authenticator {
         return Boolean.FALSE;
     }
 
-    @Override
     public void saveUser(String username, String password) {
 
         User newUser = new User(username, password);
@@ -130,19 +129,16 @@ public class MongoAuthenticator implements Authenticator {
         this.saveUser(newUser);
     }
 
-    @Override
     public void saveUser(User user) {
 
         this.usersCollection.save(user);
     }
 
-    @Override
     public void updateUser(User user) {
 
         this.updateUser(user.getId(), user.getUsername(), user.getPassword());
     }
 
-    @Override
     public void updateUser(String id, String newUsername, String newPassword) {
 
         ObjectId objectId = new ObjectId(id);
@@ -156,7 +152,6 @@ public class MongoAuthenticator implements Authenticator {
         this.usersCollection.update(objectId).with(query);
     }
 
-    @Override
     public void updateUserPassword(String id, String newPassword) {
 
         ObjectId objectId = new ObjectId(id);
@@ -169,7 +164,6 @@ public class MongoAuthenticator implements Authenticator {
         this.usersCollection.update(objectId).with(query);
     }
 
-    @Override
     public void deleteUser(User user) {
 
         String id = user.getId();
@@ -177,7 +171,6 @@ public class MongoAuthenticator implements Authenticator {
         this.deleteUser(id);
     }
 
-    @Override
     public void deleteUser(String id) {
 
         ObjectId objectId = new ObjectId(id);

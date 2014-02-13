@@ -43,15 +43,6 @@ public class UserController {
         return this.createToken();
     }
 
-    @RequestMapping(value = "/user.do", method = RequestMethod.POST, consumes = "application/json")
-    @ResponseBody
-    public String createUser(@RequestBody User user) {
-
-        this.authenticator.saveUser(user);
-
-        return this.createToken();
-    }
-
     private String createToken() {
         Token token = new Token();
 

@@ -12,6 +12,8 @@ public class Constants {
 
 	final public static String EMAIL = "email";
 
+	final public static String ADDRESS = "address";
+
     final public static String FILE_NAME = "fileName";
 
     final public static String FILES_ATTACHED = "filesAttached";
@@ -190,6 +192,12 @@ public class Constants {
 
     public static final String MONGO_AUTHENTICATOR = "mongoAuthenticator";
 
+    public static final String ACTIVE_DIRECTORY_AUTHENTICATOR = "activeDirectoryAuthenticator";
+
+    public static final String CONTEXT_SOURCE = "contextSource";
+
+    public static final String LDAP_TEMPLATE = "ldapTemplate";
+
     public static final String CUSTOM_AUTHENTICATOR = "customAuthenticator";
 
     public static final String AUTHENTICATION_TYPE = "authenticationType";
@@ -205,4 +213,10 @@ public class Constants {
     public static final long TOKEN_CLEANER_TASK_DELAY = 86400000;
 
     public static final long TOKEN_CLEANER_TASK_PERIOD = 86400000;
+
+    public static final int DAYS_BETWEEN_NOTIFICATION = 7;
+
+    public static final String BEGIN_DATE = "beginDate";
+
+    public static final String END_DATE = "endDate";
 }

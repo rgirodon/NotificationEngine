@@ -86,7 +86,7 @@ public class DecoratedNotificationController {
 
     }
 
-    @RequestMapping(value = "/getDecoratedNotifications.do", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/getDecoratedAllNotifications.do", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String getDecoratedNotifications(
             @RequestParam(value = "number", required = false) Integer number, @RequestParam(value = "email", required = false) String email) {
@@ -123,6 +123,97 @@ public class DecoratedNotificationController {
 
         return result;
 
+    }
+
+    @RequestMapping(value = "/getDecoratedNotifications.do", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public String getDecoratedNotificationsForCriteria(
+            @RequestParam(value = "criteriaName", required = false) String criteriaName,
+            @RequestParam(value = "criteriaValue", required = false) String criteriaValue,
+            @RequestParam(value = "number", required = false) Integer number,
+            @RequestParam(value = "days", required = false) Integer days) {
+
+        LOGGER.debug("Get decorated notifications with params: criteriaName=" + criteriaName + ", criteriaValue="
+                + criteriaValue + ", number=" + number + ", days=" + days);
+
+        List<DecoratedNotification> decoratedNotifications = new ArrayList<>();
+
+        if (days != null && days > 0) {
+
+            Collection<Date> datesToGet = this.getDatesForDays(days);
+
+            if (StringUtils.isEmpty(criteriaValue)) {
+                //Return everything for x days last days
+
+                for (Date date : datesToGet) {
+
+                    decoratedNotifications.addAll(this.persister.retrieveDecoratedNotificationsForDate(date));
+                }
+
+            } else if (StringUtils.isEmpty(criteriaName)) {
+                //Return everything for given email for x last days
+
+                for (Date date : datesToGet) {
+
+                    decoratedNotifications.addAll(this.persister.retrieveDecoratedNotificationsForEmailAndDate(criteriaValue, date));
+                }
+
+            } else {
+                //Return everything for the given param with the given value for x last days
+
+                for (Date date : datesToGet) {
+
+                    decoratedNotifications.addAll(this.persister.retrieveDecoratedNotificationsForCriteriaAndDate(criteriaName, criteriaValue, date));
+                }
+            }
+
+        } else {
+
+            if (StringUtils.isEmpty(criteriaValue)) {
+
+                //Return everything
+                decoratedNotifications.addAll(this.persister.retrieveAllDecoratedNotifications());
+
+            } else if (StringUtils.isEmpty(criteriaName)) {
+
+                //Return everything for the given email
+                decoratedNotifications.addAll(this.persister.retrieveDecoratedNotificationsForEmail(criteriaValue));
+
+            } else {
+
+                //Return everything for the given param with given value
+                decoratedNotifications.addAll(this.persister.retrieveDecoratedNotificationsForCriteria(criteriaName, criteriaValue));
+            }
+
+        }
+
+        //Sort the list of decorated notifications by decreasing date
+        Collections.sort(decoratedNotifications, new Comparator<DecoratedNotification>() {
+            @Override
+            public int compare(DecoratedNotification dn1, DecoratedNotification dn2) {
+                return dn2.getCreatedAt().compareTo(dn1.getCreatedAt());
+            }
+        });
+
+        Collection<DecoratedNotification> wantedDecoratedNotifications = new HashSet<>();
+
+        if(number != null && number > 0 && number < decoratedNotifications.size()) {
+
+            for(int i = 0; i < number; i++) {
+
+                wantedDecoratedNotifications.add(Iterables.get(decoratedNotifications, i));
+            }
+        }
+        else {
+
+            wantedDecoratedNotifications = decoratedNotifications;
+        }
+
+        Gson gson = new Gson();
+
+        String result = gson.toJson(wantedDecoratedNotifications);
+
+        return result;
     }
 
     @RequestMapping(value = "/countAllDecoratedNotificationsForTopic.do", method = RequestMethod.GET, params = {"topic"})
@@ -181,22 +272,7 @@ public class DecoratedNotificationController {
     @ResponseBody
     public String getSentDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
 
-        Date date = new Date();
-
-        Calendar cal = Calendar.getInstance();
-
-        cal.setTime(date);
-
-        // Create all dates wanted to retrieve data
-        Collection<Date> datesToGet = new ArrayList<>();
-
-        for(Integer day = 0; day < nbDays; day ++) {
-
-            datesToGet.add(cal.getTime());
-
-            cal.add(Calendar.DAY_OF_MONTH, -1);
-
-        }
+        Collection<Date> datesToGet = this.getDatesForDays(nbDays);
 
         //Retrieve data and store it to be sent as response
 
@@ -234,22 +310,7 @@ public class DecoratedNotificationController {
     @ResponseBody
     public String getCreatedDecoratedNotificationsForLastDays(@RequestParam("days") Integer nbDays) {
 
-        Date date = new Date();
-
-        Calendar cal = Calendar.getInstance();
-
-        cal.setTime(date);
-
-        // Create all dates wanted to retrieve data
-        Collection<Date> datesToGet = new ArrayList<>();
-
-        for(Integer day = 0; day < nbDays; day ++) {
-
-            datesToGet.add(cal.getTime());
-
-            cal.add(Calendar.DAY_OF_MONTH, -1);
-
-        }
+        Collection<Date> datesToGet = this.getDatesForDays(nbDays);
 
         //Retrieve data and store it to be sent as response
 
@@ -289,22 +350,7 @@ public class DecoratedNotificationController {
 
         Topic topic = new Topic(topicName);
 
-        Date date = new Date();
-
-        Calendar cal = Calendar.getInstance();
-
-        cal.setTime(date);
-
-        // Create all dates wanted to retrieve data
-        Collection<Date> datesToGet = new ArrayList<>();
-
-        for(Integer day = 0; day < nbDays; day ++) {
-
-            datesToGet.add(cal.getTime());
-
-            cal.add(Calendar.DAY_OF_MONTH, -1);
-
-        }
+        Collection<Date> datesToGet = this.getDatesForDays(nbDays);
 
         //Retrieve data and store it to be sent as response
 
@@ -344,22 +390,7 @@ public class DecoratedNotificationController {
 
         Topic topic = new Topic(topicName);
 
-        Date date = new Date();
-
-        Calendar cal = Calendar.getInstance();
-
-        cal.setTime(date);
-
-        // Create all dates wanted to retrieve data
-        Collection<Date> datesToGet = new ArrayList<>();
-
-        for(Integer day = 0; day < nbDays; day ++) {
-
-            datesToGet.add(cal.getTime());
-
-            cal.add(Calendar.DAY_OF_MONTH, -1);
-
-        }
+        Collection<Date> datesToGet = this.getDatesForDays(nbDays);
 
         //Retrieve data and store it to be sent as response
 
@@ -391,6 +422,27 @@ public class DecoratedNotificationController {
 
         return result.toString();
 
+    }
+
+    private Collection<Date> getDatesForDays(Integer numberOfDays) {
+        Date date = new Date();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        // Create all dates wanted to retrieve data
+        Collection<Date> datesToGet = new ArrayList<>();
+
+        for(Integer day = 0; day < numberOfDays; day ++) {
+
+            datesToGet.add(cal.getTime());
+
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        }
+
+        return datesToGet;
     }
 
     public Persister getPersister() {

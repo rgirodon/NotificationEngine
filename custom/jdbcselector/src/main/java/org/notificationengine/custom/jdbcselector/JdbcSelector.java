@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Subscription;
 import org.notificationengine.domain.Topic;
 import org.notificationengine.selector.Selector;
@@ -36,7 +37,8 @@ public class JdbcSelector extends Selector {
 		
 		return result;
 	}
-	
+
+    @Override
 	public Collection<Subscription> retrieveSubscriptions() {
 		
 		DbHelper dbHelper = (DbHelper)SpringUtils.getBean(JdbcSelectorConstants.DB_HELPER);
@@ -47,4 +49,16 @@ public class JdbcSelector extends Selector {
 		
 		return result;
 	}
+
+    @Override
+    public Collection<Subscription> retrieveSubscriptionsForRawNotification(RawNotification rawNotification) {
+
+        DbHelper dbHelper = (DbHelper)SpringUtils.getBean(JdbcSelectorConstants.DB_HELPER);
+
+        Collection<Subscription> result = dbHelper.retrieveSubscriptionsForRawNotification(rawNotification);
+
+        LOGGER.debug("Nbr of subscriptions retrieved : " + result.size());
+
+        return result;
+    }
 }

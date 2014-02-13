@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import javax.sql.DataSource;
 
+import org.notificationengine.domain.RawNotification;
 import org.notificationengine.domain.Recipient;
 import org.notificationengine.domain.Subscription;
 import org.notificationengine.domain.Topic;
@@ -93,6 +94,14 @@ public class DbHelper {
 			}	    	
 		});
 	}
+
+    public Collection<Subscription> retrieveSubscriptionsForRawNotification(RawNotification rawNotification) {
+
+        String topicName = rawNotification.getTopic().getName();
+
+        return this.retrieveSubscriptionsForTopic(topicName);
+
+    }
 	
 	
 }

@@ -1042,6 +1042,116 @@ public class Persister implements InitializingBean {
 
     }
 
+    public Collection<DecoratedNotification> retrieveDecoratedNotificationsForEmailAndDate(String email, Date date) {
+
+        LOGGER.debug("retrieveDecoratedNotificationsForEmailAndDate: " + date.toString() + " with email " + email);
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        // query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}, \"recipient.address\": #}";
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDateAndTopic =
+                this.decoratedNotifications.find(exactQuery, beginDate, endDate, email).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDateAndTopic) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+
+        }
+
+        return result;
+    }
+
+    public Collection<DecoratedNotification> retrieveDecoratedNotificationsForCriteria(String criteriaName, String criteriaValue) {
+
+        LOGGER.debug("retrieveDecoratedNotificationsForCriteria: criteria is " + criteriaName + " with value " + criteriaValue);
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        String recipientProperty = Constants.RECIPIENT + "." + criteriaName;
+
+        JSONObject query = new JSONObject();
+        query.put(recipientProperty, criteriaValue);
+
+        String exactQuery = query.toString();
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDateAndTopic =
+                this.decoratedNotifications.find(exactQuery).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDateAndTopic) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+    }
+
+    public Collection<DecoratedNotification> retrieveDecoratedNotificationsForCriteriaAndDate(String criteriaName, String criteriaValue, Date date) {
+
+        LOGGER.debug("retrieveDecoratedNotificationsForCriteria: criteria is " + criteriaName + " with value " + criteriaValue);
+
+        Collection<DecoratedNotification> result = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date beginDate = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        Date endDate = cal.getTime();
+
+        if (criteriaName.equals(Constants.EMAIL)) {
+            criteriaName = Constants.ADDRESS;
+        }
+
+        String recipientProperty = Constants.RECIPIENT + "." + criteriaName;
+
+        JSONObject query = new JSONObject();
+        query.put(recipientProperty, criteriaValue);
+
+        // query created manually
+        String exactQuery = "{createdAt: {$gt: #, $lt: #}, \"" + recipientProperty + "\": #}";
+
+        Iterable<DecoratedNotification> decoratedNotificationsForDateAndTopic =
+                this.decoratedNotifications.find(exactQuery, beginDate, endDate, criteriaValue).as(DecoratedNotification.class);
+
+        for(DecoratedNotification decoratedNotification : decoratedNotificationsForDateAndTopic) {
+
+            LOGGER.debug("Decorated notification found: " + decoratedNotification);
+
+            result.add(decoratedNotification);
+        }
+
+        return result;
+    }
+
     public Collection<Topic> retrieveAllTopics() {
 
         LOGGER.debug("Retrieve all Topics");
@@ -1053,7 +1163,6 @@ public class Persister implements InitializingBean {
         for(RawNotification rowNotification : rawNotifications) {
 
             result.add(rowNotification.getTopic());
-
         }
 
         for(Topic topic : result) {
